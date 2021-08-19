@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Vue项目实战(一)项目概述 PC端后台管理项目 功能：    开发模式：采用前后端分离的开发模式,其中前端项目是基于Vue技术栈的SPA(单页面)项目。 技术栈 Vue Vue-router Element-UI Axios Echarts    项目初始化前端项目初始化步骤 安装vue脚手架  通过vue脚手架创建项目 通过vue-ui可视化界面创建项目  参考博客使用可视化的Vue项目管理器">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vue项目搭建(一)">
+<meta property="og:url" content="http://example.com/2021/08/19/Vue%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA(%E4%B8%80)/index.html">
+<meta property="og:site_name" content="Gezi&#39;s blog">
+<meta property="og:description" content="Vue项目实战(一)项目概述 PC端后台管理项目 功能：    开发模式：采用前后端分离的开发模式,其中前端项目是基于Vue技术栈的SPA(单页面)项目。 技术栈 Vue Vue-router Element-UI Axios Echarts    项目初始化前端项目初始化步骤 安装vue脚手架  通过vue脚手架创建项目 通过vue-ui可视化界面创建项目  参考博客使用可视化的Vue项目管理器">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210808175820577-1628416702132.png">
+<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210808181439877-1628417681998.png">
+<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210808181538686-1628417740104.png">
+<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210808182613159-1628418374296.png">
+<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210808232116649-1628436079300.png">
+<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210809033312866-1628451195030.png">
+<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210809152841465-1628494122903.png">
+<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210809162013178-1628497214645.png">
+<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210809175012125-1628502613436.png">
+<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/branch.jpg">
+<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210809181530067-1628504131503.png">
+<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/less.jpg">
+<meta property="article:published_time" content="2021-08-18T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-08-19T10:08:16.415Z">
+<meta property="article:author" content="gezi_lzq">
+<meta property="article:tag" content="vue-ui">
+<meta property="article:tag" content="Element-UI">
+<meta property="article:tag" content="git">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210808175820577-1628416702132.png">
+
+<link rel="canonical" href="http://example.com/2021/08/19/Vue%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA(%E4%B8%80)/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Vue项目搭建(一) | Gezi's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Gezi's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/19/Vue%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA(%E4%B8%80)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/D4B9D508FC64873D807D11764FBEEDAA.jpg">
+      <meta itemprop="name" content="gezi_lzq">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gezi's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Vue项目搭建(一)
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-08-19 00:00:00 / Modified: 18:08:16" itemprop="dateCreated datePublished" datetime="2021-08-19T00:00:00+08:00">2021-08-19</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">前端学习</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%AD%A6%E4%B9%A0/vue/" itemprop="url" rel="index"><span itemprop="name">vue</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Vue项目实战-一"><a href="#Vue项目实战-一" class="headerlink" title="Vue项目实战(一)"></a>Vue项目实战(一)</h1><h2 id="项目概述"><a href="#项目概述" class="headerlink" title="项目概述"></a>项目概述</h2><ul>
+<li>PC端后台管理项目</li>
+<li>功能：</li>
+</ul>
+<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210808175820577-1628416702132.png" alt="image-20210808175820577"></p>
+<ul>
+<li>开发模式：采用<strong>前后端分离</strong>的开发模式,其中前端项目是基于Vue技术栈的SPA(单页面)项目。</li>
+<li>技术栈<ul>
+<li>Vue</li>
+<li>Vue-router</li>
+<li>Element-UI</li>
+<li>Axios</li>
+<li>Echarts</li>
+</ul>
+</li>
+</ul>
+<h2 id="项目初始化"><a href="#项目初始化" class="headerlink" title="项目初始化"></a>项目初始化</h2><h3 id="前端项目初始化步骤"><a href="#前端项目初始化步骤" class="headerlink" title="前端项目初始化步骤"></a>前端项目初始化步骤</h3><ol>
+<li>安装vue脚手架</li>
+</ol>
+<h4 id="通过vue脚手架创建项目"><a href="#通过vue脚手架创建项目" class="headerlink" title="通过vue脚手架创建项目"></a>通过vue脚手架创建项目</h4><ul>
+<li>通过<code>vue-ui</code>可视化界面创建项目<br><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210808181439877-1628417681998.png" alt="image-20210808181439877"></li>
+<li><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210808181538686-1628417740104.png" alt="image-20210808181538686"></li>
+<li>参考博客<a target="_blank" rel="noopener" href="https://blog.csdn.net/JZevin/article/details/108478555">使用可视化的Vue项目管理器（Vue UI）来创建、开发和管理你的项目</a></li>
+<li>自定义的可选配置项中选择<ul>
+<li>Choose Vue version；</li>
+<li>Babel；</li>
+<li>Router；</li>
+<li>Linter/Formatter;</li>
+<li>使用配置文件</li>
+</ul>
+</li>
+<li><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210808182613159-1628418374296.png" alt="image-20210808182613159"></li>
+</ul>
+<h4 id="配置Vue路由"><a href="#配置Vue路由" class="headerlink" title="配置Vue路由"></a>配置Vue路由</h4><p>在<code>vue ui</code>内配置完成</p>
+<h4 id="配置Element-UI组件库"><a href="#配置Element-UI组件库" class="headerlink" title="配置Element-UI组件库"></a>配置Element-UI组件库</h4><ul>
+<li>添加插件</li>
+</ul>
+<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210808232116649-1628436079300.png" alt="image-20210808232116649"></p>
+<ul>
+<li>修改配置<img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210809033312866-1628451195030.png" alt="image-20210809033312866"></li>
+</ul>
+<h4 id="配置axios库"><a href="#配置axios库" class="headerlink" title="配置axios库"></a>配置axios库</h4><ul>
+<li>安装依赖</li>
+</ul>
+<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210809152841465-1628494122903.png" alt="image-20210809152841465"></p>
+<h4 id="初始化git远程仓库"><a href="#初始化git远程仓库" class="headerlink" title="初始化git远程仓库"></a>初始化git远程仓库</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://gitee.com/help/articles/4181">生成/添加SSH公钥</a></li>
+</ul>
+<h4 id="将本地项目托管到Github或码云中"><a href="#将本地项目托管到Github或码云中" class="headerlink" title="将本地项目托管到Github或码云中"></a>将本地项目托管到Github或码云中</h4><ul>
+<li><p><a target="_blank" rel="noopener" href="https://gitee.com/help/articles/4169">创建仓库</a></p>
+</li>
+<li><p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210809162013178-1628497214645.png" alt="image-20210809162013178"></p>
+</li>
+<li><p>已有仓库</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cd existing_git_repo</span><br><span class="line"></span><br><span class="line">git status</span><br><span class="line">git add .</span><br><span class="line">git commit -m&quot;add files&quot;</span><br><span class="line"></span><br><span class="line">git remote add origin git@gitee.com:gezilzq/vue_shop.git</span><br><span class="line">git push -u origin master</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="（-后台项目环境安装配置）"><a href="#（-后台项目环境安装配置）" class="headerlink" title="#（ 后台项目环境安装配置）"></a>#（ 后台项目环境安装配置）</h3><blockquote>
+<p>也可以不在本地安装后台环境</p>
+<p>使用其他人搭建的后台</p>
+</blockquote>
+<ul>
+<li>安装MySQL数据库</li>
+<li>安装Node.js环境</li>
+<li>配置项目相关信息</li>
+<li>启动项目</li>
+<li>使用Postman测试后台项目接口是否正常</li>
+</ul>
+<p>后端接口文档</p>
+<h2 id="登录退出功能"><a href="#登录退出功能" class="headerlink" title="登录退出功能"></a>登录退出功能</h2><h3 id="登录概述"><a href="#登录概述" class="headerlink" title="登录概述"></a>登录概述</h3><h4 id="1-登录业务流程"><a href="#1-登录业务流程" class="headerlink" title="1.登录业务流程"></a>1.登录业务流程</h4><ol>
+<li><p>在登录页面输入用户名和密码</p>
+</li>
+<li><p>调用后台接口进行验证</p>
+</li>
+<li><p>通过验证之后,根据后台的响应状态跳转到项目主页</p>
+</li>
+</ol>
+<h4 id="2-登录业务的相关技术点"><a href="#2-登录业务的相关技术点" class="headerlink" title="2.登录业务的相关技术点"></a>2.登录业务的相关技术点</h4><ul>
+<li>http是无状态的</li>
+<li>通过cookie在客户端记录状态</li>
+<li>通过session在服务器端记录状态</li>
+<li>通过token方式维持状态（存在跨域问题时）<ul>
+<li><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210809175012125-1628502613436.png" alt="image-20210809175012125"></li>
+</ul>
+</li>
+</ul>
+<p>关于登录业务所必须知道的<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_31201781/article/details/94575507">cookie，session token的作用与区别</a></p>
+<ul>
+<li><p>登录状态保持<br>如果服务器和客户端同源，建议可以使用cookie或者session来保持登录状态<br>如果客户端和服务器跨域了，建议使用token进行维持登录状态。</p>
+</li>
+<li><p>登录逻辑：<br>在登录页面输入账号和密码进行登录，将数据发送给服务器<br>服务器返回登录的结果，登录成功则返回数据中带有token<br>客户端得到token并进行保存，后续的请求都需要将此token发送给服务器，服务器会验证token以保证用户身份。</p>
+</li>
+</ul>
+<h3 id="登录功能实现"><a href="#登录功能实现" class="headerlink" title="登录功能实现"></a>登录功能实现</h3><blockquote>
+<p><strong>在进行功能增加时，往往在新的分支内完成</strong></p>
+<ul>
+<li><p>添加新分支<code>login</code>，在<code>login</code>分支中开发当前项目`vue_shop：</p>
+<ul>
+<li><p>打开vue_shop终端，使用git status确定当前项目状态。</p>
+</li>
+<li><p>确定当前工作目录是干净的之后，创建一个分支进行开发，开发完毕之后将其合并到master</p>
+</li>
+<li><p><code>git checkout -b login</code></p>
+</li>
+<li><p>然后查看新创建的分支：<code>git branch</code></p>
+<p>确定我们正在使用login分支进行开发</p>
+<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/branch.jpg"></p>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>运行项目的方式</strong></p>
+<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210809181530067-1628504131503.png" alt="image-20210809181530067"></p>
+<p>（若是运行错误，可以回到VS里进行编译，查看错误信息，基本出现报错就得自己重新配了，可能可视化界面安装时网络不好，出现问题了）</p>
+</blockquote>
+<h4 id="登录页面的布局"><a href="#登录页面的布局" class="headerlink" title="登录页面的布局"></a>登录页面的布局</h4><p>通过 Element-UI 组件实现布局</p>
+<ul>
+<li><p>首先删除无用的示例，变为干净的项目结果</p>
+</li>
+<li><p>建立组件文件，编写路由</p>
+</li>
+</ul>
+<p>在components文件夹中新建<code>Login.vue</code>组件,添加<code>template</code>，<code>script</code>，<code>style</code>标签,<code>style</code>标签中的<code>scoped</code>可以防止组件之间的样式冲突，没有<code>scoped</code>则样式是全局的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">    &lt;div class=&quot;login_container&quot;&gt;</span><br><span class="line">        </span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">export default &#123;</span><br><span class="line">  </span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;style lang=&quot;less&quot; scoped&gt;</span><br><span class="line">.login_container &#123;</span><br><span class="line">  background-color: #2b5b6b;</span><br><span class="line">  height: 100%;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure>
+
+<p>在<code>router.js</code>中导入组件并设置规则<br>在<code>App.vue</code>中添加路由占位符</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> router = <span class="keyword">new</span> Router(&#123;</span><br><span class="line">  <span class="attr">routes</span>: [</span><br><span class="line">    &#123; <span class="attr">path</span>: <span class="string">&#x27;/&#x27;</span>, <span class="attr">redirect</span>: <span class="string">&#x27;/login&#x27;</span> &#125;,</span><br><span class="line">    &#123; <span class="attr">path</span>: <span class="string">&#x27;/login&#x27;</span>, <span class="attr">component</span>: Login &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>当我们给<code>Login.vu</code>e中的内容添加样式的时候，会报错“<code>缺少less-loader</code>”，需要配置less加载器（开发依赖），安装less(开发依赖)<br><img src="https://gitee.com/gezilzq/image-host/raw/master/img/less.jpg"><br>然后需要添加公共样式，在<code>assets</code>文件夹下面添加<code>css</code>文件夹，创建<code>global.css</code>文件,添加全局样式</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 全局样式表 */</span></span><br><span class="line"><span class="selector-tag">html</span>,<span class="selector-tag">body</span>,<span class="selector-id">#app</span>&#123;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">100%</span>;</span><br><span class="line">    <span class="attribute">margin</span>: <span class="number">0</span>;</span><br><span class="line">    <span class="attribute">padding</span>: <span class="number">0</span>; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在<code>main.js</code>中导入<code>global.css</code>，</p>
+<p>使得全局样式生效<code> import &quot;./assets/css/global.css&quot;</code><br>然后<code>Login.vue</code>中的根元素也需要设置撑满全屏（<code>height:100%</code>）</p>
+<p>随后根据登陆界面的设计进行<code>&lt;template&gt;</code>与<code>&lt;style lang=&quot;less&quot; scoped&gt;</code>的编写</p>
+<h5 id="添加element-ui的表单组件"><a href="#添加element-ui的表单组件" class="headerlink" title="添加element-ui的表单组件"></a>添加element-ui的表单组件</h5><p>在<code>plugins</code>文件夹中打开<code>element.js</code>文件，进行elementui的按需导入</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">import Vue from &#x27;vue&#x27;</span><br><span class="line"></span><br><span class="line">import &#123; Button, Form, FormItem, Input &#125; from &#x27;element-ui&#x27;</span><br><span class="line"></span><br><span class="line">Vue.use(Button)</span><br><span class="line">Vue.use(Form)</span><br><span class="line">Vue.use(FormItem)</span><br><span class="line">Vue.use(Input)</span><br></pre></td></tr></table></figure>
+
+<h5 id="添加第三方字体图标"><a href="#添加第三方字体图标" class="headerlink" title="添加第三方字体图标"></a>添加第三方字体图标</h5><p>复制素材中的<code>fonts</code>文件夹到<code>assets</code>中,在入口文件<code>main.js</code>中</p>
+<p>导入<code>import &#39;./assets/fonts/iconfont.css&#39;</code><br>然后直接在 <code>&lt;el-input prefix-icon=&quot;iconfont icon-3702mima&quot;&gt;&lt;/el-input&gt;</code><br>接着添加登录盒子</p>
+<p>最终可得以下代码（静态页面）</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;login_container&quot;</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- 登录盒子  --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;login_box&quot;</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!-- 头像 --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;avatar_box&quot;</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;../assets/logo.png&quot;</span> <span class="attr">alt</span>=<span class="string">&quot;&quot;</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!-- 登录表单 --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">el-form</span>&gt;</span></span><br><span class="line">                <span class="comment">&lt;!-- 用户名 --&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">el-form-item</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">el-input</span> &gt;</span><span class="tag">&lt;/<span class="name">el-input</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">el-form-item</span>&gt;</span></span><br><span class="line">                <span class="comment">&lt;!-- 密码 --&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">el-form-item</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">el-input</span>&gt;</span><span class="tag">&lt;/<span class="name">el-input</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">el-form-item</span>&gt;</span></span><br><span class="line">                <span class="comment">&lt;!-- 按钮 --&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">el-form-item</span> <span class="attr">class</span>=<span class="string">&quot;btns&quot;</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">el-button</span>&gt;</span>登录<span class="tag">&lt;/<span class="name">el-button</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">el-button</span>&gt;</span>重置<span class="tag">&lt;/<span class="name">el-button</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">el-form-item</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">el-form</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">&lt;style lang=&quot;less&quot; scoped&gt;</span><br><span class="line"><span class="selector-class">.login_container</span> &#123;</span><br><span class="line">  <span class="attribute">background-color</span>: <span class="number">#2b5b6b</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">100%</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.login_box</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">450px</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">300px</span>;</span><br><span class="line">  <span class="attribute">background</span>: <span class="number">#fff</span>;</span><br><span class="line">  <span class="attribute">border-radius</span>: <span class="number">3px</span>;</span><br><span class="line">  <span class="attribute">position</span>: absolute;</span><br><span class="line">  <span class="attribute">left</span>: <span class="number">50%</span>;</span><br><span class="line">  <span class="attribute">top</span>: <span class="number">50%</span>;</span><br><span class="line">  <span class="attribute">transform</span>: <span class="built_in">translate</span>(-<span class="number">50%</span>, -<span class="number">50%</span>);</span><br><span class="line">  <span class="selector-class">.avatar_box</span> &#123;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">130px</span>;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">130px</span>;</span><br><span class="line">    <span class="attribute">border</span>: <span class="number">1px</span> solid <span class="number">#eee</span>;</span><br><span class="line">    <span class="attribute">border-radius</span>: <span class="number">50%</span>;</span><br><span class="line">    <span class="attribute">padding</span>: <span class="number">10px</span>;</span><br><span class="line">    <span class="attribute">box-shadow</span>: <span class="number">0</span> <span class="number">0</span> <span class="number">10px</span> <span class="number">#ddd</span>;</span><br><span class="line">    <span class="attribute">position</span>: absolute;</span><br><span class="line">    <span class="attribute">left</span>: <span class="number">50%</span>;</span><br><span class="line">    <span class="attribute">transform</span>: <span class="built_in">translate</span>(-<span class="number">50%</span>, -<span class="number">50%</span>);</span><br><span class="line">    <span class="attribute">background-color</span>: <span class="number">#fff</span>;</span><br><span class="line">    <span class="selector-tag">img</span> &#123;</span><br><span class="line">      <span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">      <span class="attribute">height</span>: <span class="number">100%</span>;</span><br><span class="line">      <span class="attribute">border-radius</span>: <span class="number">50%</span>;</span><br><span class="line">      <span class="attribute">background-color</span>: <span class="number">#eee</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.login_form</span> &#123;</span><br><span class="line">  <span class="attribute">position</span>: absolute;</span><br><span class="line">  <span class="attribute">bottom</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">0</span> <span class="number">20px</span>;</span><br><span class="line">  <span class="attribute">box-sizing</span>: border-box;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.btns</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: flex;</span><br><span class="line">  <span class="attribute">justify-content</span>: flex-end;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="添加表单验证的步骤"><a href="#添加表单验证的步骤" class="headerlink" title="添加表单验证的步骤"></a>添加表单验证的步骤</h4><p>1).给<code>&lt;el-form&gt;</code>添加属性<code>:rules=&quot;rules&quot;</code>，<code>rules</code>是一堆验证规则，定义在<code>script</code>中<br>2).在<code>script</code>中添加表单验证规则<code>loginFormRules</code></p>
+<p>3).通过<code>&lt;el-form-item&gt;</code>的<code>prop</code>属性设置验证规则<code>&lt;el-form-item label=&quot;活动名称&quot; prop=&quot;name&quot;&gt;</code></p>
+<blockquote>
+<p>具体使用参考element-ui官网</p>
+<p><a target="_blank" rel="noopener" href="https://element.eleme.cn/#/zh-CN/component/form#biao-dan-yan-zheng">表单验证</a></p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">data () &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">      <span class="comment">// 数据绑定</span></span><br><span class="line">      <span class="attr">loginForm</span>: &#123;</span><br><span class="line">        <span class="attr">username</span>: <span class="string">&#x27;admin&#x27;</span>,</span><br><span class="line">        <span class="attr">password</span>: <span class="string">&#x27;123456&#x27;</span></span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="comment">// 表单验证规则</span></span><br><span class="line">      <span class="attr">loginFormRules</span>: &#123;</span><br><span class="line">        <span class="attr">username</span>: [</span><br><span class="line">          &#123;</span><br><span class="line">            <span class="attr">required</span>: <span class="literal">true</span>,</span><br><span class="line">            <span class="attr">message</span>: <span class="string">&#x27;请输入登录名&#x27;</span>,</span><br><span class="line">            <span class="attr">trigger</span>: <span class="string">&#x27;blur&#x27;</span></span><br><span class="line">          &#125;,</span><br><span class="line">          &#123;</span><br><span class="line">            <span class="attr">min</span>: <span class="number">3</span>,</span><br><span class="line">            <span class="attr">max</span>: <span class="number">10</span>,</span><br><span class="line">            <span class="attr">message</span>: <span class="string">&#x27;登录名长度在 3 到 10 个字符&#x27;</span>,</span><br><span class="line">            <span class="attr">trigger</span>: <span class="string">&#x27;blur&#x27;</span></span><br><span class="line">          &#125;</span><br><span class="line">        ],</span><br><span class="line">        <span class="attr">password</span>: [</span><br><span class="line">          &#123;</span><br><span class="line">            <span class="attr">required</span>: <span class="literal">true</span>,</span><br><span class="line">            <span class="attr">message</span>: <span class="string">&#x27;请输入密码&#x27;</span>,</span><br><span class="line">            <span class="attr">trigger</span>: <span class="string">&#x27;blur&#x27;</span></span><br><span class="line">          &#125;,</span><br><span class="line">          &#123;</span><br><span class="line">            <span class="attr">min</span>: <span class="number">6</span>,</span><br><span class="line">            <span class="attr">max</span>: <span class="number">15</span>,</span><br><span class="line">            <span class="attr">message</span>: <span class="string">&#x27;密码长度在 6 到 15 个字符&#x27;</span>,</span><br><span class="line">            <span class="attr">trigger</span>: <span class="string">&#x27;blur&#x27;</span></span><br><span class="line">          &#125;</span><br><span class="line">        ]</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
+
+<h4 id="实现重置按钮的功能"><a href="#实现重置按钮的功能" class="headerlink" title="实现重置按钮的功能"></a>实现重置按钮的功能</h4><blockquote>
+<p>参考文档<a target="_blank" rel="noopener" href="https://element.eleme.cn/#/zh-CN/component/form#form-item-methods">表单重置</a></p>
+<table>
+<thead>
+<tr>
+<th align="left">方法名</th>
+<th align="left">说明</th>
+<th align="center">参数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>resetFields</code></td>
+<td align="left">对整个表单进行重置，将所有字段值重置为初始值并移除校验结果</td>
+<td align="center">-</td>
+</tr>
+</tbody></table>
+</blockquote>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">el-form</span> <span class="attr">:model</span>=<span class="string">&quot;loginForm&quot;</span></span></span><br><span class="line"><span class="tag">         <span class="attr">ref</span>=<span class="string">&quot;LoginFormRef&quot;</span>     //添加<span class="attr">ref</span>属性，创建引用</span></span><br><span class="line"><span class="tag">         <span class="attr">:rules</span>=<span class="string">&quot;loginFormRules&quot;</span></span></span><br><span class="line"><span class="tag">         <span class="attr">label-width</span>=<span class="string">&quot;0px&quot;</span></span></span><br><span class="line"><span class="tag">         <span class="attr">class</span>=<span class="string">&quot;login_form&quot;</span>&gt;</span></span><br><span class="line"> </span><br><span class="line">··········</span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">el-button</span> <span class="attr">type</span>=<span class="string">&quot;info&quot;</span> @<span class="attr">click</span>=<span class="string">&quot;resetLoginForm&quot;</span>&gt;</span>重置<span class="tag">&lt;/<span class="name">el-button</span>&gt;</span></span><br><span class="line">··········</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 添加行为，</span></span><br><span class="line"> <span class="attr">methods</span>: &#123;</span><br><span class="line">   <span class="comment">// 添加表单重置方法</span></span><br><span class="line">   resetLoginForm () &#123;</span><br><span class="line">     <span class="comment">// this=&gt;当前组件对象，其中的属性$refs包含了设置的表单ref</span></span><br><span class="line">     <span class="comment">//   console.log(this)</span></span><br><span class="line">     <span class="built_in">this</span>.$refs.LoginFormRef.resetFields()</span><br><span class="line">   &#125;,</span><br><span class="line">········</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="登陆前表单数据的预验证"><a href="#登陆前表单数据的预验证" class="headerlink" title="登陆前表单数据的预验证"></a>登陆前表单数据的预验证</h4><blockquote>
+<p>参考文档<a target="_blank" rel="noopener" href="https://element.eleme.cn/#/zh-CN/component/form#biao-dan-yan-zheng">validate</a></p>
+<table>
+<thead>
+<tr>
+<th align="left">方法名</th>
+<th align="left">说明</th>
+<th align="left">参数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">validate</td>
+<td align="left">对整个表单进行校验的方法，参数为一个回调函数。该回调函数会在校验结束后被调用，并传入两个参数：是否校验成功和未通过校验的字段。若不传入回调函数，则会返回一个 promise</td>
+<td align="left"><code>Function(callback: Function(boolean, object))</code></td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th align="left">事件名称</th>
+<th align="left">说明</th>
+<th align="left">回调参数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">validate</td>
+<td align="left">任一表单项被校验后触发</td>
+<td align="left">被校验的表单项 prop 值，校验是否通过，错误消息（如果存在）</td>
+</tr>
+</tbody></table>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"> <span class="function"><span class="title">login</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">      <span class="comment">//点击登录的时候先调用validate方法验证表单内容是否有误</span></span><br><span class="line">      <span class="built_in">this</span>.$refs.LoginFormRef.validate(<span class="keyword">async</span> valid =&gt; &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="built_in">this</span>.loginFormRules)</span><br><span class="line">        <span class="comment">//如果valid参数为true则验证通过</span></span><br><span class="line">        <span class="keyword">if</span> (!valid) &#123;</span><br><span class="line">          <span class="keyword">return</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//发送请求进行登录</span></span><br><span class="line">          ········</span><br><span class="line">      &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="导入axios以发送ajax请求"><a href="#导入axios以发送ajax请求" class="headerlink" title="导入axios以发送ajax请求"></a>导入axios以发送ajax请求</h4><p>打开<code>main.js</code>，<code>import axios from &#39;axios&#39;;</code><br>设置请求的根路径：<code>axios.defaults.baseURL = &#39;http://127.0.0.1:8888/api/private/v1/&#39;;</code><br>挂载<code>axios</code>：<code>Vue.prototype.$http = axios;</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 发送请求进行登录</span></span><br><span class="line">        <span class="keyword">const</span> &#123; <span class="attr">data</span>: res &#125; = <span class="keyword">await</span> <span class="built_in">this</span>.$http.post(<span class="string">&#x27;login&#x27;</span>, <span class="built_in">this</span>.loginForm)</span><br><span class="line">        <span class="comment">//   console.log(res);</span></span><br><span class="line">        <span class="keyword">if</span> (res.meta.status !== <span class="number">200</span>) &#123;</span><br><span class="line">          <span class="keyword">return</span> <span class="built_in">console</span>.log(<span class="string">&quot;登录失败:&quot;</span>+res.meta.msg)</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="配置Message全局弹框组件"><a href="#配置Message全局弹框组件" class="headerlink" title="配置Message全局弹框组件"></a>配置Message全局弹框组件</h5><blockquote>
+<p>官网文档<a target="_blank" rel="noopener" href="https://element.eleme.cn/#/zh-CN/component/message">Message组件</a></p>
+</blockquote>
+<p>在plugins文件夹中打开<code>element.js</code>文件，进行elementui的按需导入<br><code>import &#123;Message&#125; from &#39;element-ui&#39;</code><br>进行全局挂载：<code>Vue.prototype.$message = Message;</code><br>在<code>login.vue</code>组件中编写弹窗代码：<code>this.$message.error(&#39;登录失败&#39;)</code></p>
+<h4 id="登录成功之后的操作"><a href="#登录成功之后的操作" class="headerlink" title="登录成功之后的操作"></a>登录成功之后的操作</h4><p>登录成功之后，需要将后台返回的<code>token</code>保存到<code>sessionStorage</code>中<br>操作完毕之后，需要跳转到<code>/home</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//保存token</span></span><br><span class="line"><span class="built_in">window</span>.sessionStorage.setItem(<span class="string">&#x27;token&#x27;</span>, res.data.token)</span><br><span class="line"><span class="comment">// 导航至/home</span></span><br><span class="line"><span class="built_in">this</span>.$router.push(<span class="string">&#x27;/home&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>添加一个组件Home.vue，并为之添加规则</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">        this is home</span><br><span class="line">        &lt;el-button type=&quot;info&quot; @click=&quot;logout&quot;&gt; 退出 &lt;/el-button&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">export default &#123;</span><br><span class="line">  methods: &#123;</span><br><span class="line">    logout() &#123;</span><br><span class="line">      window.sessionStorage.clear()</span><br><span class="line">      this.$router.push(&#x27;/login&#x27;)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;style lang=&#x27;less&#x27; scoped&gt;</span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure>
+
+<p>添加路由规则</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> router = <span class="keyword">new</span> Router(&#123;</span><br><span class="line">  <span class="attr">routes</span>: [</span><br><span class="line">    &#123; <span class="attr">path</span>: <span class="string">&#x27;/&#x27;</span>, <span class="attr">redirect</span>: <span class="string">&#x27;/login&#x27;</span> &#125;,</span><br><span class="line">    &#123; <span class="attr">path</span>: <span class="string">&#x27;/login&#x27;</span>, <span class="attr">component</span>: Login &#125;,</span><br><span class="line">    &#123; <span class="attr">path</span>: <span class="string">&#x27;/home&#x27;</span>, <span class="attr">component</span>: Home &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h4 id="添加路由守卫"><a href="#添加路由守卫" class="headerlink" title="添加路由守卫"></a>添加路由守卫</h4><p>如果用户没有登录，不能访问/home,如果用户通过url地址直接访问，则强制跳转到登录页面<br>打开router.js</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Vue <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line"><span class="keyword">import</span> Router <span class="keyword">from</span> <span class="string">&#x27;vue-router&#x27;</span></span><br><span class="line"><span class="keyword">import</span> Login <span class="keyword">from</span> <span class="string">&#x27;./components/Login.vue&#x27;</span></span><br><span class="line"><span class="keyword">import</span> Home <span class="keyword">from</span> <span class="string">&#x27;./components/Home.vue&#x27;</span></span><br><span class="line"></span><br><span class="line">Vue.use(Router)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> router = <span class="keyword">new</span> Router(&#123;</span><br><span class="line">  <span class="attr">routes</span>: [</span><br><span class="line">    &#123; <span class="attr">path</span>:<span class="string">&#x27;/&#x27;</span>, <span class="attr">redirect</span>:<span class="string">&#x27;/login&#x27;</span>&#125;,</span><br><span class="line">    &#123; <span class="attr">path</span>:<span class="string">&#x27;/login&#x27;</span> , <span class="attr">component</span>:Login &#125;,</span><br><span class="line">    &#123; <span class="attr">path</span>:<span class="string">&#x27;/home&#x27;</span> , <span class="attr">component</span>:Home&#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">//挂载路由导航守卫,to表示将要访问的路径，from表示从哪里来，next是下一个要做的操作</span></span><br><span class="line">router.beforeEach(<span class="function">(<span class="params">to,<span class="keyword">from</span>,next</span>)=&gt;</span>&#123; </span><br><span class="line">  <span class="keyword">if</span>(to.path === <span class="string">&#x27;/login&#x27;</span>)</span><br><span class="line">    <span class="keyword">return</span> next();</span><br><span class="line">  </span><br><span class="line">  <span class="comment">//获取token</span></span><br><span class="line">  <span class="keyword">const</span> tokenStr = <span class="built_in">window</span>.sessionStorage.getItem(<span class="string">&#x27;token&#x27;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span>(!tokenStr)</span><br><span class="line">    <span class="keyword">return</span> next(<span class="string">&#x27;/login&#x27;</span>);</span><br><span class="line"></span><br><span class="line">  next();</span><br><span class="line"></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> router </span><br></pre></td></tr></table></figure>
+
+<p>实现退出功能<br>在Home组件中添加一个退出功能按钮,给退出按钮添加点击事件，添加事件处理代码如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">    <span class="attr">methods</span>:&#123;</span><br><span class="line">        <span class="function"><span class="title">logout</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            <span class="built_in">window</span>.sessionStorage.clear();</span><br><span class="line">            <span class="built_in">this</span>.$router.push(<span class="string">&#x27;/login&#x27;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>最终<code>Login.vue</code>文件中的代码如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">    &lt;div class=&quot;login_container&quot;&gt;</span><br><span class="line">        &lt;!-- 登录盒子  --&gt;</span><br><span class="line">        &lt;div class=&quot;login_box&quot;&gt;</span><br><span class="line">            &lt;!-- 头像 --&gt;</span><br><span class="line">            &lt;div class=&quot;avatar_box&quot;&gt;</span><br><span class="line">                &lt;img src=&quot;../assets/logo.png&quot; alt=&quot;&quot;&gt;</span><br><span class="line">            &lt;/div&gt;</span><br><span class="line">            &lt;!-- 登录表单 --&gt;</span><br><span class="line">            &lt;el-form :model=&quot;loginForm&quot; ref=&quot;LoginFormRef&quot; :rules=&quot;loginFormRules&quot; label-width=&quot;0px&quot; class=&quot;login_form&quot;&gt;</span><br><span class="line">                &lt;!-- 用户名 --&gt;</span><br><span class="line">                &lt;el-form-item prop=&quot;username&quot;&gt;</span><br><span class="line">                    &lt;el-input v-model=&quot;loginForm.username&quot; prefix-icon=&quot;iconfont icon-user&quot; &gt;&lt;/el-input&gt;</span><br><span class="line">                &lt;/el-form-item&gt; </span><br><span class="line">                &lt;!-- 密码 --&gt;</span><br><span class="line">                &lt;el-form-item prop=&quot;password&quot;&gt;</span><br><span class="line">                    &lt;el-input type=&quot;password&quot; v-model=&quot;loginForm.password&quot; prefix-icon=&quot;iconfont icon-3702mima&quot;&gt;&lt;/el-input&gt;</span><br><span class="line">                &lt;/el-form-item&gt; </span><br><span class="line">                &lt;!-- 按钮 --&gt;</span><br><span class="line">                &lt;el-form-item class=&quot;btns&quot;&gt;</span><br><span class="line">                    &lt;el-button type=&quot;primary&quot; @click=&quot;login&quot;&gt;登录&lt;/el-button&gt;</span><br><span class="line">                    &lt;el-button type=&quot;info&quot; @click=&quot;resetLoginForm&quot;&gt;重置&lt;/el-button&gt;</span><br><span class="line">                &lt;/el-form-item&gt; </span><br><span class="line">            &lt;/el-form&gt;</span><br><span class="line">        &lt;/div&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">export default &#123;</span><br><span class="line">  data() &#123;</span><br><span class="line">    return &#123;</span><br><span class="line">      //数据绑定</span><br><span class="line">      loginForm: &#123;</span><br><span class="line">        username: &#x27;admin&#x27;,</span><br><span class="line">        password: &#x27;123456&#x27;</span><br><span class="line">      &#125;,</span><br><span class="line">      //表单验证规则</span><br><span class="line">      loginFormRules: &#123;</span><br><span class="line">        username: [</span><br><span class="line">          &#123; required: true, message: &#x27;请输入登录名&#x27;, trigger: &#x27;blur&#x27; &#125;,</span><br><span class="line">          &#123;</span><br><span class="line">            min: 3,</span><br><span class="line">            max: 10,</span><br><span class="line">            message: &#x27;登录名长度在 3 到 10 个字符&#x27;,</span><br><span class="line">            trigger: &#x27;blur&#x27;</span><br><span class="line">          &#125;</span><br><span class="line">        ],</span><br><span class="line">        password: [</span><br><span class="line">          &#123; required: true, message: &#x27;请输入密码&#x27;, trigger: &#x27;blur&#x27; &#125;,</span><br><span class="line">          &#123;</span><br><span class="line">            min: 6,</span><br><span class="line">            max: 15,</span><br><span class="line">            message: &#x27;密码长度在 6 到 15 个字符&#x27;,</span><br><span class="line">            trigger: &#x27;blur&#x27;</span><br><span class="line">          &#125;</span><br><span class="line">        ]</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  //添加行为，</span><br><span class="line">  methods: &#123;</span><br><span class="line">    //添加表单重置方法</span><br><span class="line">    resetLoginForm() &#123;</span><br><span class="line">      //this=&gt;当前组件对象，其中的属性$refs包含了设置的表单ref</span><br><span class="line">      //   console.log(this)</span><br><span class="line">      this.$refs.LoginFormRef.resetFields()</span><br><span class="line">    &#125;,</span><br><span class="line">    login() &#123;</span><br><span class="line">      //点击登录的时候先调用validate方法验证表单内容是否有误</span><br><span class="line">      this.$refs.LoginFormRef.validate(async valid =&gt; &#123;</span><br><span class="line">        console.log(this.loginFormRules)</span><br><span class="line">        //如果valid参数为true则验证通过</span><br><span class="line">        if (!valid) &#123;</span><br><span class="line">          return</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        //发送请求进行登录</span><br><span class="line">        const &#123; data: res &#125; = await this.$http.post(&#x27;login&#x27;, this.loginForm)</span><br><span class="line">        //   console.log(res);</span><br><span class="line">        if (res.meta.status !== 200) &#123;</span><br><span class="line">          return this.$message.error(&#x27;登录失败:&#x27; + res.meta.msg) //console.log(&quot;登录失败:&quot;+res.meta.msg)</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        this.$message.success(&#x27;登录成功&#x27;)</span><br><span class="line">        console.log(res)</span><br><span class="line">        //保存token</span><br><span class="line">        window.sessionStorage.setItem(&#x27;token&#x27;, res.data.token)</span><br><span class="line">        // 导航至/home</span><br><span class="line">        this.$router.push(&#x27;/home&#x27;)</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;style lang=&quot;less&quot; scoped&gt;</span><br><span class="line">.login_container &#123;</span><br><span class="line">  background-color: #2b5b6b;</span><br><span class="line">  height: 100%;</span><br><span class="line">&#125;</span><br><span class="line">.login_box &#123;</span><br><span class="line">  width: 450px;</span><br><span class="line">  height: 300px;</span><br><span class="line">  background: #fff;</span><br><span class="line">  border-radius: 3px;</span><br><span class="line">  position: absolute;</span><br><span class="line">  left: 50%;</span><br><span class="line">  top: 50%;</span><br><span class="line">  transform: translate(-50%, -50%);</span><br><span class="line">  .avatar_box &#123;</span><br><span class="line">    height: 130px;</span><br><span class="line">    width: 130px;</span><br><span class="line">    border: 1px solid #eee;</span><br><span class="line">    border-radius: 50%;</span><br><span class="line">    padding: 10px;</span><br><span class="line">    box-shadow: 0 0 10px #ddd;</span><br><span class="line">    position: absolute;</span><br><span class="line">    left: 50%;</span><br><span class="line">    transform: translate(-50%, -50%);</span><br><span class="line">    background-color: #fff;</span><br><span class="line">    img &#123;</span><br><span class="line">      width: 100%;</span><br><span class="line">      height: 100%;</span><br><span class="line">      border-radius: 50%;</span><br><span class="line">      background-color: #eee;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">.login_form &#123;</span><br><span class="line">  position: absolute;</span><br><span class="line">  bottom: 0;</span><br><span class="line">  width: 100%;</span><br><span class="line">  padding: 0 20px;</span><br><span class="line">  box-sizing: border-box;</span><br><span class="line">&#125;</span><br><span class="line">.btns &#123;</span><br><span class="line">  display: flex;</span><br><span class="line">  justify-content: flex-end;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/style&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1EE411B7SU">参考课程</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/vue-ui/" rel="tag"># vue-ui</a>
+              <a href="/tags/Element-UI/" rel="tag"># Element-UI</a>
+              <a href="/tags/git/" rel="tag"># git</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/08/19/Vue%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA(%E4%BA%8C)/" rel="prev" title="Vue项目搭建(二)">
+      <i class="fa fa-chevron-left"></i> Vue项目搭建(二)
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/08/19/%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98.md/" rel="next" title="背包问题">
+      背包问题 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Vue%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98-%E4%B8%80"><span class="nav-number">1.</span> <span class="nav-text">Vue项目实战(一)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E6%A6%82%E8%BF%B0"><span class="nav-number">1.1.</span> <span class="nav-text">项目概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-number">1.2.</span> <span class="nav-text">项目初始化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E5%88%9D%E5%A7%8B%E5%8C%96%E6%AD%A5%E9%AA%A4"><span class="nav-number">1.2.1.</span> <span class="nav-text">前端项目初始化步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%9A%E8%BF%87vue%E8%84%9A%E6%89%8B%E6%9E%B6%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">通过vue脚手架创建项目</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEVue%E8%B7%AF%E7%94%B1"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">配置Vue路由</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEElement-UI%E7%BB%84%E4%BB%B6%E5%BA%93"><span class="nav-number">1.2.1.3.</span> <span class="nav-text">配置Element-UI组件库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEaxios%E5%BA%93"><span class="nav-number">1.2.1.4.</span> <span class="nav-text">配置axios库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96git%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93"><span class="nav-number">1.2.1.5.</span> <span class="nav-text">初始化git远程仓库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B0%86%E6%9C%AC%E5%9C%B0%E9%A1%B9%E7%9B%AE%E6%89%98%E7%AE%A1%E5%88%B0Github%E6%88%96%E7%A0%81%E4%BA%91%E4%B8%AD"><span class="nav-number">1.2.1.6.</span> <span class="nav-text">将本地项目托管到Github或码云中</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%EF%BC%88-%E5%90%8E%E5%8F%B0%E9%A1%B9%E7%9B%AE%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE%EF%BC%89"><span class="nav-number">1.2.2.</span> <span class="nav-text">#（ 后台项目环境安装配置）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%99%BB%E5%BD%95%E9%80%80%E5%87%BA%E5%8A%9F%E8%83%BD"><span class="nav-number">1.3.</span> <span class="nav-text">登录退出功能</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%99%BB%E5%BD%95%E6%A6%82%E8%BF%B0"><span class="nav-number">1.3.1.</span> <span class="nav-text">登录概述</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E7%99%BB%E5%BD%95%E4%B8%9A%E5%8A%A1%E6%B5%81%E7%A8%8B"><span class="nav-number">1.3.1.1.</span> <span class="nav-text">1.登录业务流程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E7%99%BB%E5%BD%95%E4%B8%9A%E5%8A%A1%E7%9A%84%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF%E7%82%B9"><span class="nav-number">1.3.1.2.</span> <span class="nav-text">2.登录业务的相关技术点</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%99%BB%E5%BD%95%E5%8A%9F%E8%83%BD%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.3.2.</span> <span class="nav-text">登录功能实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%99%BB%E5%BD%95%E9%A1%B5%E9%9D%A2%E7%9A%84%E5%B8%83%E5%B1%80"><span class="nav-number">1.3.2.1.</span> <span class="nav-text">登录页面的布局</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0element-ui%E7%9A%84%E8%A1%A8%E5%8D%95%E7%BB%84%E4%BB%B6"><span class="nav-number">1.3.2.1.1.</span> <span class="nav-text">添加element-ui的表单组件</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E7%AC%AC%E4%B8%89%E6%96%B9%E5%AD%97%E4%BD%93%E5%9B%BE%E6%A0%87"><span class="nav-number">1.3.2.1.2.</span> <span class="nav-text">添加第三方字体图标</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E8%A1%A8%E5%8D%95%E9%AA%8C%E8%AF%81%E7%9A%84%E6%AD%A5%E9%AA%A4"><span class="nav-number">1.3.2.2.</span> <span class="nav-text">添加表单验证的步骤</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E9%87%8D%E7%BD%AE%E6%8C%89%E9%92%AE%E7%9A%84%E5%8A%9F%E8%83%BD"><span class="nav-number">1.3.2.3.</span> <span class="nav-text">实现重置按钮的功能</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%99%BB%E9%99%86%E5%89%8D%E8%A1%A8%E5%8D%95%E6%95%B0%E6%8D%AE%E7%9A%84%E9%A2%84%E9%AA%8C%E8%AF%81"><span class="nav-number">1.3.2.4.</span> <span class="nav-text">登陆前表单数据的预验证</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%BC%E5%85%A5axios%E4%BB%A5%E5%8F%91%E9%80%81ajax%E8%AF%B7%E6%B1%82"><span class="nav-number">1.3.2.5.</span> <span class="nav-text">导入axios以发送ajax请求</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEMessage%E5%85%A8%E5%B1%80%E5%BC%B9%E6%A1%86%E7%BB%84%E4%BB%B6"><span class="nav-number">1.3.2.5.1.</span> <span class="nav-text">配置Message全局弹框组件</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%99%BB%E5%BD%95%E6%88%90%E5%8A%9F%E4%B9%8B%E5%90%8E%E7%9A%84%E6%93%8D%E4%BD%9C"><span class="nav-number">1.3.2.6.</span> <span class="nav-text">登录成功之后的操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E8%B7%AF%E7%94%B1%E5%AE%88%E5%8D%AB"><span class="nav-number">1.3.2.7.</span> <span class="nav-text">添加路由守卫</span></a></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="gezi_lzq"
+      src="https://gitee.com/gezilzq/image-host/raw/master/img/D4B9D508FC64873D807D11764FBEEDAA.jpg">
+  <p class="site-author-name" itemprop="name">gezi_lzq</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/gezi-lzq" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;gezi-lzq" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/gezilzq" title="Gitee → https:&#x2F;&#x2F;gitee.com&#x2F;gezilzq" rel="noopener" target="_blank"><i class="fa fa-fw fa-Gitee"></i>Gitee</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.acwing.com/user/myspace/index/58842/" title="Acwing → https:&#x2F;&#x2F;www.acwing.com&#x2F;user&#x2F;myspace&#x2F;index&#x2F;58842&#x2F;" rel="noopener" target="_blank"><i class="fa fa-fw fa-Acwing"></i>Acwing</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">gezi_lzq</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
