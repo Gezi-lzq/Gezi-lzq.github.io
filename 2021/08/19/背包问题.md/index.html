@@ -227,7 +227,15 @@
 </blockquote>
 <span id="more"></span>
 
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">01背包问题Dp--&gt;A(&quot;状态表示 f(i,j)&quot;)</span><br><span class="line">A--&gt;C(&quot;集合 (所有选法)&quot;)</span><br><span class="line">C--&gt;E(&quot;只从前 i 个物品选&quot;)</span><br><span class="line">C--&gt;F(&quot;选出物品总体积不超过 j&quot;)</span><br><span class="line">A--&gt;D(&quot;属性 Max&quot;)</span><br><span class="line">01背包问题Dp--&gt;B(状态计算)</span><br><span class="line">B--&gt;x(&quot;集合的划分（第i个物品选0个或者1个）&quot;)</span><br><span class="line">x--&gt;y(&quot; f(i,j) =Max( f( i-1 , j) , f( i-1 , j-vi ) + wi)&quot;)</span><br></pre></td></tr></table></figure>
+<pre class="mermaid">graph LR
+01背包问题Dp-->A("状态表示 f(i,j)")
+A-->C("集合 (所有选法)")
+C-->E("只从前 i 个物品选")
+C-->F("选出物品总体积不超过 j")
+A-->D("属性 Max")
+01背包问题Dp-->B(状态计算)
+B-->x("集合的划分（第i个物品选0个或者1个）")
+x-->y(" f(i,j) =Max( f( i-1 , j) , f( i-1 , j-vi ) + wi)")</pre>
 
 <p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210819122814805.png" alt="image-20210819122814805"></p>
 <ul>
@@ -256,7 +264,14 @@
 <p>第 ii 种物品的体积是 vi，价值是 wi。</p>
 <p>求解将哪些物品装入背包，可使这些物品的总体积不超过背包容量，且总价值最大。<br>输出最大价值。</p>
 </blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">完全背包问题Dp--&gt;A(&quot;状态表示 f(i,j)&quot;)</span><br><span class="line">A--&gt;C(&quot;集合 (所有选法)&quot;)</span><br><span class="line">C--&gt;E(&quot;只从前 i 个物品选&quot;)</span><br><span class="line">C--&gt;F(&quot;选出物品总体积不超过 j&quot;)</span><br><span class="line">A--&gt;D(&quot;属性 Max&quot;)</span><br><span class="line">完全背包问题Dp--&gt;B(状态计算)</span><br><span class="line">B--&gt;x(&quot;集合的划分（第i个物品选0个，1个，2个…… k-1个,k个）&quot;)</span><br></pre></td></tr></table></figure>
+<pre class="mermaid">graph LR
+完全背包问题Dp-->A("状态表示 f(i,j)")
+A-->C("集合 (所有选法)")
+C-->E("只从前 i 个物品选")
+C-->F("选出物品总体积不超过 j")
+A-->D("属性 Max")
+完全背包问题Dp-->B(状态计算)
+B-->x("集合的划分（第i个物品选0个，1个，2个…… k-1个,k个）")</pre>
 
 <ul>
 <li><p><code>(i,j)</code>为从前<code>i</code>个物品中选,总体积不超过<code>j</code>的所有选法集合</p>
@@ -299,7 +314,15 @@
 <p>求解将哪些物品装入背包，可使物品体积总和不超过背包容量，且价值总和最大。<br>输出最大价值。</p>
 </blockquote>
 <h3 id="朴素算法"><a href="#朴素算法" class="headerlink" title="朴素算法"></a>朴素算法</h3><p>类似于完全背包问题</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">多重背包问题Dp--&gt;A(&quot;状态表示 f(i,j)&quot;)</span><br><span class="line">A--&gt;C(&quot;集合 (所有选法)&quot;)</span><br><span class="line">C--&gt;E(&quot;只从前 i 个物品选&quot;)</span><br><span class="line">C--&gt;F(&quot;选出物品总体积不超过 j&quot;)</span><br><span class="line">A--&gt;D(&quot;属性 Max&quot;)</span><br><span class="line">多重背包问题Dp--&gt;B(状态计算)</span><br><span class="line">B--&gt;x(&quot;集合的划分（第i个物品选k个）k&lt;=si&quot;)</span><br><span class="line">x--&gt;y(&quot; f(i,j) =Max( f( i-1 , j-k*vi ) + k*wi)  k&lt;=si&quot;)</span><br></pre></td></tr></table></figure>
+<pre class="mermaid">graph LR
+多重背包问题Dp-->A("状态表示 f(i,j)")
+A-->C("集合 (所有选法)")
+C-->E("只从前 i 个物品选")
+C-->F("选出物品总体积不超过 j")
+A-->D("属性 Max")
+多重背包问题Dp-->B(状态计算)
+B-->x("集合的划分（第i个物品选k个）k<=si")
+x-->y(" f(i,j) =Max( f( i-1 , j-k*vi ) + k*wi)  k<=si")</pre>
 
 <ul>
 <li><code>(i,j)</code>为从前<code>i</code>个物品中选,总体积不超过<code>j</code>的所有选法集合</li>
@@ -335,7 +358,15 @@
 <p>输出最大价值。</p>
 </blockquote>
 <p>算法思路于之前多重背包问题的朴素算法较为类似</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">分组背包问题Dp--&gt;A(&quot;状态表示 f(i,j)&quot;)</span><br><span class="line">A--&gt;C(&quot;集合 (所有选法)&quot;)</span><br><span class="line">C--&gt;E(&quot;只从前 i 组中选物品&quot;)</span><br><span class="line">C--&gt;F(&quot;选出物品总体积不超过 j&quot;)</span><br><span class="line">A--&gt;D(&quot;属性 Max&quot;)</span><br><span class="line">分组背包问题Dp--&gt;B(状态计算)</span><br><span class="line">B--&gt;X(&quot;集合的划分（第i组物品选第k个）&quot;)</span><br><span class="line">X--&gt;y(&quot; f(i,j) =Max( f( i-1 , j-k*v[i][k] ) + k*w[i][k])&quot;)</span><br></pre></td></tr></table></figure>
+<pre class="mermaid">graph LR
+分组背包问题Dp-->A("状态表示 f(i,j)")
+A-->C("集合 (所有选法)")
+C-->E("只从前 i 组中选物品")
+C-->F("选出物品总体积不超过 j")
+A-->D("属性 Max")
+分组背包问题Dp-->B(状态计算)
+B-->X("集合的划分（第i组物品选第k个）")
+X-->y(" f(i,j) =Max( f( i-1 , j-k*v[i][k] ) + k*w[i][k])")</pre>
 
 <ul>
 <li>状态计算公式<code>f(i,j) =Max( f( i-1 , j-k*v[i][k] ) + k*w[i][k])</code></li>
