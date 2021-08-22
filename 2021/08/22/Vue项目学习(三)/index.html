@@ -35,7 +35,7 @@
 <meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822153519927.png">
 <meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822153623043.png">
 <meta property="article:published_time" content="2021-08-21T16:00:00.000Z">
-<meta property="article:modified_time" content="2021-08-22T07:42:32.930Z">
+<meta property="article:modified_time" content="2021-08-22T11:37:52.231Z">
 <meta property="article:author" content="gezi_lzq">
 <meta property="article:tag" content="vue-ui">
 <meta property="article:tag" content="Element-UI">
@@ -174,7 +174,7 @@
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/22/Vue%E9%A1%B9%E7%9B%AE%E5%AD%A6%E4%B9%A0(%E4%B8%89)/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/D4B9D508FC64873D807D11764FBEEDAA.jpg">
+      <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
       <meta itemprop="name" content="gezi_lzq">
       <meta itemprop="description" content="Blog of lizhenqi ">
     </span>
@@ -195,7 +195,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2021-08-22 00:00:00 / Modified: 15:42:32" itemprop="dateCreated datePublished" datetime="2021-08-22T00:00:00+08:00">2021-08-22</time>
+              <time title="Created: 2021-08-22 00:00:00 / Modified: 19:37:52" itemprop="dateCreated datePublished" datetime="2021-08-22T00:00:00+08:00">2021-08-22</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -227,6 +227,8 @@
 <p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210821170830269.png" alt="image-20210821170830269"></p>
 <p>并在<code>router.js</code>添加对应的路由规则</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Rights <span class="keyword">from</span> <span class="string">&#x27;../components/power/Rights.vue&#x27;</span></span><br><span class="line">......</span><br><span class="line">      <span class="attr">path</span>: <span class="string">&#x27;/home&#x27;</span>, <span class="attr">component</span>: Home, <span class="attr">redirect</span>: <span class="string">&#x27;/welcome&#x27;</span>, <span class="attr">children</span>: [</span><br><span class="line">        &#123; <span class="attr">path</span>: <span class="string">&quot;/welcome&quot;</span>, <span class="attr">component</span>: Welcome &#125;,</span><br><span class="line">        &#123; <span class="attr">path</span>: <span class="string">&quot;/users&quot;</span>, <span class="attr">component</span>: Users &#125;,</span><br><span class="line">        &#123; <span class="attr">path</span>: <span class="string">&quot;/rights&quot;</span>, <span class="attr">component</span>: Rights &#125;</span><br><span class="line">      ]</span><br><span class="line">......</span><br></pre></td></tr></table></figure>
+
+<span id="more"></span>
 
 <h3 id="添加面包屑导航"><a href="#添加面包屑导航" class="headerlink" title="添加面包屑导航"></a>添加面包屑导航</h3><p>在Rights.vue中添加面包屑组件展示导航路径</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 面包屑导航区域 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">el-breadcrumb</span> <span class="attr">separator-class</span>=<span class="string">&quot;el-icon-arrow-right&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">el-breadcrumb-item</span> <span class="attr">:to</span>=<span class="string">&quot;&#123; path: &#x27;/home&#x27; &#125;&quot;</span>&gt;</span>首页<span class="tag">&lt;/<span class="name">el-breadcrumb-item</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">el-breadcrumb-item</span>&gt;</span>权限管理<span class="tag">&lt;/<span class="name">el-breadcrumb-item</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">el-breadcrumb-item</span>&gt;</span>权限列表<span class="tag">&lt;/<span class="name">el-breadcrumb-item</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">el-breadcrumb</span>&gt;</span></span><br></pre></td></tr></table></figure>
@@ -488,7 +490,7 @@ E.将master代码推送到码云<br>   <code> git push</code></li>
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <img class="site-author-image" itemprop="image" alt="gezi_lzq"
-      src="https://gitee.com/gezilzq/image-host/raw/master/img/D4B9D508FC64873D807D11764FBEEDAA.jpg">
+      src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
   <p class="site-author-name" itemprop="name">gezi_lzq</p>
   <div class="site-description" itemprop="description">Blog of lizhenqi </div>
 </div>
