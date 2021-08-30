@@ -182,7 +182,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2021-08-30 00:00:00 / Modified: 17:11:33" itemprop="dateCreated datePublished" datetime="2021-08-30T00:00:00+08:00">2021-08-30</time>
+              <time title="Created: 2021-08-30 00:00:00 / Modified: 17:13:57" itemprop="dateCreated datePublished" datetime="2021-08-30T00:00:00+08:00">2021-08-30</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -211,35 +211,14 @@
 <p>第二行包含 N 个整数，表示完整序列。</p>
 <h4 id="输出格式"><a href="#输出格式" class="headerlink" title="输出格式"></a>输出格式</h4><p>输出一个整数，表示最大长度。</p>
 </blockquote>
-<h3 id="线性DP"><a href="#线性DP" class="headerlink" title="线性DP"></a>线性DP</h3><pre class="mermaid">graph LR
-Dp-->a("状态表示f[i]")
-Dp-->状态计算
-a-->B(以第 i 个数字结尾的所有上升子序列组成的集合)
-a-->属性:Max
-状态计算-->c("f[i]=max(f[j]+1)")
-c-->X("i>j并且a[i]>a[j]")</pre>
-
-
-
-<p><code>f[i]</code>表示的为以<code>a[i]</code>结尾的上升序列集合中，最长的序列的长度的值。</p>
-<p>以<code>a[i]</code>结尾的上升序列集合中，最后一位<code>a[i]</code>是固定的，按照倒数第二位可以划分（以<code>a[i]</code>结尾的上升序列集合）</p>
-<p><code>i</code>之前 <code>a[j]</code> 的不是所有都可以作为<code>a[i]</code>的倒数第二位，必须满足<code>a[j]&lt;a[i]</code>，此时，<code>f[j]</code>对应的序列集合为<code>f[i]</code>的子集。</p>
-<p>所以遍历<code>0-(i-1)</code>的所有数，选择可以作为倒数第二位的数，并且通过它对应的集合，来更新<code>f[i]</code>对应的最大长度<code>f[i]=max(f[i],f[j]+1)</code>。（<code>f[j]</code>表示以<code>a[j]</code>为结尾的上升序列集合内，序列长度最大的值）</p>
-<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210830145312019.png" alt="image-20210830145312019"></p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;bits/stdc++.h&gt;</span> </span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> N = <span class="number">1010</span>;</span><br><span class="line"><span class="keyword">int</span> n;</span><br><span class="line"><span class="keyword">int</span> a[N],f[N];</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    cin&gt;&gt;n;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;i++)cin&gt;&gt;a[i];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;i++)&#123;</span><br><span class="line">        f[i]=<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">1</span>;j&lt;i;j++)<span class="comment">//遍历倒数第二个数</span></span><br><span class="line">            <span class="keyword">if</span>(a[j]&lt;a[i])<span class="comment">//满足条件</span></span><br><span class="line">                f[i]=<span class="built_in">max</span>(f[i],f[j]+<span class="number">1</span>);<span class="comment">//更新f[i]</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> res=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">        res=<span class="built_in">max</span>(res,f[i]);</span><br><span class="line">    cout&lt;&lt;res&lt;&lt;endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="优化加二分"><a href="#优化加二分" class="headerlink" title="优化加二分"></a>优化加二分</h3><p>在上面的算法中 ，<code>f[i]</code>这个数组记录了以第<code>i</code>位数结尾对应的上升序列的最长长度。但是这个数组的值是根据<code>a[i]</code>来变化的，没有单调性，所以要全部遍历一下，十分耗时。</p>
-<p>所以考虑通过其他方法记录这个，使得可以更快的找到<code>a[i]</code>刚好可以结合的那个序列集合，不需要<code>0-(i-1)</code>挨个遍历,<code>if</code>,取<code>max</code>。</p>
-<p>所以考虑通过   可以组成的序列长度  为索引来记录这些状态，</p>
-<p><code>q[i]</code>     ：表示 长度为<code>i</code>的所有序列组成的集合，存储的值为这些序列集合中最后一位的最小值</p>
-<p>选择这样一个数来储存是因为 末尾数字越小表示后面可以连接的数字越多</p>
-<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210830162322786.png" alt="image-20210830162322786"></p>
-<p>同时<code>q[i]</code>也具有单调上升的性质，自证（举个反例就行）。</p>
-<p>所以对于<code>a[i]</code>去查找一个所能连接的序列，使得称为以<code>a[i]</code>结尾的最长的序列，只需要找到<code>q[j]&lt;a[i] &amp;&amp; q[j+1]&gt;a[i]</code>， 此时<code>q[i]</code>对应的序列就是<code>a[i]</code>所寻找的。</p>
-<p>而查找<code>q[j]&lt;a[i] &amp;&amp; q[j+1]&gt;a[i]</code>只需要二分查询，找边界点就行。</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> N = <span class="number">1000010</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> a[N];</span><br><span class="line"><span class="keyword">int</span> q[N];<span class="comment">//   [i]表示 长度为i的所有序列  q[i]对应的值表示 长度为i的所有序列的末尾数字，最小的那个数字</span></span><br><span class="line">          <span class="comment">//（末尾数字越小表示后面可以连接的数字越多）</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n,len;</span><br><span class="line">    cin&gt;&gt;n;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;i++)cin&gt;&gt;a[i];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//a[i]选择合适它去连接的序列</span></span><br><span class="line">        <span class="keyword">int</span> l=<span class="number">0</span>,r=len;</span><br><span class="line">        <span class="keyword">while</span>(l&lt;r)<span class="comment">//二分查找适合它去连接且长度最长的序列</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">int</span> mid=l+r+<span class="number">1</span>&gt;&gt;<span class="number">1</span>;</span><br><span class="line">            <span class="keyword">if</span>(q[mid]&lt;a[i])l=mid;</span><br><span class="line">            <span class="keyword">else</span> r=mid<span class="number">-1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        len=<span class="built_in">max</span>(len,r+<span class="number">1</span>);<span class="comment">//判断a[i]凑成的这个序列是不是比之前的序列都要长</span></span><br><span class="line">        </span><br><span class="line">        q[r+<span class="number">1</span>]=a[i];<span class="comment">//把a[i]凑成的序列也加入进去，看看后面有没有元素能接着连接</span></span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>,len);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/08/30/%E6%9C%80%E9%95%BF%E4%B8%8A%E5%8D%87%E5%AD%90%E5%BA%8F%E5%88%97/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
