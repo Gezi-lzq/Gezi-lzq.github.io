@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="参考学习的项目 环境配置在Anaconda中创建一个python&#x3D;3.7的环境 可在pycharm内直接新建环境，也可以通过命令行的方式 conda create -n your_env_name python&#x3D;x.x 激活或者切换虚拟环境  activate your_env_name  然后对此虚拟环境中安装额外的包 pip install cvzone">
+<meta property="og:type" content="article">
+<meta property="og:title" content="通过OpenCV实现虚拟键盘">
+<meta property="og:url" content="http://example.com/2021/08/23/%E9%80%9A%E8%BF%87OpenCV%E5%AE%9E%E7%8E%B0%E8%99%9A%E6%8B%9F%E9%94%AE%E7%9B%98/index.html">
+<meta property="og:site_name" content="Gezi&#39;s blog">
+<meta property="og:description" content="参考学习的项目 环境配置在Anaconda中创建一个python&#x3D;3.7的环境 可在pycharm内直接新建环境，也可以通过命令行的方式 conda create -n your_env_name python&#x3D;x.x 激活或者切换虚拟环境  activate your_env_name  然后对此虚拟环境中安装额外的包 pip install cvzone">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210823121359108.png">
+<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210823153526997.png">
+<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210823155733808.png">
+<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210823172514509.png">
+<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210823181154991.png">
+<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210823184647094.png">
+<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210823190040051.png">
+<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210823190148199.png">
+<meta property="article:published_time" content="2021-08-22T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-08-23T13:27:39.632Z">
+<meta property="article:author" content="gezi_lzq">
+<meta property="article:tag" content="OpenCv">
+<meta property="article:tag" content="mediapica">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210823121359108.png">
+
+<link rel="canonical" href="http://example.com/2021/08/23/%E9%80%9A%E8%BF%87OpenCV%E5%AE%9E%E7%8E%B0%E8%99%9A%E6%8B%9F%E9%94%AE%E7%9B%98/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>通过OpenCV实现虚拟键盘 | Gezi's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Gezi's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/23/%E9%80%9A%E8%BF%87OpenCV%E5%AE%9E%E7%8E%B0%E8%99%9A%E6%8B%9F%E9%94%AE%E7%9B%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
+      <meta itemprop="name" content="gezi_lzq">
+      <meta itemprop="description" content="Blog of lizhenqi ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gezi's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          通过OpenCV实现虚拟键盘
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-08-23 00:00:00 / Modified: 21:27:39" itemprop="dateCreated datePublished" datetime="2021-08-23T00:00:00+08:00">2021-08-23</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" itemprop="url" rel="index"><span itemprop="name">人工智能</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=jzXZVFqEE2I&list=RDCMUCYUjYU5FveRAscQ8V21w81A&start_radio=1">参考学习的项目</a></p>
+<h2 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h2><p>在Anaconda中创建一个<code>python=3.7</code>的环境</p>
+<p>可在pycharm内直接新建环境，也可以通过命令行的方式</p>
+<p><code>conda create -n your_env_name python=x.x</code></p>
+<p>激活或者切换虚拟环境  <code>activate your_env_name</code></p>
+<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210823121359108.png" alt="image-20210823121359108"></p>
+<p>然后对此虚拟环境中安装额外的包</p>
+<p><code>pip install cvzone</code></p>
+<span id="more"></span>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">Collecting cvzone</span><br><span class="line">  Using cached cvzone-1.4.1.tar.gz (11 kB)</span><br><span class="line">Collecting opencv-python</span><br><span class="line">  Downloading opencv_python-4.5.3.56-cp37-cp37m-win_amd64.whl (34.9 MB)</span><br><span class="line">     |████████████████████████████████| 34.9 MB 1.1 MB/s</span><br><span class="line">Collecting numpy</span><br><span class="line">  Downloading numpy-1.21.2-cp37-cp37m-win_amd64.whl (14.0 MB)</span><br><span class="line">     |████████████████████████████████| 14.0 MB 1.1 MB/s</span><br><span class="line">Building wheels for collected packages: cvzone</span><br><span class="line">  Building wheel for cvzone (setup.py) ... done</span><br><span class="line">  Created wheel for cvzone: filename=cvzone-1.4.1-py3-none-any.whl size=17681 sha256=b9f8a2d3a160b07195f96790b8a4a8aa637bbba78d9de84e60467749947f9001</span><br><span class="line">  Stored in directory: c:\users\lzq\appdata\local\pip\cache\wheels\7d\c8\ae\0e2ab1bda96471f8c6607160b1c96f76a963d3ef846d1bb9bb</span><br><span class="line">Successfully built cvzone</span><br><span class="line">Installing collected packages: numpy, opencv-python, cvzone</span><br><span class="line">Successfully installed cvzone-1.4.1 numpy-1.21.2 opencv-python-4.5.3.56</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><code>pip install mediapipe</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">Collecting absl-py</span><br><span class="line">  Using cached absl_py-0.13.0-py3-none-any.whl (132 kB)</span><br><span class="line">Collecting opencv-contrib-python</span><br><span class="line">  Downloading opencv_contrib_python-4.5.3.56-cp37-cp37m-win_amd64.whl (41.8 MB)</span><br><span class="line">     |████████████████████████████████| 41.8 MB 3.2 kB/s</span><br><span class="line">Requirement already satisfied: numpy in f:\environment\anaconda\envs\cv37\lib\site-packages (from mediapipe) (1.21.2)</span><br><span class="line">Collecting six</span><br><span class="line">  Using cached six-1.16.0-py2.py3-none-any.whl (11 kB)</span><br><span class="line">Requirement already satisfied: wheel in f:\environment\anaconda\envs\cv37\lib\site-packages (from mediapipe) (0.37.0)</span><br><span class="line">Collecting protobuf&gt;=3.11.4</span><br><span class="line">  Downloading protobuf-3.17.3-cp37-cp37m-win_amd64.whl (909 kB)</span><br><span class="line">     |████████████████████████████████| 909 kB 3.3 MB/s</span><br><span class="line">Collecting attrs&gt;=19.1.0</span><br><span class="line">  Downloading attrs-21.2.0-py2.py3-none-any.whl (53 kB)</span><br><span class="line">     |████████████████████████████████| 53 kB 943 kB/s</span><br><span class="line">Collecting matplotlib</span><br><span class="line">  Downloading matplotlib-3.4.3-cp37-cp37m-win_amd64.whl (7.2 MB)</span><br><span class="line">     |████████████████████████████████| 7.2 MB 939 kB/s</span><br><span class="line">Collecting kiwisolver&gt;=1.0.1</span><br><span class="line">  Downloading kiwisolver-1.3.1-cp37-cp37m-win_amd64.whl (51 kB)</span><br><span class="line">     |████████████████████████████████| 51 kB 1.3 MB/s</span><br><span class="line">Collecting python-dateutil&gt;=2.7</span><br><span class="line">  Using cached python_dateutil-2.8.2-py2.py3-none-any.whl (247 kB)</span><br><span class="line">Collecting pyparsing&gt;=2.2.1</span><br><span class="line">  Downloading pyparsing-2.4.7-py2.py3-none-any.whl (67 kB)</span><br><span class="line">     |████████████████████████████████| 67 kB 823 kB/s</span><br><span class="line">Collecting pillow&gt;=6.2.0</span><br><span class="line">  Downloading Pillow-8.3.1-1-cp37-cp37m-win_amd64.whl (3.2 MB)</span><br><span class="line">     |████████████████████████████████| 3.2 MB 1.6 MB/s</span><br><span class="line">Collecting cycler&gt;=0.10</span><br><span class="line">  Downloading cycler-0.10.0-py2.py3-none-any.whl (6.5 kB)</span><br><span class="line">Installing collected packages: six, python-dateutil, pyparsing, pillow, kiwisolver, cycler, protobuf, opencv-contrib-python, matplotlib, attrs, absl-py, mediapipe</span><br><span class="line">Successfully installed absl-py-0.13.0 attrs-21.2.0 cycler-0.10.0 kiwisolver-1.3.1 matplotlib-3.4.3 mediapipe-0.8.7 opencv-contrib-python-4.5.3.56 pillow-8.3.1 prot</span><br><span class="line">obuf-3.17.3 pyparsing-2.4.7 python-dateutil-2.8.2 six-1.16.0</span><br></pre></td></tr></table></figure>
+
+<h2 id="项目实现"><a href="#项目实现" class="headerlink" title="项目实现"></a>项目实现</h2><h3 id="打开摄像"><a href="#打开摄像" class="headerlink" title="打开摄像"></a>打开摄像</h3><p>导入<code>opencv</code>库，并创造一个<code>VideoCapture</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> cv2</span><br><span class="line"></span><br><span class="line">cap = cv2.VideoCapture(<span class="number">0</span>)<span class="comment"># 0为webcam id</span></span><br><span class="line"><span class="comment">#通常为默认值，但为了有足够空间放置键盘键，所以进行设置</span></span><br><span class="line"><span class="comment"># HD分辨率</span></span><br><span class="line">cap.<span class="built_in">set</span>(<span class="number">3</span>, <span class="number">1280</span>)  <span class="comment"># 设置宽度</span></span><br><span class="line">cap.<span class="built_in">set</span>(<span class="number">4</span>, <span class="number">720</span>)  <span class="comment"># 设定高度</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    success, img = cap.read()</span><br><span class="line">    cv2.imshow(<span class="string">&quot;Image&quot;</span>, img)</span><br><span class="line">    cv2.waitKey(<span class="number">1</span>)</span><br><span class="line">    </span><br></pre></td></tr></table></figure>
+
+<p>运行后应该可以顺利的打开一个窗口，展现电脑摄像头拍到的画面。</p>
+<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210823153526997.png" alt="image-20210823153526997"></p>
+<p>（我的电脑摄像头太渣了，所以set的分辨率完全配不上）</p>
+<h3 id="跟踪手部"><a href="#跟踪手部" class="headerlink" title="跟踪手部"></a>跟踪手部</h3><p>首先导入并创建手部跟踪模块</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> cvzone.HandTrackingModule <span class="keyword">import</span> HandDetector</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建检测器 置信度调为0.8（默认0.5）</span></span><br><span class="line">detector=HandDetector(detectionCon=<span class="number">0.8</span>)</span><br></pre></td></tr></table></figure>
+
+<p>在while循环内识别标注</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    success, img = cap.read()</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#识别</span></span><br><span class="line">    img = detector.findHands(img)</span><br><span class="line">    lmList, bboxInfo = detector.findPosition(img)</span><br><span class="line">    </span><br><span class="line">    cv2.imshow(<span class="string">&quot;Image&quot;</span>, img)</span><br><span class="line">    cv2.waitKey(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>此时再次运行</p>
+<img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210823155733808.png" alt="image-20210823155733808" style="zoom: 67%;" />
+
+<p>此时已经可以识别手部，并且标注出来了。</p>
+<h3 id="创建按键"><a href="#创建按键" class="headerlink" title="创建按键"></a>创建按键</h3><p>屏幕中的按键有它的位置，大小，颜色，文字等属性，如果每一个都自己使用<code>cv2.rectangle()</code>与<code>cv2.putText</code>来填写太过麻烦，所以考虑创建一个类来容纳按键的这些属性，并由一个列表来管理这些按键</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Button</span>():</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, pos, text, size=[<span class="number">42</span>, <span class="number">42</span>]</span>):</span></span><br><span class="line">        self.pos = pos</span><br><span class="line">        self.text = text</span><br><span class="line">        self.size = size</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">draw</span>(<span class="params">self, img, color=(<span class="params"><span class="number">112</span>, <span class="number">161</span>, <span class="number">255</span></span>)</span>):</span></span><br><span class="line">        x, y = self.pos</span><br><span class="line">        w, h = self.size</span><br><span class="line">        cv2.rectangle(img, self.pos, (x + w, y + h), color, cv2.FILLED)</span><br><span class="line">        cv2.putText(img, self.text, (x + <span class="number">13</span>, y + <span class="number">23</span>), cv2.FONT_HERSHEY_PLAIN, <span class="number">1.5</span>, (<span class="number">255</span>, <span class="number">255</span>, <span class="number">255</span>), <span class="number">1</span>)</span><br><span class="line">        <span class="keyword">return</span> img</span><br></pre></td></tr></table></figure>
+
+<p>键盘字符</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">keys = [[<span class="string">&quot;Q&quot;</span>, <span class="string">&quot;W&quot;</span>, <span class="string">&quot;E&quot;</span>, <span class="string">&quot;R&quot;</span>, <span class="string">&quot;T&quot;</span>, <span class="string">&quot;Y&quot;</span>, <span class="string">&quot;U&quot;</span>, <span class="string">&quot;I&quot;</span>, <span class="string">&quot;O&quot;</span>, <span class="string">&#x27;P&#x27;</span>, <span class="string">&quot;[&quot;</span>, <span class="string">&#x27;]&#x27;</span>],</span><br><span class="line">        [<span class="string">&quot;A&quot;</span>, <span class="string">&quot;S&quot;</span>, <span class="string">&quot;D&quot;</span>, <span class="string">&quot;F&quot;</span>, <span class="string">&quot;G&quot;</span>, <span class="string">&quot;H&quot;</span>, <span class="string">&quot;J&quot;</span>, <span class="string">&quot;K&quot;</span>, <span class="string">&quot;L&quot;</span>, <span class="string">&quot;;&quot;</span>, <span class="string">&quot;&#x27;&quot;</span>],</span><br><span class="line">        [<span class="string">&quot;Z&quot;</span>, <span class="string">&quot;X&quot;</span>, <span class="string">&quot;C&quot;</span>, <span class="string">&quot;V&quot;</span>, <span class="string">&quot;B&quot;</span>, <span class="string">&quot;N&quot;</span>, <span class="string">&#x27;M&#x27;</span>, <span class="string">&quot;,&quot;</span>, <span class="string">&quot;.&quot;</span>, <span class="string">&quot;/&quot;</span>]]</span><br></pre></td></tr></table></figure>
+
+<p>绘制</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">buttonList = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(keys)):</span><br><span class="line">    <span class="keyword">for</span> j, key <span class="keyword">in</span> <span class="built_in">enumerate</span>(keys[i]):</span><br><span class="line">        buttonList.append(Button([<span class="number">50</span> * j + <span class="number">10</span>+ i*<span class="number">12</span>, <span class="number">60</span>+<span class="number">50</span> * i], key))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">AllDraw</span>(<span class="params">img</span>):</span></span><br><span class="line">    <span class="keyword">for</span> btn <span class="keyword">in</span> buttonList:</span><br><span class="line">        img = btn.draw(img)</span><br><span class="line">    <span class="keyword">return</span> img</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>然后将<code>img=AllDraw(img)</code>加入循环之中</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    success, img = cap.read()</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#识别</span></span><br><span class="line">    img = detector.findHands(img)</span><br><span class="line">    lmList, bboxInfo = detector.findPosition(img)</span><br><span class="line">    <span class="comment">#绘制键盘</span></span><br><span class="line">    img=AllDraw(img)</span><br><span class="line">    </span><br><span class="line">    cv2.imshow(<span class="string">&quot;Image&quot;</span>, img)</span><br><span class="line">    cv2.waitKey(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<p>则可出现一个键盘</p>
+<h3 id="检测手指"><a href="#检测手指" class="headerlink" title="检测手指"></a>检测手指</h3><p>通过mediapipe获得手势信息  <a target="_blank" rel="noopener" href="https://google.github.io/mediapipe/solutions/hand">相关链接</a></p>
+<p>通过检测8号的位置，来判断食指尖停留在哪个键上</p>
+<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210823172514509.png" alt="image-20210823172514509"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    success, img = cap.read()</span><br><span class="line">    img = cv2.flip(img, <span class="number">1</span>)</span><br><span class="line">    img = detector.findHands(img)</span><br><span class="line">    lmList, bboxInfo = detector.findPosition(img)</span><br><span class="line"></span><br><span class="line">    img = AllDraw(img)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> lmList:</span><br><span class="line">        <span class="keyword">for</span> button <span class="keyword">in</span> buttonList:</span><br><span class="line">            x, y = button.pos</span><br><span class="line">            w, h = button.size</span><br><span class="line">            deviation=<span class="number">1</span></span><br><span class="line">            <span class="keyword">if</span> x - deviation &lt; lmList[<span class="number">8</span>][<span class="number">0</span>] &lt; x + w + deviation \</span><br><span class="line">                    <span class="keyword">and</span> y - deviation &lt; lmList[<span class="number">8</span>][<span class="number">1</span>] &lt; y + h + deviation:</span><br><span class="line">                img = button.draw(img, (<span class="number">12</span>, <span class="number">95</span>, <span class="number">255</span>))</span><br><span class="line">    cv2.imshow(<span class="string">&quot;Image&quot;</span>, img)</span><br><span class="line">    cv2.waitKey(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210823181154991.png" alt="image-20210823181154991"></p>
+<h3 id="点击按键"><a href="#点击按键" class="headerlink" title="点击按键"></a>点击按键</h3><p>手指的点击只是轻微完全，判断起来较为麻烦，干扰较多</p>
+<p>因此可以选择其他方式来替换点击</p>
+<p>我选择了大拇指 4号点 轻碰 5号点位置 视为一次点击</p>
+<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210823184647094.png" alt="image-20210823184647094"></p>
+<p>通过<code>l,_,_=detector.findDistance(4,5,img,draw=False)</code>判断l的长度，如<code>l&lt;20</code>是视为一次点击(可以添加变色效果)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">l,_,_=detector.findDistance(<span class="number">4</span>,<span class="number">5</span>,img,draw=<span class="literal">False</span>)</span><br><span class="line">	<span class="keyword">if</span> l&lt;<span class="number">20</span> :</span><br><span class="line">		img = button.draw(img, (<span class="number">34</span>,<span class="number">126</span>,<span class="number">230</span>))</span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210823190040051.png" alt="image-20210823190040051"></p>
+<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210823190148199.png" alt="image-20210823190148199"></p>
+<p>当然，也可以使用别的方式来代替点击，比如食指与中指并在一起视为点击，等（因为我的按键设置太小所以没这样判断）</p>
+<p>其中有一个需要注意的点，就是点击过程中可能会一下触发多次</p>
+<p>有两种方式</p>
+<ul>
+<li>一种是加点判断逻辑，当<code>l&lt;20</code>后变为<code>l&gt;20</code>视为触发一次点击（一直按着不算点击，松手才算）</li>
+<li>一种是当第一次<code>l&lt;20</code>时<code>sleep</code>0.7秒，</li>
+</ul>
+<h3 id="添加透明效果"><a href="#添加透明效果" class="headerlink" title="添加透明效果"></a>添加透明效果</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">AllDraw</span>(<span class="params">img</span>):</span></span><br><span class="line">    imgNew = np.zeros_like(img, np.uint8)</span><br><span class="line">    <span class="keyword">for</span> btn <span class="keyword">in</span> buttonList:</span><br><span class="line">        imgNew = btn.draw(imgNew)</span><br><span class="line"></span><br><span class="line">    out = img.copy()</span><br><span class="line">    alpha = <span class="number">0.2</span></span><br><span class="line">    mask = imgNew.astype(<span class="built_in">bool</span>)</span><br><span class="line"></span><br><span class="line">    out[mask] = cv2.addWeighted(img,alpha,imgNew,<span class="number">1</span>-alpha,<span class="number">0</span>)[mask]</span><br><span class="line">    <span class="keyword">return</span> out</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>gezi_lzq
+  </li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="http://example.com/2021/08/23/%E9%80%9A%E8%BF%87OpenCV%E5%AE%9E%E7%8E%B0%E8%99%9A%E6%8B%9F%E9%94%AE%E7%9B%98/" title="通过OpenCV实现虚拟键盘">http://example.com/2021/08/23/通过OpenCV实现虚拟键盘/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/OpenCv/" rel="tag"># OpenCv</a>
+              <a href="/tags/mediapica/" rel="tag"># mediapica</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/08/22/Vue%E9%A1%B9%E7%9B%AE%E5%AD%A6%E4%B9%A0(%E4%B8%89)/" rel="prev" title="Vue项目学习(三)">
+      <i class="fa fa-chevron-left"></i> Vue项目学习(三)
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/08/26/%E5%9C%A8Vue%E5%BC%80%E5%8F%91%E4%B8%AD%E4%BD%BF%E7%94%A8SVG%E5%9B%BE%E6%A0%87/" rel="next" title="在Vue开发中使用SVG图标">
+      在Vue开发中使用SVG图标 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE"><span class="nav-number">1.</span> <span class="nav-text">环境配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E5%AE%9E%E7%8E%B0"><span class="nav-number">2.</span> <span class="nav-text">项目实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%93%E5%BC%80%E6%91%84%E5%83%8F"><span class="nav-number">2.1.</span> <span class="nav-text">打开摄像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%9F%E8%B8%AA%E6%89%8B%E9%83%A8"><span class="nav-number">2.2.</span> <span class="nav-text">跟踪手部</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E6%8C%89%E9%94%AE"><span class="nav-number">2.3.</span> <span class="nav-text">创建按键</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A3%80%E6%B5%8B%E6%89%8B%E6%8C%87"><span class="nav-number">2.4.</span> <span class="nav-text">检测手指</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%82%B9%E5%87%BB%E6%8C%89%E9%94%AE"><span class="nav-number">2.5.</span> <span class="nav-text">点击按键</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E9%80%8F%E6%98%8E%E6%95%88%E6%9E%9C"><span class="nav-number">2.6.</span> <span class="nav-text">添加透明效果</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="gezi_lzq"
+      src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
+  <p class="site-author-name" itemprop="name">gezi_lzq</p>
+  <div class="site-description" itemprop="description">Blog of lizhenqi </div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags">
+          
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/gezi-lzq" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;gezi-lzq" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/gezilzq" title="Gitee → https:&#x2F;&#x2F;gitee.com&#x2F;gezilzq" rel="noopener" target="_blank"><i class="fa fa-fw fa-Gitee"></i>Gitee</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.acwing.com/user/myspace/index/58842/" title="Acwing → https:&#x2F;&#x2F;www.acwing.com&#x2F;user&#x2F;myspace&#x2F;index&#x2F;58842&#x2F;" rel="noopener" target="_blank"><i class="fa fa-fw fa-Acwing"></i>Acwing</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">gezi_lzq</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+</body>
+</html>
