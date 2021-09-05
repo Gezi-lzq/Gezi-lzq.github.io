@@ -20,28 +20,26 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="安装 WSL 2WSL，Windows Subsystem for Linux（适用于 Linux 的 Windows 子系统）的简写。它有两个版本，WSL 1 和 WSL 2。 建议使用 WSL 2，它具有更好的整体性能。 查看Win10 版本号  cmd内输入winver命令  需要保证Win10版本号为2004，或者内部版本19041，或是更高。 “虚拟机平台”可选功能。使用管理员身份打开">
+  <meta name="description" content="这部分老实说我起码看过好多遍了，关于这个冯诺依曼结构，但是总是记不住，或是记得有很大缺失之类。 本着“好记性不如烂笔头”的想法，也是为了能写一篇博客些许的获得感，大概记录所学。  一个形象的例子也许对于教科书来说，一开始从计算机结构发展的历史进行讲解，然后抛出存储器，运算器，控制器，等等概念，再去画出图片，直接开始讲解是个不错的，严谨的方式。（其实也能够理解和看懂，但是总觉得差了些什么）  所以">
 <meta property="og:type" content="article">
-<meta property="og:title" content="安装 WSL 2">
-<meta property="og:url" content="http://example.com/2021/08/28/%E5%AE%89%E8%A3%85%20WSL%202/index.html">
+<meta property="og:title" content="计算机系统的基本组成和基本功能（未完稿)">
+<meta property="og:url" content="http://example.com/2021/09/05/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%84%E6%88%90%E5%92%8C%E5%9F%BA%E6%9C%AC%E5%8A%9F%E8%83%BD%EF%BC%88%E6%9C%AA%E5%AE%8C%E7%A8%BF%EF%BC%89/index.html">
 <meta property="og:site_name" content="Gezi&#39;s blog">
-<meta property="og:description" content="安装 WSL 2WSL，Windows Subsystem for Linux（适用于 Linux 的 Windows 子系统）的简写。它有两个版本，WSL 1 和 WSL 2。 建议使用 WSL 2，它具有更好的整体性能。 查看Win10 版本号  cmd内输入winver命令  需要保证Win10版本号为2004，或者内部版本19041，或是更高。 “虚拟机平台”可选功能。使用管理员身份打开">
+<meta property="og:description" content="这部分老实说我起码看过好多遍了，关于这个冯诺依曼结构，但是总是记不住，或是记得有很大缺失之类。 本着“好记性不如烂笔头”的想法，也是为了能写一篇博客些许的获得感，大概记录所学。  一个形象的例子也许对于教科书来说，一开始从计算机结构发展的历史进行讲解，然后抛出存储器，运算器，控制器，等等概念，再去画出图片，直接开始讲解是个不错的，严谨的方式。（其实也能够理解和看懂，但是总觉得差了些什么）  所以">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210828181817908.png">
-<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210828182034362.png">
-<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210828182834892.png">
-<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210828185917555.png">
-<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210828190228758.png">
-<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210828184556983.png">
-<meta property="article:published_time" content="2021-08-27T16:00:00.000Z">
-<meta property="article:modified_time" content="2021-08-28T12:22:47.905Z">
+<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210905004654717.png">
+<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210905130701427.png">
+<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210905130805005.png">
+<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210905130827096.png">
+<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210905130844594.png">
+<meta property="article:published_time" content="2021-09-04T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-09-05T06:11:01.169Z">
 <meta property="article:author" content="gezi_lzq">
-<meta property="article:tag" content="Ubuntu">
-<meta property="article:tag" content="WSL">
+<meta property="article:tag" content="计算机系统组成">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210828181817908.png">
+<meta name="twitter:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210905004654717.png">
 
-<link rel="canonical" href="http://example.com/2021/08/28/%E5%AE%89%E8%A3%85%20WSL%202/">
+<link rel="canonical" href="http://example.com/2021/09/05/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%84%E6%88%90%E5%92%8C%E5%9F%BA%E6%9C%AC%E5%8A%9F%E8%83%BD%EF%BC%88%E6%9C%AA%E5%AE%8C%E7%A8%BF%EF%BC%89/">
 
 
 <script id="page-configurations">
@@ -54,7 +52,7 @@
   };
 </script>
 
-  <title>安装 WSL 2 | Gezi's blog</title>
+  <title>计算机系统的基本组成和基本功能（未完稿) | Gezi's blog</title>
   
 
 
@@ -169,7 +167,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/28/%E5%AE%89%E8%A3%85%20WSL%202/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/09/05/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%84%E6%88%90%E5%92%8C%E5%9F%BA%E6%9C%AC%E5%8A%9F%E8%83%BD%EF%BC%88%E6%9C%AA%E5%AE%8C%E7%A8%BF%EF%BC%89/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
@@ -182,7 +180,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          安装 WSL 2
+          计算机系统的基本组成和基本功能（未完稿)
         </h1>
 
         <div class="post-meta">
@@ -193,7 +191,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2021-08-28 00:00:00 / Modified: 20:22:47" itemprop="dateCreated datePublished" datetime="2021-08-28T00:00:00+08:00">2021-08-28</time>
+              <time title="Created: 2021-09-05 00:00:00 / Modified: 14:11:01" itemprop="dateCreated datePublished" datetime="2021-09-05T00:00:00+08:00">2021-09-05</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -201,7 +199,7 @@
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">Linux学习</span></a>
+                  <a href="/categories/CSAPP%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">CSAPP学习</span></a>
                 </span>
             </span>
 
@@ -223,30 +221,41 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="安装-WSL-2"><a href="#安装-WSL-2" class="headerlink" title="安装 WSL 2"></a><strong>安装 WSL 2</strong></h2><p><strong>WSL</strong>，Windows Subsystem for Linux（适用于 Linux 的 Windows 子系统）的简写。它有两个版本，WSL 1 和 WSL 2。 建议使用 WSL 2，它具有更好的整体性能。</p>
-<p>查看Win10 版本号  cmd内输入<code>winver</code>命令</p>
-<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210828181817908.png" alt="image-20210828181817908"></p>
-<p>需要保证Win10版本号为2004，或者内部版本19041，或是更高。</p>
-<p>“虚拟机平台”可选功能。使用管理员身份打开 PowerShell，执行以下命令：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart</span><br></pre></td></tr></table></figure>
-
+        <blockquote>
+<p>这部分老实说我起码看过好多遍了，关于这个冯诺依曼结构，但是总是记不住，或是记得有很大缺失之类。</p>
+<p>本着“好记性不如烂笔头”的想法，也是为了能写一篇博客些许的获得感，大概记录所学。</p>
+</blockquote>
+<h2 id="一个形象的例子"><a href="#一个形象的例子" class="headerlink" title="一个形象的例子"></a>一个形象的例子</h2><p>也许对于教科书来说，一开始从计算机结构发展的历史进行讲解，然后抛出<strong>存储器</strong>，<strong>运算器</strong>，<strong>控制器</strong>，等等概念，再去画出图片，直接开始讲解是个不错的，严谨的方式。（其实也能够理解和看懂，但是总觉得差了些什么）</p>
+<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210905004654717.png" alt="image-20210905004654717"></p>
+<p>所以打算借助<a target="_blank" rel="noopener" href="https://www.icourse163.org/u/mooc1463468641395">袁春风</a>老师在课上的<strong>做菜</strong>例子（一个绝妙的比喻）来展开讲解计算机是如何工作的。</p>
 <span id="more"></span>
 
-<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210828182034362.png" alt="image-20210828182034362"></p>
-<p>安装 Linux 分发版本。打开微软应用商店，搜索 Ubuntu，在列表中选择最新的长期支持版本 20.04 LTS 并安装。</p>
-<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210828182834892.png" alt="image-20210828182834892"></p>
-<ol>
-<li>win+x，选择Windows PowerShell（管理员）</li>
-<li>输入：<br><code>Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux</code></li>
-<li>回车，输入Y，重启！</li>
-</ol>
-<p>然后启动</p>
-<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210828185917555.png" alt="image-20210828185917555"></p>
-<p>然后设置用户名与密码</p>
-<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210828190228758.png" alt="image-20210828190228758"></p>
-<p>搜索“Terminal”安装</p>
-<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210828184556983.png" alt="image-20210828184556983"></p>
-<p>可打开Ubuntu-20.04（Terminal可以搞一些界面美化</p>
+<h3 id="下面我们只谈做菜"><a href="#下面我们只谈做菜" class="headerlink" title="下面我们只谈做菜"></a>下面我们只谈做菜</h3><blockquote>
+<p>作为一个饭店老板，我总是希望我的餐馆可以多快好省的经营下去。可应该怎么做呢 </p>
+</blockquote>
+<p>为了达成这么一个目标，我们首先需要拆分整个餐馆经营的流程。</p>
+<p>餐馆内部实际各种分工流程复杂，可是对于顾客来说，这是完全看不到的，也不需要看到。</p>
+<p>顾客只需要到前台妹子那里点餐，然后服务员小哥给顾客端过去就行。</p>
+<p>这便是一个关键的环节，顾客的用餐体验便于此息息相关，如果前台妹子记错了菜名，或者服务员小哥把菜送错了桌子，这个顾客可必定火冒三丈了！</p>
+<p>于是我用本子记下：</p>
+<blockquote>
+<p>需要注意的：</p>
+<ul>
+<li>前台妹子——准确有序的传达顾客的菜名</li>
+<li>服务员——准确的把菜送到相应的顾客</li>
+</ul>
+</blockquote>
+<p>然后我接着分析，如果都让大厨一个人去边看菜名，边去指挥伙计准备蔬菜，自己再去炒菜，一定会手忙脚乱乱成一锅，即使磨合好了，如何扩大规模再来新的伙计也一定会乱套。那该如何呢？</p>
+<h4 id="解决后厨问题"><a href="#解决后厨问题" class="headerlink" title="解决后厨问题"></a>解决后厨问题</h4><p>我站在厨房门口仔细观察了一下，发现了一个重要的东西，那就行每一个菜名都有对应的固定的菜谱（这不是废话嘛），只要派一个伙计AS，拿着菜名找到对应的菜谱，再按着菜谱的要求去准备蔬菜就行。</p>
+<p>随后我又发现，这一个伙计AS好像干不了这么多活（当然啦，这么多工作，有你这么压榨人的吗！），于是我对这个伙计AS展开为期XXX日的培训，让他可以拿到菜名就能飞速得到对应菜谱（也许是全背下来了？不知道，反正这伙计练成了）。</p>
+<p>可是还没等我幻想饭店兴隆，后面的伙计快累趴下了，尽管伙计AS报菜谱迅速，但是其他人不是听不懂怎么看菜谱，就是翻半天找不到蔬菜，我仔细思索了一下，毕竟他们都只是便宜薪水招来的普通员工（黑心资本家！），如果培训每一个员工都会看菜谱，成本太大。这时，我想到虽然他们看不懂，但是具体的指示还是能听懂的，比如“去2号架子第三排左手第二个格子取出全部蔬菜 放到  XXX的一个碟子里”。可是谁去下达这些指令呢，我把目光投向了伙计AS，AS连忙说，他肯定做不完，但是可以另一帮小弟去完成这个任务，我愉快的给了他一笔钱让他去办了。</p>
+<p>根据刚刚的分析，我大概有了点思路，菜单，指令，菜名变成菜单，菜单变成指令，员工，办事，员工看到指令才能办事，怎么告诉员工指令呢，这么多指令放在哪里呢……(我陷入了深思)</p>
+<p>我只需要把 菜单 和 菜单对应的指令 提前写好在一一张张卡片上，把卡片放在卡片格子里（因为卡片太薄嘛，一张一个格子，也好拿来看啦），在安排一个当前的任务盒子，把目前需要做的指令放到这个盒子里。</p>
+<p>首先我选一个员工PC来站在任务盒子旁边数数，其他员工只能听PC的指令去取第几个指令，</p>
+<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210905130701427.png" alt="image-20210905130701427"></p>
+<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210905130805005.png" alt="image-20210905130805005"></p>
+<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210905130827096.png" alt="image-20210905130827096"></p>
+<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210905130844594.png" alt="image-20210905130844594"></p>
 
     </div>
 
@@ -256,8 +265,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/Ubuntu/" rel="tag"># Ubuntu</a>
-              <a href="/tags/WSL/" rel="tag"># WSL</a>
+              <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E7%BB%84%E6%88%90/" rel="tag"># 计算机系统组成</a>
           </div>
 
         
@@ -266,13 +274,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/08/26/%E5%9C%A8Vue%E5%BC%80%E5%8F%91%E4%B8%AD%E4%BD%BF%E7%94%A8SVG%E5%9B%BE%E6%A0%87/" rel="prev" title="在Vue开发中使用SVG图标">
-      <i class="fa fa-chevron-left"></i> 在Vue开发中使用SVG图标
+    <a href="/2021/08/31/%E6%9C%80%E7%9F%AD%E7%BC%96%E8%BE%91%E8%B7%9D%E7%A6%BB-%E9%A2%98%E8%A7%A3/" rel="prev" title="最短编辑距离-题解">
+      <i class="fa fa-chevron-left"></i> 最短编辑距离-题解
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2021/08/30/%E6%9C%80%E9%95%BF%E4%B8%8A%E5%8D%87%E5%AD%90%E5%BA%8F%E5%88%97/" rel="next" title="最长上升子序列(题解)">
-      最长上升子序列(题解) <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -331,7 +336,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-WSL-2"><span class="nav-number">1.</span> <span class="nav-text">安装 WSL 2</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E5%BD%A2%E8%B1%A1%E7%9A%84%E4%BE%8B%E5%AD%90"><span class="nav-number">1.</span> <span class="nav-text">一个形象的例子</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8B%E9%9D%A2%E6%88%91%E4%BB%AC%E5%8F%AA%E8%B0%88%E5%81%9A%E8%8F%9C"><span class="nav-number">1.1.</span> <span class="nav-text">下面我们只谈做菜</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E5%90%8E%E5%8E%A8%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.1.</span> <span class="nav-text">解决后厨问题</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
