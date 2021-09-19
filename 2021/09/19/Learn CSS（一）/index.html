@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="CSS 指的是层叠样式表* (Cascading Style Sheets) CSS 描述了如何在屏幕、纸张或其他媒体上显示 HTML 元素 CSS 节省了大量工作。它可以同时控制多张网页的布局 外部样式表存储在 CSS 文件中  *：也称级联样式表。 创建 HTML 的目的是描述网页的内容,CSS 从 HTML 页面中删除了样式格式！ CSS 语法CSS 规则集（rule-set）由选择器和声">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Learn CSS（一）">
+<meta property="og:url" content="http://example.com/2021/09/19/Learn%20CSS%EF%BC%88%E4%B8%80%EF%BC%89/index.html">
+<meta property="og:site_name" content="Gezi&#39;s blog">
+<meta property="og:description" content="CSS 指的是层叠样式表* (Cascading Style Sheets) CSS 描述了如何在屏幕、纸张或其他媒体上显示 HTML 元素 CSS 节省了大量工作。它可以同时控制多张网页的布局 外部样式表存储在 CSS 文件中  *：也称级联样式表。 创建 HTML 的目的是描述网页的内容,CSS 从 HTML 页面中删除了样式格式！ CSS 语法CSS 规则集（rule-set）由选择器和声">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/selector.gif">
+<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/boxmodel.gif">
+<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/margin_collapsing_1.gif">
+<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/margin_collapsing_example_2.gif">
+<meta property="article:published_time" content="2021-09-18T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-09-19T04:52:02.760Z">
+<meta property="article:author" content="gezi_lzq">
+<meta property="article:tag" content="前端基础">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/selector.gif">
+
+<link rel="canonical" href="http://example.com/2021/09/19/Learn%20CSS%EF%BC%88%E4%B8%80%EF%BC%89/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Learn CSS（一） | Gezi's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Gezi's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/09/19/Learn%20CSS%EF%BC%88%E4%B8%80%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
+      <meta itemprop="name" content="gezi_lzq">
+      <meta itemprop="description" content="Blog of lizhenqi ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gezi's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Learn CSS（一）
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-09-19 00:00:00 / Modified: 12:52:02" itemprop="dateCreated datePublished" datetime="2021-09-19T00:00:00+08:00">2021-09-19</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CSS/" itemprop="url" rel="index"><span itemprop="name">CSS</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <ul>
+<li><em>CSS</em> 指的是层叠样式表* (<em>C</em>ascading <em>S</em>tyle <em>S</em>heets)</li>
+<li>CSS 描述了<em>如何在屏幕、纸张或其他媒体上显示 HTML 元素</em></li>
+<li>CSS <em>节省了大量工作</em>。它可以同时控制多张网页的布局</li>
+<li>外部样式表存储在 <em>CSS 文件</em>中</li>
+</ul>
+<p>*<strong>：</strong>也称级联样式表。</p>
+<p>创建 HTML 的目的是<em>描述网页</em>的内容,CSS 从 HTML 页面中删除了样式格式！</p>
+<h2 id="CSS-语法"><a href="#CSS-语法" class="headerlink" title="CSS 语法"></a>CSS 语法</h2><p>CSS 规则集（rule-set）由选择器和声明块组成：</p>
+<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/selector.gif" alt="CSS 选择器"></p>
+<p><strong>选择器</strong>指向您需要设置样式的 HTML 元素。</p>
+<p><strong>声明块</strong>包含一条或多条用分号分隔的声明。</p>
+<p>每条声明都包含一个 <strong>CSS 属性名称</strong>和一个<strong>值</strong>，以冒号分隔。</p>
+<p>多条 CSS 声明用<strong>分号</strong>分隔，声明块用<strong>花括号</strong>括起来。</p>
+<h3 id="CSS选择器"><a href="#CSS选择器" class="headerlink" title="CSS选择器"></a>CSS选择器</h3><p>CSS 选择器用于“查找”（或选取）要设置样式的 HTML 元素。</p>
+<p>我们可以将 CSS 选择器分为五类：</p>
+<ul>
+<li><p>简单选择器（根据名称、id、类来选取元素）</p>
+<ul>
+<li>根据元素名称（html的标签名称）</li>
+<li>根据HTML元素的id属性来选择特定元素  <code>#id名&#123;……&#125;</code>(id 名称不能以数字开头)<ul>
+<li><em>class选择器的值不是唯一的，我可以在多个标签共用一个class名</em></li>
+</ul>
+</li>
+<li>通用选择器（*）选择页面上的所有的 HTML 元素</li>
+<li>分组选择器选取所有具有相同样式定义的 HTML 元素<code>h1,h2,p&#123;……&#125;</code></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">选择器</th>
+<th align="left">例子</th>
+<th align="left">例子描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.w3school.com.cn/css/css_selectors.asp">.<em>class</em></a></td>
+<td align="left">.intro</td>
+<td align="left">选取所有 class=”intro” 的元素。</td>
+</tr>
+<tr>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.w3school.com.cn/css/css_selectors.asp">#<em>id</em></a></td>
+<td align="left">#firstname</td>
+<td align="left">选取 id=”firstname” 的那个元素。</td>
+</tr>
+<tr>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.w3school.com.cn/css/css_selectors.asp">*</a></td>
+<td align="left">*</td>
+<td align="left">选取所有元素。</td>
+</tr>
+<tr>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.w3school.com.cn/css/css_selectors.asp"><em>element</em></a></td>
+<td align="left">p</td>
+<td align="left">选取所有 <p> 元素。</td>
+</tr>
+<tr>
+<td align="left"><a target="_blank" rel="noopener" href="https://www.w3school.com.cn/css/css_selectors.asp"><em>element</em>,<em>element</em>,..</a></td>
+<td align="left">div, p</td>
+<td align="left">选取所有 <div> 元素和所有 <p> 元素。</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+<blockquote>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.w3school.com.cn/css/css_combinators.asp">组合器选择器</a>（根据它们之间的特定关系来选取元素）</li>
+<li><a target="_blank" rel="noopener" href="https://www.w3school.com.cn/css/css_pseudo_classes.asp">伪类选择器</a>（根据特定状态选取元素）</li>
+<li><a target="_blank" rel="noopener" href="https://www.w3school.com.cn/css/css_pseudo_elements.asp">伪元素选择器</a>（选取元素的一部分并设置其样式）</li>
+<li><a target="_blank" rel="noopener" href="https://www.w3school.com.cn/css/css_attribute_selectors.asp">属性选择器</a>（根据属性或属性值来选取元素）</li>
+</ul>
+</blockquote>
+<h3 id="CSS使用"><a href="#CSS使用" class="headerlink" title="CSS使用"></a>CSS使用</h3><ul>
+<li>外部 CSS<ul>
+<li>每张 HTML 页面必须在 head 部分的 <link> 元素内包含对外部样式表文件的引用。</li>
+<li>如<code>&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;mystyle.css&quot;&gt;</code></li>
+</ul>
+</li>
+<li>内部 CSS<ul>
+<li>内部样式是在 head 部分的<code> &lt;style&gt;</code> 元素中进行定义。</li>
+</ul>
+</li>
+<li>行内 CSS<ul>
+<li>行内样式（也称内联样式）可用于为单个元素应用唯一的样式。</li>
+<li>标签内写<code>style=……</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="CSS颜色"><a href="#CSS颜色" class="headerlink" title="CSS颜色"></a><a target="_blank" rel="noopener" href="https://www.w3school.com.cn/css/css3_colors.asp">CSS颜色</a></h3><h4 id="颜色"><a href="#颜色" class="headerlink" title="颜色"></a>颜色</h4><ul>
+<li><p>使用预定义的颜色名称  <a target="_blank" rel="noopener" href="https://www.w3school.com.cn/css/css_colors.asp">140 种标准颜色名</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://www.w3school.com.cn/css/css_colors_rgb.asp">RGBA 颜色</a>值是这样规定的：<code>rgba(red, green, blue, alpha)</code></p>
+<ul>
+<li><em>alpha</em> 参数是介于 0.0（完全透明）和 1.0（完全不透明）之间的数字</li>
+</ul>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://www.w3school.com.cn/css/css_colors_hex.asp">HSL 颜色</a>值是这样规定的：<code>hsl(hue, saturation, lightness)</code>。</p>
+<ul>
+<li>色相、饱和度和亮度（Hue、Saturation 以及 Lightness）</li>
+</ul>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://www.w3school.com.cn/css/css_colors_hsl.asp">HSLA 颜色</a>值由以下参数规定：<code>hsla(hue, saturation, lightness, alpha)</code></p>
+<ul>
+<li>alpha 参数定义不透明度。 alpha 参数是介于 0.0（完全透明）和 1.0（完全不透明）之间的数字。</li>
+</ul>
+</li>
+<li><p>不透明度<code>opacity </code>属性设置整个元素的不透明度</p>
+<ul>
+<li>opacity 属性值必须是介于 0.0（完全透明）和 1.0（完全不透明）之间的数字。</li>
+<li>不希望对子元素应用不透明度  使用 <strong><em>RGBA</em> 颜色值</strong></li>
+</ul>
+</li>
+</ul>
+<h4 id="区域"><a href="#区域" class="headerlink" title="区域"></a>区域</h4><ul>
+<li>背景颜色<code>background-color:DodgerBlue;</code></li>
+<li>文本颜色<code>color:DodgerBlue;</code></li>
+<li>边框颜色<code>solid rgb(255, 99, 71)</code>(给实线边框类型添加颜色)</li>
+<li>……</li>
+</ul>
+<h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>背景设置颜色：</p>
+<ul>
+<li><code>background-color</code>属性指定元素的背景色。</li>
+</ul>
+<p>背景设置图片：</p>
+<ul>
+<li><code>background-image</code> 属性指定用作元素背景的图像。url引用图片</li>
+<li><code>background-image </code>属性指定水平或者垂直方向上重复图像<ul>
+<li>默认均重复</li>
+<li><code>background-repeat: repeat-x;</code>图像仅在水平方向重复 </li>
+<li><code>background-repeat: no-repeat</code>指定只显示一次背景图像</li>
+</ul>
+</li>
+<li><code>background-position</code>属性用于指定背景图像的位置。<ul>
+<li>通过<code>right</code>,<code>top</code>等指定</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p><code>background-attachment</code> 属性指定背景图像是应该滚动还是固定的（不会随页面的其余部分一起滚动）</p>
+<ul>
+<li><code> background-attachment: fixed;</code>固定背景图像</li>
+<li><code>background-attachment: scroll;</code>背景图像应随页面的其余部分一起滚动</li>
+</ul>
+</li>
+<li><p>background - 简写属性</p>
+<ul>
+<li>如<code>background: #ffffff url(&quot;tree.png&quot;) no-repeat right top;</code></li>
+<li>属性值的顺序为：（缺失并不要紧，只要按照此顺序设置其他值即可）<ul>
+<li>background-color</li>
+<li>background-image</li>
+<li>background-repeat</li>
+<li>background-attachment</li>
+<li>background-position</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="边框"><a href="#边框" class="headerlink" title="边框"></a>边框</h3><h4 id="边框类型"><a href="#边框类型" class="headerlink" title="边框类型"></a>边框类型</h4><p><code>border-style</code> 属性指定要显示的边框类型。</p>
+<p>允许以下值：</p>
+<ul>
+<li><code>dotted</code> - 定义点线边框</li>
+<li><code>dashed </code>- 定义虚线边框</li>
+<li><code>solid </code>- 定义实线边框</li>
+<li><code>double</code> - 定义双边框</li>
+<li><code>groove</code> - 定义 3D 坡口边框。效果取决于 border-color 值</li>
+<li><code>ridge</code> - 定义 3D 脊线边框。效果取决于 border-color 值</li>
+<li><code>inset </code>- 定义 3D inset 边框。效果取决于 border-color 值</li>
+<li><code>outset</code> - 定义 3D outset 边框。效果取决于 border-color 值</li>
+<li><code>none</code> - 定义无边框</li>
+<li><code>hidden</code> - 定义隐藏边框</li>
+</ul>
+<p><code>border-style</code> 属性可以设置一到四个值（用于上边框、右边框、下边框和左边框）。</p>
+<p>如:</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">p</span> &#123;</span><br><span class="line">  <span class="attribute">border-top-style</span>: dotted;</span><br><span class="line">  <span class="attribute">border-right-style</span>: solid;</span><br><span class="line">  <span class="attribute">border-bottom-style</span>: dotted;</span><br><span class="line">  <span class="attribute">border-left-style</span>: solid;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>border-radius</code> 属性用于向元素添加圆角边框</li>
+</ul>
+<h4 id="边框宽度与颜色"><a href="#边框宽度与颜色" class="headerlink" title="边框宽度与颜色"></a>边框宽度与颜色</h4><ul>
+<li><p> <code>border-width</code> 属性指定四个边框的宽度。</p>
+</li>
+<li><p>可以将宽度设置为特定大小（以 <code>px</code>、<code>pt</code>、<code>cm</code>、<code>em</code> 计），也可以使用以下三个预定义值之一：<code>thin</code>、<code>medium</code> 或 <code>thick</code></p>
+</li>
+<li><p>可以设置一到四个值（用于上边框、右边框、下边框和左边框)</p>
+</li>
+<li><p><code>border-color </code>属性用于设置四个边框的颜色。</p>
+<ul>
+<li>可以设置一到四个值（用于上边框、右边框、下边框和左边框）</li>
+</ul>
+</li>
+</ul>
+<h4 id="Border-简写属性"><a href="#Border-简写属性" class="headerlink" title="Border - 简写属性"></a>Border - 简写属性</h4><p>为了缩减代码，也可以在一个属性中指定所有单独的边框属性。</p>
+<p><code>border</code> 属性是以下各个边框属性的简写属性：</p>
+<ul>
+<li><code>border-width</code></li>
+<li><code>border-style</code>（必需）</li>
+<li><code>border-color</code></li>
+</ul>
+<h3 id="轮廓"><a href="#轮廓" class="headerlink" title="轮廓"></a><a target="_blank" rel="noopener" href="https://www.w3school.com.cn/css/css_outline.asp">轮廓</a></h3><p>轮廓是在元素周围绘制的一条线，在边框之外，以凸显元素。</p>
+<p>CSS 拥有如下轮廓属性：</p>
+<ul>
+<li><code>outline-style</code></li>
+<li><code>outline-color</code></li>
+<li><code>outline-width</code></li>
+<li><code>outline-offset</code> 属性在元素的轮廓与边框之间添加空间。元素及其轮廓之间的空间是透明的</li>
+<li><code>outline</code></li>
+</ul>
+<p><strong>注意：</strong>轮廓与<a target="_blank" rel="noopener" href="https://www.w3school.com.cn/css/css_border.asp">边框</a>不同！不同之处在于：轮廓是在元素边框之外绘制的，并且可能与其他内容重叠。同样，轮廓也不是元素尺寸的一部分；元素的总宽度和高度不受轮廓线宽度的影响。</p>
+<h3 id="文本"><a href="#文本" class="headerlink" title="文本"></a>文本</h3><h4 id="文本对齐"><a href="#文本对齐" class="headerlink" title="文本对齐"></a>文本对齐</h4><p><code>text-align</code> 属性用于设置文本的水平对齐方式。</p>
+<p>文本可以左对齐或右对齐，或居中对齐。<code>center</code>,<code>left</code>,<code>right</code></p>
+<p>当<code>text-align</code>属性设置为 “<code>justify</code>“ 后，将拉伸每一行，以使每一行具有相等的宽度，并且左右边距是直的（就像在杂志和报纸中）</p>
+<h4 id="文本方向"><a href="#文本方向" class="headerlink" title="文本方向"></a>文本方向</h4><p><code>direction</code> 和 <code>unicode-bidi</code> 属性可用于更改元素的文本方向</p>
+<h3 id="图标"><a href="#图标" class="headerlink" title="图标"></a>图标</h3><p>向 HTML 页面添加图标的最简单方法是使用图标库，比如 Font Awesome。</p>
+<p>将指定的图标类的名称添加到任何行内 HTML 元素（如 <i> 或 <span>）。</p>
+<ul>
+<li><p>Font Awesome图标</p>
+<ul>
+<li>```html<script src="https://kit.fontawesome.com/yourcode.js"></script>
+……<br><i class="fas fa-cloud"></i><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">* Bootstrap 图标</span><br><span class="line"></span><br><span class="line">  * ```html</span><br><span class="line">    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css&quot;&gt;</span><br><span class="line">    ……</span><br><span class="line">    &lt;i class=&quot;glyphicon glyphicon-cloud&quot;&gt;&lt;/i&gt;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>Google 图标</p>
+<ul>
+<li><pre><code class="html">&lt;link rel=&quot;stylesheet&quot; href=&quot;https://fonts.googleapis.com/icon?family=Material+Icons&quot;&gt;
+……
+&lt;i class=&quot;material-icons&quot;&gt;cloud&lt;/i&gt;
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h3><p>设置链接的样式</p>
+<p>四种链接状态分别是：</p>
+<ul>
+<li><code>a:link</code> - 正常的，未访问的链接</li>
+<li><code>a:visited</code> - 用户访问过的链接</li>
+<li><code>a:hover </code>- 用户将鼠标悬停在链接上时</li>
+<li><code>a:active</code> - 链接被点击时</li>
+</ul>
+<h3 id="列表"><a href="#列表" class="headerlink" title="列表"></a>列表</h3><p><a target="_blank" rel="noopener" href="https://www.w3school.com.cn/css/css_list.asp">CSS 列表属性</a>使您可以：</p>
+<ul>
+<li>为有序列表设置不同的列表项标记</li>
+<li>为无序列表设置不同的列表项标记</li>
+<li>将图像设置为列表项标记</li>
+<li>为列表和列表项添加背景色</li>
+</ul>
+<p><code>list-style-type </code>属性指定列表项标记的类型。</p>
+<ul>
+<li><code>circle</code>,<code>square</code>,<code>upper-roman</code>,<code>lower-alpha</code></li>
+</ul>
+<h3 id="表格"><a href="#表格" class="headerlink" title="表格"></a><a target="_blank" rel="noopener" href="https://www.w3school.com.cn/css/css_table.asp">表格</a></h3><h2 id="CSS框模型"><a href="#CSS框模型" class="headerlink" title="CSS框模型"></a>CSS框模型</h2><p>所有 HTML 元素都可以视为方框。在 CSS 中，在谈论设计和布局时，会使用术语“盒模型”或“框模型”。</p>
+<p>CSS 框模型实质上是一个包围每个 HTML 元素的框。它包括：外边距、边框、内边距以及实际的内容。下图展示了框模型：</p>
+<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/boxmodel.gif" alt="CSS 框模型"></p>
+<p>对不同部分的说明：</p>
+<ul>
+<li><em>内容</em> - 框的内容，其中显示文本和图像。</li>
+<li><em>内边距</em> - 清除内容周围的区域。内边距是透明的。</li>
+<li><em>边框</em> - 围绕内边距和内容的边框。</li>
+<li><em>外边距</em> - 清除边界外的区域。外边距是透明的。</li>
+</ul>
+<p>框模型允许我们在元素周围添加边框，并定义元素之间的空间。</p>
+<p>元素框的最内部分是实际的内容，直接包围内容的是内边距。内边距呈现了元素的背景。内边距的边缘是边框。边框以外是外边距，外边距默认是透明的，因此不会遮挡其后的任何元素。</p>
+<h3 id="外边距"><a href="#外边距" class="headerlink" title="外边距"></a>外边距</h3><p><strong>围绕在元素边框的空白区域是外边距。设置外边距会在元素外创建额外的“空白”。</strong></p>
+<p>CSS <code>margin</code> 属性用于在任何定义的边框之外，为元素周围创建空间。</p>
+<h4 id="Margin-单独的边"><a href="#Margin-单独的边" class="headerlink" title="Margin - 单独的边"></a>Margin - 单独的边</h4><p>CSS 拥有用于为元素的每一侧指定外边距的属性：</p>
+<ul>
+<li><code>margin-top</code></li>
+<li><code>margin-right</code></li>
+<li><code>margin-bottom</code></li>
+<li><code>margin-left</code></li>
+</ul>
+<p>所有外边距属性都可以设置以下值：</p>
+<ul>
+<li><code>auto</code> - 浏览器来计算外边距<ul>
+<li>以使元素在其容器中水平居中,该元素将占据指定的宽度，并且剩余空间将在左右边界之间平均分配</li>
+</ul>
+</li>
+<li><em><code>length</code></em> - 以 px、pt、cm 等单位指定外边距</li>
+<li><code>%</code> - 指定以包含元素宽度的百分比计的外边距</li>
+<li><code>inherit</code> - 指定应从父元素继承外边距</li>
+</ul>
+<p><strong>提示：</strong>允许负值。</p>
+<p><strong>margin 简写属性</strong>：<code>mergin 上 右 下 左</code></p>
+<h3 id="外边距合并"><a href="#外边距合并" class="headerlink" title="外边距合并"></a><a target="_blank" rel="noopener" href="https://www.w3school.com.cn/css/css_margin_collapse.asp">外边距合并</a></h3><p><strong>外边距合并指的是，当两个垂直外边距相遇时，它们将形成一个外边距。</strong></p>
+<p><strong>合并后的外边距的高度等于两个发生合并的外边距的高度中的较大者。</strong></p>
+<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/margin_collapsing_1.gif" alt="CSS 外边距合并实例 1"></p>
+<p>当一个元素包含在另一个元素中时（假设没有内边距或边框把外边距分隔开），它们的上和/或下外边距也会发生合并。请看下图：</p>
+<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/margin_collapsing_example_2.gif" alt="CSS 外边距合并实例 2"></p>
+<h3 id="内边距"><a href="#内边距" class="headerlink" title="内边距"></a>内边距</h3><p>CSS <code>padding</code> 属性用于在任何定义的边界内的元素内容周围生成空间。</p>
+<p>通过 CSS，您可以完全控制内边距（填充）。有一些属性可以为元素的每一侧（上、右、下和左侧）设置内边距。</p>
+<h4 id="Padding-单独的边"><a href="#Padding-单独的边" class="headerlink" title="Padding - 单独的边"></a>Padding - 单独的边</h4><p>CSS 拥有用于为元素的每一侧指定内边距的属性：</p>
+<ul>
+<li><code>padding-top</code></li>
+<li><code>padding-right</code></li>
+<li><code>padding-bottom</code></li>
+<li><code>padding-left</code></li>
+</ul>
+<p>所有内边距属性都可以设置以下值：</p>
+<ul>
+<li><em><code>length</code></em> - 以 px、pt、cm 等单位指定内边距</li>
+<li><code>% </code>- 指定以包含元素宽度的百分比计的内边距</li>
+<li><code>inherit</code> - 指定应从父元素继承内边距</li>
+</ul>
+<p><strong>提示：</strong>不允许负值。</p>
+<p>简写方式同上。</p>
+<h3 id="元素宽度与高度"><a href="#元素宽度与高度" class="headerlink" title="元素宽度与高度"></a>元素宽度与高度</h3><p>CSS <code>width</code> 属性指定元素<strong>内容区域的宽度</strong>。</p>
+<p><strong>内容区域是元素（盒模型）的内边距、边框和外边距内的部分。</strong></p>
+<p>因此，如果元素拥有指定的宽度，则添加到该元素的内边距会添加到元素的总宽度中。这通常是不希望的结果。</p>
+<h4 id="CSS-设置高度和宽度"><a href="#CSS-设置高度和宽度" class="headerlink" title="CSS 设置高度和宽度"></a>CSS 设置高度和宽度</h4><p><code>height</code> 和<code>width</code>属性用于设置元素的高度和宽度。</p>
+<p><code>height </code>和<code>width</code>属性不包括内边距、边框或外边距。它设置的是元素内边距、边框以及外边距内的区域的高度或宽度。</p>
+<ul>
+<li><code>max-width</code> 属性用于设置元素的最大宽度。</li>
+</ul>
+<h4 id="CSS-高度和宽度值"><a href="#CSS-高度和宽度值" class="headerlink" title="CSS 高度和宽度值"></a>CSS 高度和宽度值</h4><p><code>height</code> 和 <code>width</code> 属性可设置如下值：</p>
+<ul>
+<li><code>auto</code> - 默认。浏览器计算高度和宽度。</li>
+<li><em><code>length</code></em> - 以 px、cm 等定义高度/宽度。</li>
+<li><code>% </code>- 以包含块的百分比定义高度/宽度。</li>
+<li><code>initial</code> - 将高度/宽度设置为默认值。</li>
+<li><code>inherit</code> - 从其父值继承高度/宽度。</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%89%8D%E7%AB%AF%E5%9F%BA%E7%A1%80/" rel="tag"># 前端基础</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/09/11/%E5%AD%A6%E4%B9%A0%E6%97%A5%E5%BF%97/" rel="prev" title="学习日志">
+      <i class="fa fa-chevron-left"></i> 学习日志
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/09/19/%E4%BB%8Ejava%20IO%E6%B5%81%20%E4%BA%86%E8%A7%A3%20%E8%A3%85%E9%A5%B0%E8%80%85%E6%A8%A1%E5%BC%8F/" rel="next" title="">
+       <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#CSS-%E8%AF%AD%E6%B3%95"><span class="nav-number">1.</span> <span class="nav-text">CSS 语法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CSS%E9%80%89%E6%8B%A9%E5%99%A8"><span class="nav-number">1.1.</span> <span class="nav-text">CSS选择器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CSS%E4%BD%BF%E7%94%A8"><span class="nav-number">1.2.</span> <span class="nav-text">CSS使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CSS%E9%A2%9C%E8%89%B2"><span class="nav-number">1.3.</span> <span class="nav-text">CSS颜色</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A2%9C%E8%89%B2"><span class="nav-number">1.3.1.</span> <span class="nav-text">颜色</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8C%BA%E5%9F%9F"><span class="nav-number">1.3.2.</span> <span class="nav-text">区域</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">1.4.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BE%B9%E6%A1%86"><span class="nav-number">1.5.</span> <span class="nav-text">边框</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%B9%E6%A1%86%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.5.1.</span> <span class="nav-text">边框类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%B9%E6%A1%86%E5%AE%BD%E5%BA%A6%E4%B8%8E%E9%A2%9C%E8%89%B2"><span class="nav-number">1.5.2.</span> <span class="nav-text">边框宽度与颜色</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Border-%E7%AE%80%E5%86%99%E5%B1%9E%E6%80%A7"><span class="nav-number">1.5.3.</span> <span class="nav-text">Border - 简写属性</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BD%AE%E5%BB%93"><span class="nav-number">1.6.</span> <span class="nav-text">轮廓</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E6%9C%AC"><span class="nav-number">1.7.</span> <span class="nav-text">文本</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%87%E6%9C%AC%E5%AF%B9%E9%BD%90"><span class="nav-number">1.7.1.</span> <span class="nav-text">文本对齐</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%87%E6%9C%AC%E6%96%B9%E5%90%91"><span class="nav-number">1.7.2.</span> <span class="nav-text">文本方向</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%BE%E6%A0%87"><span class="nav-number">1.8.</span> <span class="nav-text">图标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%93%BE%E6%8E%A5"><span class="nav-number">1.9.</span> <span class="nav-text">链接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%97%E8%A1%A8"><span class="nav-number">1.10.</span> <span class="nav-text">列表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A1%A8%E6%A0%BC"><span class="nav-number">1.11.</span> <span class="nav-text">表格</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CSS%E6%A1%86%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.</span> <span class="nav-text">CSS框模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%96%E8%BE%B9%E8%B7%9D"><span class="nav-number">2.1.</span> <span class="nav-text">外边距</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Margin-%E5%8D%95%E7%8B%AC%E7%9A%84%E8%BE%B9"><span class="nav-number">2.1.1.</span> <span class="nav-text">Margin - 单独的边</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%96%E8%BE%B9%E8%B7%9D%E5%90%88%E5%B9%B6"><span class="nav-number">2.2.</span> <span class="nav-text">外边距合并</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E8%BE%B9%E8%B7%9D"><span class="nav-number">2.3.</span> <span class="nav-text">内边距</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Padding-%E5%8D%95%E7%8B%AC%E7%9A%84%E8%BE%B9"><span class="nav-number">2.3.1.</span> <span class="nav-text">Padding - 单独的边</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%83%E7%B4%A0%E5%AE%BD%E5%BA%A6%E4%B8%8E%E9%AB%98%E5%BA%A6"><span class="nav-number">2.4.</span> <span class="nav-text">元素宽度与高度</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#CSS-%E8%AE%BE%E7%BD%AE%E9%AB%98%E5%BA%A6%E5%92%8C%E5%AE%BD%E5%BA%A6"><span class="nav-number">2.4.1.</span> <span class="nav-text">CSS 设置高度和宽度</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CSS-%E9%AB%98%E5%BA%A6%E5%92%8C%E5%AE%BD%E5%BA%A6%E5%80%BC"><span class="nav-number">2.4.2.</span> <span class="nav-text">CSS 高度和宽度值</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="gezi_lzq"
+      src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
+  <p class="site-author-name" itemprop="name">gezi_lzq</p>
+  <div class="site-description" itemprop="description">Blog of lizhenqi </div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/gezi-lzq" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;gezi-lzq" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/gezilzq" title="Gitee → https:&#x2F;&#x2F;gitee.com&#x2F;gezilzq" rel="noopener" target="_blank"><i class="fa fa-fw fa-Gitee"></i>Gitee</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.acwing.com/user/myspace/index/58842/" title="Acwing → https:&#x2F;&#x2F;www.acwing.com&#x2F;user&#x2F;myspace&#x2F;index&#x2F;58842&#x2F;" rel="noopener" target="_blank"><i class="fa fa-fw fa-Acwing"></i>Acwing</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">gezi_lzq</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+</body>
+</html>
