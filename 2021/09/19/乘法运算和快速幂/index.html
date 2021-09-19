@@ -20,28 +20,23 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="安装 WSL 2WSL，Windows Subsystem for Linux（适用于 Linux 的 Windows 子系统）的简写。它有两个版本，WSL 1 和 WSL 2。 建议使用 WSL 2，它具有更好的整体性能。 查看Win10 版本号  cmd内输入winver命令  需要保证Win10版本号为2004，或者内部版本19041，或是更高。 “虚拟机平台”可选功能。使用管理员身份打开">
+  <meta name="description" content="乘法运算和快速幂程序进行乘法运算，用编程程序描述起来十分简单，一个*（乘号）足以表示，可是计算机究竟做了什么呢，有没有办法不使用*，来自己实现一个乘法的函数呢？ 众所周知的是，各种信息都是以0,1（二进制）的形式在电脑内储存的，要运算的整数数据也是一样的，无符号整数就是普通的十进制转换为二进制，而有符号整数则是通过补码的形式来存储的。 &lt;&lt;运算符在了解乘法是如何处理之前，必须要知道&amp;l">
 <meta property="og:type" content="article">
-<meta property="og:title" content="安装 WSL 2">
-<meta property="og:url" content="http://example.com/2021/08/28/%E5%AE%89%E8%A3%85%20WSL%202/index.html">
+<meta property="og:title" content="乘法运算和快速幂">
+<meta property="og:url" content="http://example.com/2021/09/19/%E4%B9%98%E6%B3%95%E8%BF%90%E7%AE%97%E5%92%8C%E5%BF%AB%E9%80%9F%E5%B9%82/index.html">
 <meta property="og:site_name" content="Gezi&#39;s blog">
-<meta property="og:description" content="安装 WSL 2WSL，Windows Subsystem for Linux（适用于 Linux 的 Windows 子系统）的简写。它有两个版本，WSL 1 和 WSL 2。 建议使用 WSL 2，它具有更好的整体性能。 查看Win10 版本号  cmd内输入winver命令  需要保证Win10版本号为2004，或者内部版本19041，或是更高。 “虚拟机平台”可选功能。使用管理员身份打开">
+<meta property="og:description" content="乘法运算和快速幂程序进行乘法运算，用编程程序描述起来十分简单，一个*（乘号）足以表示，可是计算机究竟做了什么呢，有没有办法不使用*，来自己实现一个乘法的函数呢？ 众所周知的是，各种信息都是以0,1（二进制）的形式在电脑内储存的，要运算的整数数据也是一样的，无符号整数就是普通的十进制转换为二进制，而有符号整数则是通过补码的形式来存储的。 &lt;&lt;运算符在了解乘法是如何处理之前，必须要知道&amp;l">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210828181817908.png">
-<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210828182034362.png">
-<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210828182834892.png">
-<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210828185917555.png">
-<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210828190228758.png">
-<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210828184556983.png">
-<meta property="article:published_time" content="2021-08-27T16:00:00.000Z">
-<meta property="article:modified_time" content="2021-08-28T12:22:47.905Z">
+<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210919145750149.png">
+<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210919152611553.png">
+<meta property="article:published_time" content="2021-09-18T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-09-19T08:22:34.123Z">
 <meta property="article:author" content="gezi_lzq">
-<meta property="article:tag" content="Ubuntu">
-<meta property="article:tag" content="WSL">
+<meta property="article:tag" content="快速幂">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210828181817908.png">
+<meta name="twitter:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210919145750149.png">
 
-<link rel="canonical" href="http://example.com/2021/08/28/%E5%AE%89%E8%A3%85%20WSL%202/">
+<link rel="canonical" href="http://example.com/2021/09/19/%E4%B9%98%E6%B3%95%E8%BF%90%E7%AE%97%E5%92%8C%E5%BF%AB%E9%80%9F%E5%B9%82/">
 
 
 <script id="page-configurations">
@@ -54,7 +49,7 @@
   };
 </script>
 
-  <title>安装 WSL 2 | Gezi's blog</title>
+  <title>乘法运算和快速幂 | Gezi's blog</title>
   
 
 
@@ -169,7 +164,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/28/%E5%AE%89%E8%A3%85%20WSL%202/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/09/19/%E4%B9%98%E6%B3%95%E8%BF%90%E7%AE%97%E5%92%8C%E5%BF%AB%E9%80%9F%E5%B9%82/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
@@ -182,7 +177,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          安装 WSL 2
+          乘法运算和快速幂
         </h1>
 
         <div class="post-meta">
@@ -193,7 +188,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2021-08-28 00:00:00 / Modified: 20:22:47" itemprop="dateCreated datePublished" datetime="2021-08-28T00:00:00+08:00">2021-08-28</time>
+              <time title="Created: 2021-09-19 00:00:00 / Modified: 16:22:34" itemprop="dateCreated datePublished" datetime="2021-09-19T00:00:00+08:00">2021-09-19</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -201,7 +196,7 @@
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">Linux学习</span></a>
+                  <a href="/categories/CSAPP%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">CSAPP学习</span></a>
                 </span>
             </span>
 
@@ -223,30 +218,58 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="安装-WSL-2"><a href="#安装-WSL-2" class="headerlink" title="安装 WSL 2"></a><strong>安装 WSL 2</strong></h2><p><strong>WSL</strong>，Windows Subsystem for Linux（适用于 Linux 的 Windows 子系统）的简写。它有两个版本，WSL 1 和 WSL 2。 建议使用 WSL 2，它具有更好的整体性能。</p>
-<p>查看Win10 版本号  cmd内输入<code>winver</code>命令</p>
-<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210828181817908.png" alt="image-20210828181817908"></p>
-<p>需要保证Win10版本号为2004，或者内部版本19041，或是更高。</p>
-<p>“虚拟机平台”可选功能。使用管理员身份打开 PowerShell，执行以下命令：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart</span><br></pre></td></tr></table></figure>
-
+        <h1 id="乘法运算和快速幂"><a href="#乘法运算和快速幂" class="headerlink" title="乘法运算和快速幂"></a>乘法运算和快速幂</h1><p>程序进行乘法运算，用编程程序描述起来十分简单，一个<code>*</code>（乘号）足以表示，可是计算机究竟做了什么呢，有没有办法不使用<code>*</code>，来自己实现一个乘法的函数呢？</p>
+<p>众所周知的是，各种信息都是以<code>0</code>,<code>1</code>（二进制）的形式在电脑内储存的，要运算的整数数据也是一样的，无符号整数就是普通的十进制转换为二进制，而有符号整数则是通过补码的形式来存储的。</p>
+<h2 id="lt-lt-运算符"><a href="#lt-lt-运算符" class="headerlink" title="&lt;&lt;运算符"></a><code>&lt;&lt;</code>运算符</h2><p>在了解乘法是如何处理之前，必须要知道<code>&lt;&lt;</code>运算符的作用。这个家伙叫做移位运算符，顾名思义，它就是来移动这个二进制数的位置的，而<code>&lt;&lt;</code>符号箭头的方向就是那一串<code>01</code>移动的方向，<code>&lt;&lt;3</code>后面跟的数字就是要移动的位数。</p>
+<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210919145750149.png" alt="移位操作示范"></p>
+<p>先说一下结论：</p>
+<p><code>x&lt;&lt;4</code>就等同于把<code>x</code>的值乘以2的4次方，再对<code>M</code>取一次模，而<code>M</code>的值则是这个<code>x</code>所能存储的位数w所决定的。</p>
+<p>打个比方：</p>
+<blockquote>
+<p><code>x</code>是个无符号整数，只有4位，x最大也只能是<code>1111</code>了，对应的十进制数就是 2^4-1，也就是15。如果<code>x</code>现在等于<code>[0101]</code>也就是5，我通过<code>x&lt;&lt;2</code>操作，就变成了<code>010100</code>也就是5* 2^2=20，但是<code>x</code>内只能存储4位，所以前面2位就被丢弃了<del>01</del><code>[0100]</code>,换算成十进制就是<code>4</code>。这个过程整体表示就是    <code>x&lt;&lt;4=(5*2^2)mod16=4</code></p>
+</blockquote>
+<ul>
+<li><em>需要知道的，以上为了方便理解只通过无符号数来说，而对于补码形式，也都是类似的</em></li>
+</ul>
 <span id="more"></span>
 
-<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210828182034362.png" alt="image-20210828182034362"></p>
-<p>安装 Linux 分发版本。打开微软应用商店，搜索 Ubuntu，在列表中选择最新的长期支持版本 20.04 LTS 并安装。</p>
-<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210828182834892.png" alt="image-20210828182834892"></p>
-<ol>
-<li>win+x，选择Windows PowerShell（管理员）</li>
-<li>输入：<br><code>Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux</code></li>
-<li>回车，输入Y，重启！</li>
-</ol>
-<p>然后启动</p>
-<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210828185917555.png" alt="image-20210828185917555"></p>
-<p>然后设置用户名与密码</p>
-<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210828190228758.png" alt="image-20210828190228758"></p>
-<p>搜索“Terminal”安装</p>
-<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210828184556983.png" alt="image-20210828184556983"></p>
-<p>可打开Ubuntu-20.04（Terminal可以搞一些界面美化</p>
+<h2 id="乘法运算"><a href="#乘法运算" class="headerlink" title="乘法运算"></a>乘法运算</h2><p>当知道了移位运算符的操作后，我们就可以研究一下乘法的过程了。</p>
+<p>首先，我们在不考虑两个数相乘后的数可能会溢出被截断的情况，仅仅考虑最简单的情况，以乘以一个常数来看。</p>
+<p>我们都知道，乘法其实就是变相的加法，2*100实际上就是100个2加在一起，或者是2个100加在一起，如果根据这个想法，肯定也是可以实现一个乘法操作的，但是他的效率也未免太慢了，也用不到前面提到的移位操作。所以我们来看另一种通过移位和加法组合来代替乘以常数因子的乘法。</p>
+<blockquote>
+<p>通过考虑乘以2的幂的情况，在概括成乘以任意常数</p>
+</blockquote>
+<p>如果是<code>x*4</code>该怎么处理呢？通过了解的移位操作，我们可以很清晰的说出，把<code>x&lt;&lt;2</code>就ok了！</p>
+<p>那么<code>x*8</code>呢？当然也是类似的操作<code>x&lt;&lt;3</code>就可以了！</p>
+<p>如果说是下<code>x*12</code>呢？这个时候可能会迟疑一下，因为12可不是2的幂对应的数啊，不过根据乘法结合律，你只需要这样来处理一下<code>x*(4+8)=x*4+x*8</code>你就可以使用移位操作来处理，在通过加法组合到一起就能够实现了。</p>
+<p>这便是所说的通过移位和加法组合来代替乘以常数因子的乘法</p>
+<p>换成二进制在来说明一下：</p>
+<p>12用二进制表示则是<code>110</code>等于<code>100+10</code>。</p>
+<p>下面的例子也是类似的</p>
+<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210919152611553.png" alt="image-20210919152611553"></p>
+<p>在了解这个后，可以尝试编写一个乘法函数</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">multiply</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> ans=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;y!=<span class="number">0</span>;y&gt;&gt;=<span class="number">1</span>,i++)</span><br><span class="line">        <span class="keyword">if</span>(y&amp;<span class="number">1</span>)ans+=x&lt;&lt;i;</span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>而这只是一个相对直接累加的方法优一些的算法，如果是编译器会在计算中提供更多优化方式</p>
+<p>比如<code>x*14</code>可以通过<code>x*16-x*2=(x&lt;&lt;4)-(x&lt;&lt;1)</code>来实现。</p>
+<h2 id="快速幂"><a href="#快速幂" class="headerlink" title="快速幂"></a>快速幂</h2><p>而下面要说的快速幂也是秉着同样的思想。</p>
+<p>求某个数的幂很容易啊，求3^10,只需要<code>3*3*3*3*3*3*3*3*3*3</code>，这样把3连续乘10次就好了，而如果是1000次方，100000次方呢，如果还按着不断累乘的方法也太慢了（就像3*10，只会把10个3累加起来一样，太慢）。</p>
+<p>这个时候，就像是处理那个乘数一样去处理那个次方数,</p>
+<p>如     3^12^=(3^4^)*(3^8^)              12=4+8=2^2^+2^3^</p>
+<p>而<code>3^4</code>=<code>(3^2)*(3^2)</code>,<code>3^8</code>=<code>(3^4)*(3^4)</code>可以通过这个方式来计算</p>
+<p>只需要<code>3^1</code>,<code>3^2</code>,<code>3^4</code>,<code>3^8</code>,<code>3^16</code>……这些数据，就可以快速的计算出需要的幂</p>
+<blockquote>
+<p>比较一下，如果是要计算<code>x^14</code></p>
+<ul>
+<li><p>按照传统的方法，则是把x累乘14次</p>
+</li>
+<li><p>按照快速幂的算法，把14变成二进制<code>1110</code>,又计算好<code>x^1 ， x^(10) , x^(100), x^(1000)</code></p>
+<p>则可算出 *<em>x^14^=x^(1110)^=(x^1000^)</em>(x^100^)*(x^10^),**只要5次就可以</p>
+</li>
+</ul>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//求 a 的 b 次方对 p 取模的值。</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">long</span> <span class="keyword">long</span> LL;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">qmi</span><span class="params">(<span class="keyword">int</span> a,<span class="keyword">int</span> b,<span class="keyword">int</span> p)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> res=<span class="number">1</span>%p;</span><br><span class="line">    <span class="keyword">while</span>(b)&#123;</span><br><span class="line">        <span class="keyword">if</span>(b&amp;<span class="number">1</span>)res=(LL)res*a%p;</span><br><span class="line">        a=(LL)a*a%p;</span><br><span class="line">        b&gt;&gt;=<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 
     </div>
 
@@ -256,8 +279,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/Ubuntu/" rel="tag"># Ubuntu</a>
-              <a href="/tags/WSL/" rel="tag"># WSL</a>
+              <a href="/tags/%E5%BF%AB%E9%80%9F%E5%B9%82/" rel="tag"># 快速幂</a>
           </div>
 
         
@@ -266,12 +288,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/08/26/%E5%9C%A8Vue%E5%BC%80%E5%8F%91%E4%B8%AD%E4%BD%BF%E7%94%A8SVG%E5%9B%BE%E6%A0%87/" rel="prev" title="在Vue开发中使用SVG图标">
-      <i class="fa fa-chevron-left"></i> 在Vue开发中使用SVG图标
+    <a href="/2021/09/11/%E5%AD%A6%E4%B9%A0%E6%97%A5%E5%BF%97/" rel="prev" title="学习日志">
+      <i class="fa fa-chevron-left"></i> 学习日志
     </a></div>
       <div class="post-nav-item">
-    <a href="/2021/08/30/%E6%9C%80%E9%95%BF%E4%B8%8A%E5%8D%87%E5%AD%90%E5%BA%8F%E5%88%97/" rel="next" title="最长上升子序列(题解)">
-      最长上升子序列(题解) <i class="fa fa-chevron-right"></i>
+    <a href="/2021/09/19/%E4%BB%8Ejava%20IO%E6%B5%81%20%E4%BA%86%E8%A7%A3%20%E8%A3%85%E9%A5%B0%E8%80%85%E6%A8%A1%E5%BC%8F/" rel="next" title="从java I/O流 了解 装饰者模式">
+      从java I/O流 了解 装饰者模式 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -331,7 +353,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-WSL-2"><span class="nav-number">1.</span> <span class="nav-text">安装 WSL 2</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B9%98%E6%B3%95%E8%BF%90%E7%AE%97%E5%92%8C%E5%BF%AB%E9%80%9F%E5%B9%82"><span class="nav-number">1.</span> <span class="nav-text">乘法运算和快速幂</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#lt-lt-%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="nav-number">1.1.</span> <span class="nav-text">&lt;&lt;运算符</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%98%E6%B3%95%E8%BF%90%E7%AE%97"><span class="nav-number">1.2.</span> <span class="nav-text">乘法运算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BF%AB%E9%80%9F%E5%B9%82"><span class="nav-number">1.3.</span> <span class="nav-text">快速幂</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 

@@ -332,6 +332,93 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/09/19/%E4%B9%98%E6%B3%95%E8%BF%90%E7%AE%97%E5%92%8C%E5%BF%AB%E9%80%9F%E5%B9%82/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
+      <meta itemprop="name" content="gezi_lzq">
+      <meta itemprop="description" content="Blog of lizhenqi ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gezi's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/09/19/%E4%B9%98%E6%B3%95%E8%BF%90%E7%AE%97%E5%92%8C%E5%BF%AB%E9%80%9F%E5%B9%82/" class="post-title-link" itemprop="url">乘法运算和快速幂</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-09-19 00:00:00 / Modified: 16:22:34" itemprop="dateCreated datePublished" datetime="2021-09-19T00:00:00+08:00">2021-09-19</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CSAPP%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">CSAPP学习</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="乘法运算和快速幂"><a href="#乘法运算和快速幂" class="headerlink" title="乘法运算和快速幂"></a>乘法运算和快速幂</h1><p>程序进行乘法运算，用编程程序描述起来十分简单，一个<code>*</code>（乘号）足以表示，可是计算机究竟做了什么呢，有没有办法不使用<code>*</code>，来自己实现一个乘法的函数呢？</p>
+<p>众所周知的是，各种信息都是以<code>0</code>,<code>1</code>（二进制）的形式在电脑内储存的，要运算的整数数据也是一样的，无符号整数就是普通的十进制转换为二进制，而有符号整数则是通过补码的形式来存储的。</p>
+<h2 id="lt-lt-运算符"><a href="#lt-lt-运算符" class="headerlink" title="&lt;&lt;运算符"></a><code>&lt;&lt;</code>运算符</h2><p>在了解乘法是如何处理之前，必须要知道<code>&lt;&lt;</code>运算符的作用。这个家伙叫做移位运算符，顾名思义，它就是来移动这个二进制数的位置的，而<code>&lt;&lt;</code>符号箭头的方向就是那一串<code>01</code>移动的方向，<code>&lt;&lt;3</code>后面跟的数字就是要移动的位数。</p>
+<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210919145750149.png" alt="移位操作示范"></p>
+<p>先说一下结论：</p>
+<p><code>x&lt;&lt;4</code>就等同于把<code>x</code>的值乘以2的4次方，再对<code>M</code>取一次模，而<code>M</code>的值则是这个<code>x</code>所能存储的位数w所决定的。</p>
+<p>打个比方：</p>
+<blockquote>
+<p><code>x</code>是个无符号整数，只有4位，x最大也只能是<code>1111</code>了，对应的十进制数就是 2^4-1，也就是15。如果<code>x</code>现在等于<code>[0101]</code>也就是5，我通过<code>x&lt;&lt;2</code>操作，就变成了<code>010100</code>也就是5* 2^2=20，但是<code>x</code>内只能存储4位，所以前面2位就被丢弃了<del>01</del><code>[0100]</code>,换算成十进制就是<code>4</code>。这个过程整体表示就是    <code>x&lt;&lt;4=(5*2^2)mod16=4</code></p>
+</blockquote>
+<ul>
+<li><em>需要知道的，以上为了方便理解只通过无符号数来说，而对于补码形式，也都是类似的</em></li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/09/19/%E4%B9%98%E6%B3%95%E8%BF%90%E7%AE%97%E5%92%8C%E5%BF%AB%E9%80%9F%E5%B9%82/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/09/11/%E5%AD%A6%E4%B9%A0%E6%97%A5%E5%BF%97/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -915,89 +1002,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/22/Vue%E9%A1%B9%E7%9B%AE%E5%AD%A6%E4%B9%A0(%E4%B8%89)/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
-      <meta itemprop="name" content="gezi_lzq">
-      <meta itemprop="description" content="Blog of lizhenqi ">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gezi's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/08/22/Vue%E9%A1%B9%E7%9B%AE%E5%AD%A6%E4%B9%A0(%E4%B8%89)/" class="post-title-link" itemprop="url">Vue项目学习(三)</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-08-22 00:00:00 / Modified: 19:37:52" itemprop="dateCreated datePublished" datetime="2021-08-22T00:00:00+08:00">2021-08-22</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">前端学习</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%AD%A6%E4%B9%A0/vue/" itemprop="url" rel="index"><span itemprop="name">vue</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1TJ411E7cY"><em>参考课程</em></a> </p>
-<h2 id="权限列表"><a href="#权限列表" class="headerlink" title="权限列表"></a>权限列表</h2><h3 id="添加权限列表路由"><a href="#添加权限列表路由" class="headerlink" title="添加权限列表路由"></a>添加权限列表路由</h3><p>创建权限管理组件（Rights.vue）</p>
-<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210821170830269.png" alt="image-20210821170830269"></p>
-<p>并在<code>router.js</code>添加对应的路由规则</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Rights <span class="keyword">from</span> <span class="string">&#x27;../components/power/Rights.vue&#x27;</span></span><br><span class="line">......</span><br><span class="line">      <span class="attr">path</span>: <span class="string">&#x27;/home&#x27;</span>, <span class="attr">component</span>: Home, <span class="attr">redirect</span>: <span class="string">&#x27;/welcome&#x27;</span>, <span class="attr">children</span>: [</span><br><span class="line">        &#123; <span class="attr">path</span>: <span class="string">&quot;/welcome&quot;</span>, <span class="attr">component</span>: Welcome &#125;,</span><br><span class="line">        &#123; <span class="attr">path</span>: <span class="string">&quot;/users&quot;</span>, <span class="attr">component</span>: Users &#125;,</span><br><span class="line">        &#123; <span class="attr">path</span>: <span class="string">&quot;/rights&quot;</span>, <span class="attr">component</span>: Rights &#125;</span><br><span class="line">      ]</span><br><span class="line">......</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/08/22/Vue%E9%A1%B9%E7%9B%AE%E5%AD%A6%E4%B9%A0(%E4%B8%89)/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1069,7 +1073,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-count">14</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -1082,7 +1086,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags">
           
-        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-count">18</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
