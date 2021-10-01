@@ -259,7 +259,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2021-10-01 00:00:00 / Modified: 15:30:12" itemprop="dateCreated datePublished" datetime="2021-10-01T00:00:00+08:00">2021-10-01</time>
+              <time title="Created: 2021-10-01 00:00:00 / Modified: 15:45:40" itemprop="dateCreated datePublished" datetime="2021-10-01T00:00:00+08:00">2021-10-01</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -292,136 +292,14 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm init -y</span><br></pre></td></tr></table></figure>
 <p>生成了一个package.json</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">Wrote to F:\Project\Learn\TypeStript\code\part3\package.json:</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  &quot;name&quot;: &quot;part3&quot;,</span><br><span class="line">  &quot;version&quot;: &quot;1.0.0&quot;,</span><br><span class="line">  &quot;description&quot;: &quot;&quot;,</span><br><span class="line">  &quot;main&quot;: &quot;index.js&quot;,</span><br><span class="line">  &quot;scripts&quot;: &#123;</span><br><span class="line">    &quot;test&quot;: &quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;keywords&quot;: [],</span><br><span class="line">  &quot;author&quot;: &quot;&quot;,</span><br><span class="line">  &quot;license&quot;: &quot;ISC&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="下载构建工具"><a href="#下载构建工具" class="headerlink" title="下载构建工具"></a>下载构建工具</h3><ul>
-<li>npm安装开发依赖</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i -D webpack webpack-cli typescript ts-loader</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>webpack<ul>
-<li>构建工具webpack</li>
-</ul>
-</li>
-<li>webpack-cli<ul>
-<li>webpack的命令行工具</li>
-</ul>
-</li>
-<li>typescript<ul>
-<li>ts编译器</li>
-</ul>
-</li>
-<li>ts-loader<ul>
-<li>ts加载器，用于在webpack中编译ts文件</li>
-</ul>
-</li>
-</ul>
-<p>安装完成后，<code>package.json</code>内也自动添加上了</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;devDependencies&quot;</span>: &#123;</span><br><span class="line">  <span class="attr">&quot;ts-loader&quot;</span>: <span class="string">&quot;^9.2.6&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;typescript&quot;</span>: <span class="string">&quot;^4.4.3&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;webpack&quot;</span>: <span class="string">&quot;^5.55.1&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;webpack-cli&quot;</span>: <span class="string">&quot;^4.8.0&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="编写配置文件"><a href="#编写配置文件" class="headerlink" title="编写配置文件"></a>编写配置文件</h3><ul>
-<li>编写webpack配置文件<code>webpack.config.js</code></li>
-</ul>
-<ol>
-<li>首先引入一个包</li>
-</ol>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">&#x27;path&#x27;</span>)</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>node.js中的一个模块，主要作用就是帮助我们拼接路径*</li>
-</ul>
-<ol start="2">
-<li>编写配置信息</li>
-</ol>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//webpack中的所有配置信息都应写在module.exports中</span></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    <span class="comment">// 指定入口文件</span></span><br><span class="line">    <span class="attr">entry</span>: <span class="string">&quot;./src/index.ts&quot;</span>,</span><br><span class="line">    </span><br><span class="line">    <span class="attr">mode</span>: <span class="string">&#x27;production&#x27;</span>,</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//指定打包文件所在目录</span></span><br><span class="line">    <span class="attr">output</span>: &#123;</span><br><span class="line">        <span class="comment">//指定打包文件的目录为”dist“</span></span><br><span class="line">        <span class="attr">path</span>: path.resolve(__dirname,<span class="string">&#x27;dist&#x27;</span>),</span><br><span class="line">        <span class="comment">//指定 打包后文件的文件的文件名为”bundle.js“</span></span><br><span class="line">        <span class="attr">filename</span>: <span class="string">&quot;bundle.js&quot;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">//指定webpack打包时要使用的模块</span></span><br><span class="line">    <span class="attr">module</span>: &#123;</span><br><span class="line">        <span class="comment">// 指定要加载的规则</span></span><br><span class="line">        <span class="attr">rules</span>: [</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">// test指定的是规则生效的文件(.ts结尾)</span></span><br><span class="line">                <span class="attr">test</span>:<span class="regexp">/\.ts$/</span>,</span><br><span class="line">                <span class="comment">//要使用的loader</span></span><br><span class="line">                use: <span class="string">&#x27;ts-loader&#x27;</span>,</span><br><span class="line">                <span class="comment">//要排除的文件</span></span><br><span class="line">                <span class="attr">exclude</span>: <span class="regexp">/node-moules/</span></span><br><span class="line">            &#125;</span><br><span class="line">        ]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>指定ts编译规范<code>tsconfig.json</code>文件</li>
-</ul>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;compilerOptions&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;module&quot;</span>: <span class="string">&quot;ES2015&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;target&quot;</span>: <span class="string">&quot;ES2016&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;strict&quot;</span>: <span class="literal">true</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>修改<code>package.json</code>文件</li>
-</ul>
-<p>当build命令时执行webpack</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;scripts&quot;</span>: &#123;</span><br><span class="line">  <span class="attr">&quot;test&quot;</span>: <span class="string">&quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;build&quot;</span>: <span class="string">&quot;webpack&quot;</span></span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
-
-<p>运行<code>npm run build</code>命令,生成<code>dist\bundle.js</code>文件</p>
-<h3 id="安装插件"><a href="#安装插件" class="headerlink" title="安装插件"></a>安装插件</h3><h4 id="html-webpack-plugin"><a href="#html-webpack-plugin" class="headerlink" title="html-webpack-plugin"></a><code>html-webpack-plugin</code></h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i -D html-webpack-plugin</span><br></pre></td></tr></table></figure>
-
-<p>webpack中html插件，用来自动创建html文件</p>
-<p>进入<code>webpack.config.js</code>文件对插件进行配置</p>
-<ul>
-<li>引入插件</li>
-</ul>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> HTMLWebpackPlugin = <span class="built_in">require</span>(<span class="string">&quot;html-webpack-plugin&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>配置webpack插件</li>
-</ul>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">plugins: [</span><br><span class="line">    <span class="keyword">new</span> HTMLWebpackPlugin(&#123;</span><br><span class="line">        <span class="attr">title</span>: <span class="string">&quot;Hello TS&quot;</span>,</span><br><span class="line">    &#125;),</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
-
-<p>运行<code>npm run build</code>后，生成<code>index.html</code>文件，<code>&lt;title&gt;</code>即为配置时所写的</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!doctype <span class="meta-keyword">html</span>&gt;</span><span class="tag">&lt;<span class="name">html</span>&gt;</span><span class="tag">&lt;<span class="name">head</span>&gt;</span><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;utf-8&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">title</span>&gt;</span>Hello TS<span class="tag">&lt;/<span class="name">title</span>&gt;</span><span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">&quot;viewport&quot;</span> <span class="attr">content</span>=<span class="string">·········</span></span></span><br></pre></td></tr></table></figure>
-
-<p>当然实际肯定不能这样一个个写，大多使用模板来生成网页</p>
-<p>根据自己设定的<code>./src/index.html</code>模板来生成</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">plugins: [</span><br><span class="line">    <span class="keyword">new</span> HTMLWebpackPlugin(&#123;</span><br><span class="line">        <span class="attr">template</span>: <span class="string">&quot;./src/index.html&quot;</span>,</span><br><span class="line">    &#125;),</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
-
-<h4 id="webpack-dev-server"><a href="#webpack-dev-server" class="headerlink" title="webpack-dev-server"></a><code>webpack-dev-server</code></h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i -D webpack-dev-server</span><br></pre></td></tr></table></figure>
-
-<p>webpack-dev-server，webpack的开发服务器，可以通过它热更新网页，项目有更改自动刷新</p>
-<ul>
-<li>设置命令，修改<code>package.json</code>文件</li>
-</ul>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;scripts&quot;</span>: &#123;</span><br><span class="line">  <span class="attr">&quot;test&quot;</span>: <span class="string">&quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;build&quot;</span>: <span class="string">&quot;webpack&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;start&quot;</span>: <span class="string">&quot;webpack serve --open chrome.exe&quot;</span></span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
-
-<p>通过<code>start</code>命令启动<code>webpack serve</code>并且打开chrome</p>
-<h4 id="clean-webpack-plugin"><a href="#clean-webpack-plugin" class="headerlink" title="clean-webpack-plugin"></a><code>clean-webpack-plugin</code></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i -D clean-webpack-plugin</span><br></pre></td></tr></table></figure>
-
-<p>webpack中的清除插件，每次构建都会先清除目录</p>
-<ul>
-<li>引入插件</li>
-</ul>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; CleanWebpackPlugin &#125; = <span class="built_in">require</span>(<span class="string">&quot;clean-webpack-plugin&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>配置注册webpack插件</li>
-</ul>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">plugins: [</span><br><span class="line">    <span class="keyword">new</span> CleanWebpackPlugin(),</span><br><span class="line">    <span class="keyword">new</span> HTMLWebpackPlugin(&#123;</span><br><span class="line">        <span class="attr">title</span>: <span class="string">&quot;Hello TS&quot;</span>,</span><br><span class="line">    &#125;),</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
-
-<p>作用：执行前会先去清空dist目录再编译</p>
-<h3 id="多模块配置"><a href="#多模块配置" class="headerlink" title="多模块配置"></a>多模块配置</h3><p>在<code>webpack.config.js</code>中加入</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//用来设置引用模块</span><br><span class="line">resolve: &#123;</span><br><span class="line">	extensions: [&quot;.ts&quot;, &quot;.js&quot;]</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
-
-<p>作用：指ts文件或者js文件均可作为模块使用</p>
-<h3 id="安装Babel"><a href="#安装Babel" class="headerlink" title="安装Babel"></a>安装Babel</h3><p>开发中还经常需要结合babel来对代码进行转换以使其可以兼容到更多的浏览器，在上述步骤的基础上，通过以下步骤再将babel引入到项目中。</p>
-<blockquote>
-<p>Babel 是一个工具链，主要用于将采用 ECMAScript 2015+ 语法编写的代码转换为向后兼容的 JavaScript 语法，以便能够运行在当前和旧版本的浏览器或其他环境中。下面列出的是 Babel 能为你做的事情：</p>
-<ul>
-<li>语法转换</li>
-<li>通过 Polyfill 方式在目标环境中添加缺失的特性（通过第三方 polyfill 模块，例如 <a target="_blank" rel="noopener" href="https://github.com/zloirock/core-js">core-js</a>，实现）</li>
-<li>源码转换 (codemods)</li>
-</ul>
-</blockquote>
-<ul>
-<li>npm安装</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -D  @babel/core @babel/preset-env babel-loader core-js</span><br></pre></td></tr></table></figure>
-
-<p><code>@babel/core</code>babel的一个核心工具</p>
-<p><code>@babel/preset-env</code>预先设置的环境</p>
-<p><code>babel-loader</code>babel在webpack中的加载器</p>
-<p><code>core-js</code>模拟js运行环境,使老版本的浏览器支持新版ES语法（可以后面按需加载）</p>
-<p>成功安装</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;devDependencies&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;@babel/core&quot;</span>: <span class="string">&quot;^7.15.5&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;@babel/preset-env&quot;</span>: <span class="string">&quot;^7.15.6&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;babel-loader&quot;</span>: <span class="string">&quot;^8.2.2&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;clean-webpack-plugin&quot;</span>: <span class="string">&quot;^4.0.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;core-js&quot;</span>: <span class="string">&quot;^3.18.1&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;html-webpack-plugin&quot;</span>: <span class="string">&quot;^5.3.2&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;ts-loader&quot;</span>: <span class="string">&quot;^9.2.6&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;typescript&quot;</span>: <span class="string">&quot;^4.4.3&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;webpack&quot;</span>: <span class="string">&quot;^5.55.1&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;webpack-cli&quot;</span>: <span class="string">&quot;^4.8.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;webpack-dev-server&quot;</span>: <span class="string">&quot;^4.3.0&quot;</span></span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>修改配置文件</li>
-</ul>
-<p>修改webpack.config.js配置文件</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//要使用的loader,从后往前执行，所以先写babel</span></span><br><span class="line">               <span class="attr">use</span>: [</span><br><span class="line">                   <span class="comment">//配置babel</span></span><br><span class="line">                   &#123;</span><br><span class="line">                       <span class="attr">loader</span>: <span class="string">&quot;babel-loader&quot;</span>,     <span class="comment">//指定加载器</span></span><br><span class="line">                       <span class="comment">//设置babel</span></span><br><span class="line">                       <span class="attr">options</span>:&#123;</span><br><span class="line">                           <span class="comment">//设置预定义环境</span></span><br><span class="line">                           <span class="attr">presets</span>: [</span><br><span class="line">                               [</span><br><span class="line">                                   <span class="comment">//指定环境插件</span></span><br><span class="line">                                   <span class="string">&quot;@babel/preset-env&quot;</span>,</span><br><span class="line">                                   <span class="comment">//配置信息</span></span><br><span class="line">                                   &#123;</span><br><span class="line">                                       <span class="comment">//指定兼容的目标浏览器</span></span><br><span class="line">                                       <span class="string">&quot;targets&quot;</span>:&#123;</span><br><span class="line">                                           <span class="string">&quot;chrome&quot;</span>: <span class="string">&quot;88&quot;</span>,</span><br><span class="line">                                           <span class="string">&quot;ie&quot;</span>: <span class="string">&quot;11&quot;</span></span><br><span class="line">                                       &#125;,</span><br><span class="line">                                       <span class="comment">//指定corejs版本</span></span><br><span class="line">                                       <span class="string">&quot;corejs&quot;</span>:<span class="string">&quot;3&quot;</span>,</span><br><span class="line">                                       <span class="comment">//使用corejs的方式</span></span><br><span class="line">                                       <span class="string">&quot;useBuiltIns&quot;</span>: <span class="string">&quot;usage&quot;</span><span class="comment">//usage按需加载</span></span><br><span class="line">                                   &#125;</span><br><span class="line">                               ]</span><br><span class="line">                           ]</span><br><span class="line">                       &#125;</span><br><span class="line">                   &#125;,</span><br><span class="line">                   &#123;</span><br><span class="line">                       <span class="attr">loader</span>: <span class="string">&quot;ts-loader&quot;</span>,</span><br><span class="line">                   &#125;</span><br><span class="line">               ],</span><br></pre></td></tr></table></figure>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/10/01/Webpack%E6%89%93%E5%8C%85ts%E4%BB%A3%E7%A0%81/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
