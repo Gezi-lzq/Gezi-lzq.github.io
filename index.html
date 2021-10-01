@@ -157,7 +157,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/09/19/%E4%B9%98%E6%B3%95%E8%BF%90%E7%AE%97%E5%92%8C%E5%BF%AB%E9%80%9F%E5%B9%82/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/10/01/Webpack%E6%89%93%E5%8C%85ts%E4%BB%A3%E7%A0%81/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
@@ -171,7 +171,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/09/19/%E4%B9%98%E6%B3%95%E8%BF%90%E7%AE%97%E5%92%8C%E5%BF%AB%E9%80%9F%E5%B9%82/" class="post-title-link" itemprop="url">乘法运算和快速幂</a>
+            <a href="/2021/10/01/Webpack%E6%89%93%E5%8C%85ts%E4%BB%A3%E7%A0%81/" class="post-title-link" itemprop="url">Webpack打包ts代码</a>
         </h2>
 
         <div class="post-meta">
@@ -182,7 +182,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2021-09-19 00:00:00 / Modified: 16:22:34" itemprop="dateCreated datePublished" datetime="2021-09-19T00:00:00+08:00">2021-09-19</time>
+              <time title="Created: 2021-10-01 00:00:00 / Modified: 15:30:12" itemprop="dateCreated datePublished" datetime="2021-10-01T00:00:00+08:00">2021-10-01</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -190,7 +190,11 @@
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/CSAPP%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">CSAPP学习</span></a>
+                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">前端学习</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%AD%A6%E4%B9%A0/TypeScript/" itemprop="url" rel="index"><span itemprop="name">TypeScript</span></a>
                 </span>
             </span>
 
@@ -205,22 +209,592 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="乘法运算和快速幂"><a href="#乘法运算和快速幂" class="headerlink" title="乘法运算和快速幂"></a>乘法运算和快速幂</h1><p>程序进行乘法运算，用编程程序描述起来十分简单，一个<code>*</code>（乘号）足以表示，可是计算机究竟做了什么呢，有没有办法不使用<code>*</code>，来自己实现一个乘法的函数呢？</p>
-<p>众所周知的是，各种信息都是以<code>0</code>,<code>1</code>（二进制）的形式在电脑内储存的，要运算的整数数据也是一样的，无符号整数就是普通的十进制转换为二进制，而有符号整数则是通过补码的形式来存储的。</p>
-<h2 id="lt-lt-运算符"><a href="#lt-lt-运算符" class="headerlink" title="&lt;&lt;运算符"></a><code>&lt;&lt;</code>运算符</h2><p>在了解乘法是如何处理之前，必须要知道<code>&lt;&lt;</code>运算符的作用。这个家伙叫做移位运算符，顾名思义，它就是来移动这个二进制数的位置的，而<code>&lt;&lt;</code>符号箭头的方向就是那一串<code>01</code>移动的方向，<code>&lt;&lt;3</code>后面跟的数字就是要移动的位数。</p>
-<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210919145750149.png" alt="移位操作示范"></p>
-<p>先说一下结论：</p>
-<p><code>x&lt;&lt;4</code>就等同于把<code>x</code>的值乘以2的4次方，再对<code>M</code>取一次模，而<code>M</code>的值则是这个<code>x</code>所能存储的位数w所决定的。</p>
-<p>打个比方：</p>
+          <h2 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h2><h3 id="初始化项目"><a href="#初始化项目" class="headerlink" title="初始化项目"></a>初始化项目</h3><ul>
+<li>命令行运行</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm init -y</span><br></pre></td></tr></table></figure>
+<p>生成了一个package.json</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">Wrote to F:\Project\Learn\TypeStript\code\part3\package.json:</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  &quot;name&quot;: &quot;part3&quot;,</span><br><span class="line">  &quot;version&quot;: &quot;1.0.0&quot;,</span><br><span class="line">  &quot;description&quot;: &quot;&quot;,</span><br><span class="line">  &quot;main&quot;: &quot;index.js&quot;,</span><br><span class="line">  &quot;scripts&quot;: &#123;</span><br><span class="line">    &quot;test&quot;: &quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;keywords&quot;: [],</span><br><span class="line">  &quot;author&quot;: &quot;&quot;,</span><br><span class="line">  &quot;license&quot;: &quot;ISC&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="下载构建工具"><a href="#下载构建工具" class="headerlink" title="下载构建工具"></a>下载构建工具</h3><ul>
+<li>npm安装开发依赖</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i -D webpack webpack-cli typescript ts-loader</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>webpack<ul>
+<li>构建工具webpack</li>
+</ul>
+</li>
+<li>webpack-cli<ul>
+<li>webpack的命令行工具</li>
+</ul>
+</li>
+<li>typescript<ul>
+<li>ts编译器</li>
+</ul>
+</li>
+<li>ts-loader<ul>
+<li>ts加载器，用于在webpack中编译ts文件</li>
+</ul>
+</li>
+</ul>
+<p>安装完成后，<code>package.json</code>内也自动添加上了</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;devDependencies&quot;</span>: &#123;</span><br><span class="line">  <span class="attr">&quot;ts-loader&quot;</span>: <span class="string">&quot;^9.2.6&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;typescript&quot;</span>: <span class="string">&quot;^4.4.3&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;webpack&quot;</span>: <span class="string">&quot;^5.55.1&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;webpack-cli&quot;</span>: <span class="string">&quot;^4.8.0&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="编写配置文件"><a href="#编写配置文件" class="headerlink" title="编写配置文件"></a>编写配置文件</h3><ul>
+<li>编写webpack配置文件<code>webpack.config.js</code></li>
+</ul>
+<ol>
+<li>首先引入一个包</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">&#x27;path&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>node.js中的一个模块，主要作用就是帮助我们拼接路径*</li>
+</ul>
+<ol start="2">
+<li>编写配置信息</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//webpack中的所有配置信息都应写在module.exports中</span></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    <span class="comment">// 指定入口文件</span></span><br><span class="line">    <span class="attr">entry</span>: <span class="string">&quot;./src/index.ts&quot;</span>,</span><br><span class="line">    </span><br><span class="line">    <span class="attr">mode</span>: <span class="string">&#x27;production&#x27;</span>,</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//指定打包文件所在目录</span></span><br><span class="line">    <span class="attr">output</span>: &#123;</span><br><span class="line">        <span class="comment">//指定打包文件的目录为”dist“</span></span><br><span class="line">        <span class="attr">path</span>: path.resolve(__dirname,<span class="string">&#x27;dist&#x27;</span>),</span><br><span class="line">        <span class="comment">//指定 打包后文件的文件的文件名为”bundle.js“</span></span><br><span class="line">        <span class="attr">filename</span>: <span class="string">&quot;bundle.js&quot;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">//指定webpack打包时要使用的模块</span></span><br><span class="line">    <span class="attr">module</span>: &#123;</span><br><span class="line">        <span class="comment">// 指定要加载的规则</span></span><br><span class="line">        <span class="attr">rules</span>: [</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">// test指定的是规则生效的文件(.ts结尾)</span></span><br><span class="line">                <span class="attr">test</span>:<span class="regexp">/\.ts$/</span>,</span><br><span class="line">                <span class="comment">//要使用的loader</span></span><br><span class="line">                use: <span class="string">&#x27;ts-loader&#x27;</span>,</span><br><span class="line">                <span class="comment">//要排除的文件</span></span><br><span class="line">                <span class="attr">exclude</span>: <span class="regexp">/node-moules/</span></span><br><span class="line">            &#125;</span><br><span class="line">        ]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>指定ts编译规范<code>tsconfig.json</code>文件</li>
+</ul>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;compilerOptions&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;module&quot;</span>: <span class="string">&quot;ES2015&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;target&quot;</span>: <span class="string">&quot;ES2016&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;strict&quot;</span>: <span class="literal">true</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>修改<code>package.json</code>文件</li>
+</ul>
+<p>当build命令时执行webpack</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;scripts&quot;</span>: &#123;</span><br><span class="line">  <span class="attr">&quot;test&quot;</span>: <span class="string">&quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;build&quot;</span>: <span class="string">&quot;webpack&quot;</span></span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+
+<p>运行<code>npm run build</code>命令,生成<code>dist\bundle.js</code>文件</p>
+<h3 id="安装插件"><a href="#安装插件" class="headerlink" title="安装插件"></a>安装插件</h3><h4 id="html-webpack-plugin"><a href="#html-webpack-plugin" class="headerlink" title="html-webpack-plugin"></a><code>html-webpack-plugin</code></h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i -D html-webpack-plugin</span><br></pre></td></tr></table></figure>
+
+<p>webpack中html插件，用来自动创建html文件</p>
+<p>进入<code>webpack.config.js</code>文件对插件进行配置</p>
+<ul>
+<li>引入插件</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> HTMLWebpackPlugin = <span class="built_in">require</span>(<span class="string">&quot;html-webpack-plugin&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>配置webpack插件</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">plugins: [</span><br><span class="line">    <span class="keyword">new</span> HTMLWebpackPlugin(&#123;</span><br><span class="line">        <span class="attr">title</span>: <span class="string">&quot;Hello TS&quot;</span>,</span><br><span class="line">    &#125;),</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>运行<code>npm run build</code>后，生成<code>index.html</code>文件，<code>&lt;title&gt;</code>即为配置时所写的</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!doctype <span class="meta-keyword">html</span>&gt;</span><span class="tag">&lt;<span class="name">html</span>&gt;</span><span class="tag">&lt;<span class="name">head</span>&gt;</span><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;utf-8&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">title</span>&gt;</span>Hello TS<span class="tag">&lt;/<span class="name">title</span>&gt;</span><span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">&quot;viewport&quot;</span> <span class="attr">content</span>=<span class="string">·········</span></span></span><br></pre></td></tr></table></figure>
+
+<p>当然实际肯定不能这样一个个写，大多使用模板来生成网页</p>
+<p>根据自己设定的<code>./src/index.html</code>模板来生成</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">plugins: [</span><br><span class="line">    <span class="keyword">new</span> HTMLWebpackPlugin(&#123;</span><br><span class="line">        <span class="attr">template</span>: <span class="string">&quot;./src/index.html&quot;</span>,</span><br><span class="line">    &#125;),</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<h4 id="webpack-dev-server"><a href="#webpack-dev-server" class="headerlink" title="webpack-dev-server"></a><code>webpack-dev-server</code></h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i -D webpack-dev-server</span><br></pre></td></tr></table></figure>
+
+<p>webpack-dev-server，webpack的开发服务器，可以通过它热更新网页，项目有更改自动刷新</p>
+<ul>
+<li>设置命令，修改<code>package.json</code>文件</li>
+</ul>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;scripts&quot;</span>: &#123;</span><br><span class="line">  <span class="attr">&quot;test&quot;</span>: <span class="string">&quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;build&quot;</span>: <span class="string">&quot;webpack&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;start&quot;</span>: <span class="string">&quot;webpack serve --open chrome.exe&quot;</span></span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+
+<p>通过<code>start</code>命令启动<code>webpack serve</code>并且打开chrome</p>
+<h4 id="clean-webpack-plugin"><a href="#clean-webpack-plugin" class="headerlink" title="clean-webpack-plugin"></a><code>clean-webpack-plugin</code></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i -D clean-webpack-plugin</span><br></pre></td></tr></table></figure>
+
+<p>webpack中的清除插件，每次构建都会先清除目录</p>
+<ul>
+<li>引入插件</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; CleanWebpackPlugin &#125; = <span class="built_in">require</span>(<span class="string">&quot;clean-webpack-plugin&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>配置注册webpack插件</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">plugins: [</span><br><span class="line">    <span class="keyword">new</span> CleanWebpackPlugin(),</span><br><span class="line">    <span class="keyword">new</span> HTMLWebpackPlugin(&#123;</span><br><span class="line">        <span class="attr">title</span>: <span class="string">&quot;Hello TS&quot;</span>,</span><br><span class="line">    &#125;),</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>作用：执行前会先去清空dist目录再编译</p>
+<h3 id="多模块配置"><a href="#多模块配置" class="headerlink" title="多模块配置"></a>多模块配置</h3><p>在<code>webpack.config.js</code>中加入</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//用来设置引用模块</span><br><span class="line">resolve: &#123;</span><br><span class="line">	extensions: [&quot;.ts&quot;, &quot;.js&quot;]</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+
+<p>作用：指ts文件或者js文件均可作为模块使用</p>
+<h3 id="安装Babel"><a href="#安装Babel" class="headerlink" title="安装Babel"></a>安装Babel</h3><p>开发中还经常需要结合babel来对代码进行转换以使其可以兼容到更多的浏览器，在上述步骤的基础上，通过以下步骤再将babel引入到项目中。</p>
 <blockquote>
-<p><code>x</code>是个无符号整数，只有4位，x最大也只能是<code>1111</code>了，对应的十进制数就是 2^4-1，也就是15。如果<code>x</code>现在等于<code>[0101]</code>也就是5，我通过<code>x&lt;&lt;2</code>操作，就变成了<code>010100</code>也就是5* 2^2=20，但是<code>x</code>内只能存储4位，所以前面2位就被丢弃了<del>01</del><code>[0100]</code>,换算成十进制就是<code>4</code>。这个过程整体表示就是    <code>x&lt;&lt;4=(5*2^2)mod16=4</code></p>
+<p>Babel 是一个工具链，主要用于将采用 ECMAScript 2015+ 语法编写的代码转换为向后兼容的 JavaScript 语法，以便能够运行在当前和旧版本的浏览器或其他环境中。下面列出的是 Babel 能为你做的事情：</p>
+<ul>
+<li>语法转换</li>
+<li>通过 Polyfill 方式在目标环境中添加缺失的特性（通过第三方 polyfill 模块，例如 <a target="_blank" rel="noopener" href="https://github.com/zloirock/core-js">core-js</a>，实现）</li>
+<li>源码转换 (codemods)</li>
+</ul>
 </blockquote>
 <ul>
-<li><em>需要知道的，以上为了方便理解只通过无符号数来说，而对于补码形式，也都是类似的</em></li>
+<li>npm安装</li>
 </ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -D  @babel/core @babel/preset-env babel-loader core-js</span><br></pre></td></tr></table></figure>
+
+<p><code>@babel/core</code>babel的一个核心工具</p>
+<p><code>@babel/preset-env</code>预先设置的环境</p>
+<p><code>babel-loader</code>babel在webpack中的加载器</p>
+<p><code>core-js</code>模拟js运行环境,使老版本的浏览器支持新版ES语法（可以后面按需加载）</p>
+<p>成功安装</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;devDependencies&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;@babel/core&quot;</span>: <span class="string">&quot;^7.15.5&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;@babel/preset-env&quot;</span>: <span class="string">&quot;^7.15.6&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;babel-loader&quot;</span>: <span class="string">&quot;^8.2.2&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;clean-webpack-plugin&quot;</span>: <span class="string">&quot;^4.0.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;core-js&quot;</span>: <span class="string">&quot;^3.18.1&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;html-webpack-plugin&quot;</span>: <span class="string">&quot;^5.3.2&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;ts-loader&quot;</span>: <span class="string">&quot;^9.2.6&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;typescript&quot;</span>: <span class="string">&quot;^4.4.3&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;webpack&quot;</span>: <span class="string">&quot;^5.55.1&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;webpack-cli&quot;</span>: <span class="string">&quot;^4.8.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;webpack-dev-server&quot;</span>: <span class="string">&quot;^4.3.0&quot;</span></span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>修改配置文件</li>
+</ul>
+<p>修改webpack.config.js配置文件</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//要使用的loader,从后往前执行，所以先写babel</span></span><br><span class="line">               <span class="attr">use</span>: [</span><br><span class="line">                   <span class="comment">//配置babel</span></span><br><span class="line">                   &#123;</span><br><span class="line">                       <span class="attr">loader</span>: <span class="string">&quot;babel-loader&quot;</span>,     <span class="comment">//指定加载器</span></span><br><span class="line">                       <span class="comment">//设置babel</span></span><br><span class="line">                       <span class="attr">options</span>:&#123;</span><br><span class="line">                           <span class="comment">//设置预定义环境</span></span><br><span class="line">                           <span class="attr">presets</span>: [</span><br><span class="line">                               [</span><br><span class="line">                                   <span class="comment">//指定环境插件</span></span><br><span class="line">                                   <span class="string">&quot;@babel/preset-env&quot;</span>,</span><br><span class="line">                                   <span class="comment">//配置信息</span></span><br><span class="line">                                   &#123;</span><br><span class="line">                                       <span class="comment">//指定兼容的目标浏览器</span></span><br><span class="line">                                       <span class="string">&quot;targets&quot;</span>:&#123;</span><br><span class="line">                                           <span class="string">&quot;chrome&quot;</span>: <span class="string">&quot;88&quot;</span>,</span><br><span class="line">                                           <span class="string">&quot;ie&quot;</span>: <span class="string">&quot;11&quot;</span></span><br><span class="line">                                       &#125;,</span><br><span class="line">                                       <span class="comment">//指定corejs版本</span></span><br><span class="line">                                       <span class="string">&quot;corejs&quot;</span>:<span class="string">&quot;3&quot;</span>,</span><br><span class="line">                                       <span class="comment">//使用corejs的方式</span></span><br><span class="line">                                       <span class="string">&quot;useBuiltIns&quot;</span>: <span class="string">&quot;usage&quot;</span><span class="comment">//usage按需加载</span></span><br><span class="line">                                   &#125;</span><br><span class="line">                               ]</span><br><span class="line">                           ]</span><br><span class="line">                       &#125;</span><br><span class="line">                   &#125;,</span><br><span class="line">                   &#123;</span><br><span class="line">                       <span class="attr">loader</span>: <span class="string">&quot;ts-loader&quot;</span>,</span><br><span class="line">                   &#125;</span><br><span class="line">               ],</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/09/29/%E5%BC%B9%E6%80%A7%E7%9B%92%E5%AD%90flex/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
+      <meta itemprop="name" content="gezi_lzq">
+      <meta itemprop="description" content="Blog of lizhenqi ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gezi's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/09/29/%E5%BC%B9%E6%80%A7%E7%9B%92%E5%AD%90flex/" class="post-title-link" itemprop="url">弹性盒子`flex`记录</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-09-29 00:00:00" itemprop="dateCreated datePublished" datetime="2021-09-29T00:00:00+08:00">2021-09-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-10-01 15:31:40" itemprop="dateModified" datetime="2021-10-01T15:31:40+08:00">2021-10-01</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">前端学习</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%AD%A6%E4%B9%A0/CSS/" itemprop="url" rel="index"><span itemprop="name">CSS</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="父项常见属性"><a href="#父项常见属性" class="headerlink" title="父项常见属性"></a>父项常见属性</h3><ul>
+<li><code>flex-direction</code>：设置主轴的方向。</li>
+<li><code>justify-content</code>: 设置主轴上的子元素排列方式</li>
+<li><code>flex-wrap</code>:设置子元素是否换行</li>
+<li><code>align-content</code>：设置侧轴上的子元素排列方式（多行）</li>
+<li><code>align-items</code>: 设置侧轴上的子元素排列方式（单行）</li>
+<li><code>flex-flow</code>: 复合属性，相当于同时设置了<code>flex-direction</code>和<code>flex-wrap</code></li>
+</ul>
+<h3 id="子项常见属性"><a href="#子项常见属性" class="headerlink" title="子项常见属性"></a>子项常见属性</h3><ul>
+<li><code>flex</code>子项目占的份数</li>
+<li><code>align-self</code>控制子项自己在侧轴的排列方式</li>
+<li><code>order</code>属性定义子项的排列顺序（前后顺序）</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/09/26/%E5%B8%83%E5%B1%80/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
+      <meta itemprop="name" content="gezi_lzq">
+      <meta itemprop="description" content="Blog of lizhenqi ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gezi's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/09/26/%E5%B8%83%E5%B1%80/" class="post-title-link" itemprop="url">布局学习记录</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-09-26 00:00:00" itemprop="dateCreated datePublished" datetime="2021-09-26T00:00:00+08:00">2021-09-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-10-01 15:34:12" itemprop="dateModified" datetime="2021-10-01T15:34:12+08:00">2021-10-01</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">前端学习</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%AD%A6%E4%B9%A0/CSS/" itemprop="url" rel="index"><span itemprop="name">CSS</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="浮动（float"><a href="#浮动（float" class="headerlink" title="浮动（float)"></a>浮动（float)</h2><blockquote>
+<p>网页布局第一准则:多个块级元素纵向排列找标准流,<strong>多个块级元素横向排列找浮动</strong>。</p>
+<p>网页布局第二准则:先设置盒子大小,之后设置盒子的位置.</p>
+</blockquote>
+<p>浮动最典型的应用：可以让多个块级元素一行内排列显示。</p>
+<p><code>float</code>属性用于创建浮动框,将其移动到一边,直到左边缘或右边缘触及包含块或另一个浮动框的边缘。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2021/09/19/%E4%B9%98%E6%B3%95%E8%BF%90%E7%AE%97%E5%92%8C%E5%BF%AB%E9%80%9F%E5%B9%82/#more" rel="contents">
+              <a class="btn" href="/2021/09/26/%E5%B8%83%E5%B1%80/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/09/25/%E9%80%89%E6%8B%A9%E5%99%A8%E8%AE%B0%E5%BD%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
+      <meta itemprop="name" content="gezi_lzq">
+      <meta itemprop="description" content="Blog of lizhenqi ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gezi's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/09/25/%E9%80%89%E6%8B%A9%E5%99%A8%E8%AE%B0%E5%BD%95/" class="post-title-link" itemprop="url">选择器记录</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-09-25 00:00:00" itemprop="dateCreated datePublished" datetime="2021-09-25T00:00:00+08:00">2021-09-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-10-01 15:32:26" itemprop="dateModified" datetime="2021-10-01T15:32:26+08:00">2021-10-01</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">前端学习</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%AD%A6%E4%B9%A0/CSS/" itemprop="url" rel="index"><span itemprop="name">CSS</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="使用全局选择器，让选择器更易读"><a href="#使用全局选择器，让选择器更易读" class="headerlink" title="使用全局选择器，让选择器更易读"></a><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Learn/CSS/Building_blocks/Selectors/Type_Class_and_ID_Selectors#%E4%BD%BF%E7%94%A8%E5%85%A8%E5%B1%80%E9%80%89%E6%8B%A9%E5%99%A8%EF%BC%8C%E8%AE%A9%E9%80%89%E6%8B%A9%E5%99%A8%E6%9B%B4%E6%98%93%E8%AF%BB">使用全局选择器，让选择器更易读</a></h3><p>全局选择器的一种用法是让选择器更易读，更明显地表明它们的作用。例如，如果我想选中任何<code>&lt;article&gt;</code>元素的第一子元素，不论它是什么元素，都给它加粗，我可以将<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/:first-child"><code>:first-child</code></a>选择器（我们将会在<a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Selectors/Pseudo-classes_and_pseudo-elements">伪类和伪元素</a>课中进一步了解）用作<code>&lt;article&gt;</code>元素选择器的一个兄弟选择器：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">article :first-child &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是这会和<code>article:first-child</code>混淆，而后者选择了作为其他元素的第一子元素的<code>&lt;article&gt;</code>元素。</p>
+<p>为了避免这种混淆，我们可以向<code>:first-child</code>选择器加入全局选择器，这样选择器所做的事情很容易就能看懂。选择器正选中<code>&lt;article&gt;</code>元素的<em>任何</em>第一子元素：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">article *:first-child &#123;</span><br><span class="line"></span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/09/25/%E9%80%89%E6%8B%A9%E5%99%A8%E8%AE%B0%E5%BD%95/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/09/24/Learn%20CSS(%E4%BA%8C)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
+      <meta itemprop="name" content="gezi_lzq">
+      <meta itemprop="description" content="Blog of lizhenqi ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gezi's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/09/24/Learn%20CSS(%E4%BA%8C)/" class="post-title-link" itemprop="url">Learn CSS（二）</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-09-24 00:00:00" itemprop="dateCreated datePublished" datetime="2021-09-24T00:00:00+08:00">2021-09-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-10-01 15:34:59" itemprop="dateModified" datetime="2021-10-01T15:34:59+08:00">2021-10-01</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">前端学习</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%AD%A6%E4%B9%A0/CSS/" itemprop="url" rel="index"><span itemprop="name">CSS</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="CSS-布局"><a href="#CSS-布局" class="headerlink" title="CSS 布局"></a>CSS 布局</h1><h2 id="display-属性"><a href="#display-属性" class="headerlink" title="display 属性"></a>display 属性</h2><ul>
+<li><code>display</code> 属性规定是否/如何显示元素。</li>
+</ul>
+<p>每个 HTML 元素都有一个默认的 display 值，具体取决于它的元素类型。大多数元素的默认 display 值为 <code>block</code> 或 <code>inline</code>。</p>
+<p><code>display: none; </code>通常与 JavaScript 一起使用，以隐藏和显示元素，而无需删除和重新创建它们。</p>
+<p>默认情况下，<code>&lt;script&gt;</code> 元素使用 <code>display: none;</code>。</p>
+<h4 id="块级元素（block-element）"><a href="#块级元素（block-element）" class="headerlink" title="块级元素（block element）"></a>块级元素（block element）</h4><p>块级元素总是从新行开始，并占据可用的全部宽度（尽可能向左和向右伸展）。</p>
+<p>如<code>div</code>,<code>h</code>,<code>p</code>,<code>form</code>,<code>header</code>,<code>footer</code></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/09/24/Learn%20CSS(%E4%BA%8C)/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/09/24/%E5%B1%82%E5%8F%A0%E4%B8%8E%E7%BB%A7%E6%89%BF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
+      <meta itemprop="name" content="gezi_lzq">
+      <meta itemprop="description" content="Blog of lizhenqi ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gezi's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/09/24/%E5%B1%82%E5%8F%A0%E4%B8%8E%E7%BB%A7%E6%89%BF/" class="post-title-link" itemprop="url">层叠与继承记录</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-09-24 00:00:00" itemprop="dateCreated datePublished" datetime="2021-09-24T00:00:00+08:00">2021-09-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-10-01 15:33:17" itemprop="dateModified" datetime="2021-10-01T15:33:17+08:00">2021-10-01</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">前端学习</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%AD%A6%E4%B9%A0/CSS/" itemprop="url" rel="index"><span itemprop="name">CSS</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <blockquote>
+<p>最基本的概念——层叠、优先级和继承——这些概念决定着如何将CSS应用到HTML中，以及如何解决冲突。  </p>
+</blockquote>
+<h2 id="冲突规则"><a href="#冲突规则" class="headerlink" title="冲突规则"></a><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Learn/CSS/Building_blocks/Cascade_and_inheritance#%E5%86%B2%E7%AA%81%E8%A7%84%E5%88%99">冲突规则</a></h2><p>CSS代表**层叠样式表(Cascading Style Sheets)*<em>，理解第一个词</em>cascading*很重要— cascade 的表现方式是理解CSS的关键。</p>
+<p>在某些时候，在做一个项目过程中你会发现一些应该产生效果的样式没有生效。</p>
+<p>通常的原因是你创建了两个应用于同一个元素的规则。<strong>cascade</strong>, 和它密切相关的概念是 <strong>specificity</strong>，决定在发生冲突的时候应该使用哪条规则。设计元素样式的规则可能不是期望的规则，因此需要了解这些机制是如何工作的。</p>
+<p>这里也有<strong>继承</strong>的概念，也就是在默认情况下，一些css属性继承当前元素的父元素上设置的值，有些则不继承。这也可能导致一些和期望不同的结果。</p>
+<p>我们来快速的看下正在处理的关键问题，然后依次了解它们是如何相互影响的，以及如何和css交互的。虽然这些概念难以理解，但是随着不断的练习，你会慢慢熟悉它的工作原理。</p>
+<h3 id="层叠"><a href="#层叠" class="headerlink" title="层叠"></a><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Learn/CSS/Building_blocks/Cascade_and_inheritance#%E5%B1%82%E5%8F%A0">层叠</a></h3><p>Stylesheets <strong>cascade（样式表层叠）</strong> — 简单的说，<strong>css规则的顺序很重要</strong>；当应用两条同级别的规则到一个元素的时候，写在后面的就是实际使用的规则。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/09/24/%E5%B1%82%E5%8F%A0%E4%B8%8E%E7%BB%A7%E6%89%BF/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -331,6 +905,93 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/09/19/%E4%B9%98%E6%B3%95%E8%BF%90%E7%AE%97%E5%92%8C%E5%BF%AB%E9%80%9F%E5%B9%82/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
+      <meta itemprop="name" content="gezi_lzq">
+      <meta itemprop="description" content="Blog of lizhenqi ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gezi's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/09/19/%E4%B9%98%E6%B3%95%E8%BF%90%E7%AE%97%E5%92%8C%E5%BF%AB%E9%80%9F%E5%B9%82/" class="post-title-link" itemprop="url">乘法运算和快速幂</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-09-19 00:00:00 / Modified: 16:22:34" itemprop="dateCreated datePublished" datetime="2021-09-19T00:00:00+08:00">2021-09-19</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CSAPP%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">CSAPP学习</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="乘法运算和快速幂"><a href="#乘法运算和快速幂" class="headerlink" title="乘法运算和快速幂"></a>乘法运算和快速幂</h1><p>程序进行乘法运算，用编程程序描述起来十分简单，一个<code>*</code>（乘号）足以表示，可是计算机究竟做了什么呢，有没有办法不使用<code>*</code>，来自己实现一个乘法的函数呢？</p>
+<p>众所周知的是，各种信息都是以<code>0</code>,<code>1</code>（二进制）的形式在电脑内储存的，要运算的整数数据也是一样的，无符号整数就是普通的十进制转换为二进制，而有符号整数则是通过补码的形式来存储的。</p>
+<h2 id="lt-lt-运算符"><a href="#lt-lt-运算符" class="headerlink" title="&lt;&lt;运算符"></a><code>&lt;&lt;</code>运算符</h2><p>在了解乘法是如何处理之前，必须要知道<code>&lt;&lt;</code>运算符的作用。这个家伙叫做移位运算符，顾名思义，它就是来移动这个二进制数的位置的，而<code>&lt;&lt;</code>符号箭头的方向就是那一串<code>01</code>移动的方向，<code>&lt;&lt;3</code>后面跟的数字就是要移动的位数。</p>
+<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210919145750149.png" alt="移位操作示范"></p>
+<p>先说一下结论：</p>
+<p><code>x&lt;&lt;4</code>就等同于把<code>x</code>的值乘以2的4次方，再对<code>M</code>取一次模，而<code>M</code>的值则是这个<code>x</code>所能存储的位数w所决定的。</p>
+<p>打个比方：</p>
+<blockquote>
+<p><code>x</code>是个无符号整数，只有4位，x最大也只能是<code>1111</code>了，对应的十进制数就是 2^4-1，也就是15。如果<code>x</code>现在等于<code>[0101]</code>也就是5，我通过<code>x&lt;&lt;2</code>操作，就变成了<code>010100</code>也就是5* 2^2=20，但是<code>x</code>内只能存储4位，所以前面2位就被丢弃了<del>01</del><code>[0100]</code>,换算成十进制就是<code>4</code>。这个过程整体表示就是    <code>x&lt;&lt;4=(5*2^2)mod16=4</code></p>
+</blockquote>
+<ul>
+<li><em>需要知道的，以上为了方便理解只通过无符号数来说，而对于补码形式，也都是类似的</em></li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/09/19/%E4%B9%98%E6%B3%95%E8%BF%90%E7%AE%97%E5%92%8C%E5%BF%AB%E9%80%9F%E5%B9%82/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/09/18/Learn%20CSS%EF%BC%88%E4%B8%80%EF%BC%89/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -362,7 +1023,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-09-19 23:19:41" itemprop="dateModified" datetime="2021-09-19T23:19:41+08:00">2021-09-19</time>
+                <time title="Modified: 2021-09-21 16:03:20" itemprop="dateModified" datetime="2021-09-21T16:03:20+08:00">2021-09-21</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -508,510 +1169,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/09/05/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%84%E6%88%90%E5%92%8C%E5%9F%BA%E6%9C%AC%E5%8A%9F%E8%83%BD%EF%BC%88%E6%9C%AA%E5%AE%8C%E7%A8%BF%EF%BC%89/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
-      <meta itemprop="name" content="gezi_lzq">
-      <meta itemprop="description" content="Blog of lizhenqi ">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gezi's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/09/05/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%84%E6%88%90%E5%92%8C%E5%9F%BA%E6%9C%AC%E5%8A%9F%E8%83%BD%EF%BC%88%E6%9C%AA%E5%AE%8C%E7%A8%BF%EF%BC%89/" class="post-title-link" itemprop="url">计算机系统的基本组成和基本功能（未完稿)</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-09-05 00:00:00 / Modified: 14:11:01" itemprop="dateCreated datePublished" datetime="2021-09-05T00:00:00+08:00">2021-09-05</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/CSAPP%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">CSAPP学习</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <blockquote>
-<p>这部分老实说我起码看过好多遍了，关于这个冯诺依曼结构，但是总是记不住，或是记得有很大缺失之类。</p>
-<p>本着“好记性不如烂笔头”的想法，也是为了能写一篇博客些许的获得感，大概记录所学。</p>
-</blockquote>
-<h2 id="一个形象的例子"><a href="#一个形象的例子" class="headerlink" title="一个形象的例子"></a>一个形象的例子</h2><p>也许对于教科书来说，一开始从计算机结构发展的历史进行讲解，然后抛出<strong>存储器</strong>，<strong>运算器</strong>，<strong>控制器</strong>，等等概念，再去画出图片，直接开始讲解是个不错的，严谨的方式。（其实也能够理解和看懂，但是总觉得差了些什么）</p>
-<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210905004654717.png" alt="image-20210905004654717"></p>
-<p>所以打算借助<a target="_blank" rel="noopener" href="https://www.icourse163.org/u/mooc1463468641395">袁春风</a>老师在课上的<strong>做菜</strong>例子（一个绝妙的比喻）来展开讲解计算机是如何工作的。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/09/05/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%84%E6%88%90%E5%92%8C%E5%9F%BA%E6%9C%AC%E5%8A%9F%E8%83%BD%EF%BC%88%E6%9C%AA%E5%AE%8C%E7%A8%BF%EF%BC%89/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/31/%E6%9C%80%E7%9F%AD%E7%BC%96%E8%BE%91%E8%B7%9D%E7%A6%BB-%E9%A2%98%E8%A7%A3/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
-      <meta itemprop="name" content="gezi_lzq">
-      <meta itemprop="description" content="Blog of lizhenqi ">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gezi's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/08/31/%E6%9C%80%E7%9F%AD%E7%BC%96%E8%BE%91%E8%B7%9D%E7%A6%BB-%E9%A2%98%E8%A7%A3/" class="post-title-link" itemprop="url">最短编辑距离-题解</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-08-31 00:00:00 / Modified: 18:41:47" itemprop="dateCreated datePublished" datetime="2021-08-31T00:00:00+08:00">2021-08-31</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="最短编辑距离-题解"><a href="#最短编辑距离-题解" class="headerlink" title="最短编辑距离-题解"></a>最短编辑距离-题解</h2><blockquote>
-<p><a target="_blank" rel="noopener" href="https://www.acwing.com/problem/content/904/">原题链接</a></p>
-<p>题目摘要：</p>
-<p>给定两个字符串 A 和 B，现在要将 A 经过若干操作变为 B，可进行的操作有：</p>
-<ol>
-<li>删除–将字符串 A 中的某个字符删除。</li>
-<li>插入–在字符串 A 的某个位置插入某个字符。</li>
-<li>替换–将字符串 A 中的某个字符替换为另一个字符。</li>
-</ol>
-<p>现在请你求出，将 A 变为 B 至少需要进行多少次操作。</p>
-</blockquote>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/08/31/%E6%9C%80%E7%9F%AD%E7%BC%96%E8%BE%91%E8%B7%9D%E7%A6%BB-%E9%A2%98%E8%A7%A3/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/30/%E6%9C%80%E9%95%BF%E4%B8%8A%E5%8D%87%E5%AD%90%E5%BA%8F%E5%88%97/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
-      <meta itemprop="name" content="gezi_lzq">
-      <meta itemprop="description" content="Blog of lizhenqi ">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gezi's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/08/30/%E6%9C%80%E9%95%BF%E4%B8%8A%E5%8D%87%E5%AD%90%E5%BA%8F%E5%88%97/" class="post-title-link" itemprop="url">最长上升子序列(题解)</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-08-30 00:00:00 / Modified: 17:13:57" itemprop="dateCreated datePublished" datetime="2021-08-30T00:00:00+08:00">2021-08-30</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="最长上升子序列"><a href="#最长上升子序列" class="headerlink" title="最长上升子序列"></a>最长上升子序列</h2><blockquote>
-<p>给定一个长度为 N 的数列，求数值严格单调递增的子序列的长度最长是多少。</p>
-<h4 id="输入格式"><a href="#输入格式" class="headerlink" title="输入格式"></a>输入格式</h4><p>第一行包含整数 N。</p>
-<p>第二行包含 N 个整数，表示完整序列。</p>
-<h4 id="输出格式"><a href="#输出格式" class="headerlink" title="输出格式"></a>输出格式</h4><p>输出一个整数，表示最大长度。</p>
-</blockquote>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/08/30/%E6%9C%80%E9%95%BF%E4%B8%8A%E5%8D%87%E5%AD%90%E5%BA%8F%E5%88%97/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/28/%E5%AE%89%E8%A3%85%20WSL%202/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
-      <meta itemprop="name" content="gezi_lzq">
-      <meta itemprop="description" content="Blog of lizhenqi ">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gezi's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/08/28/%E5%AE%89%E8%A3%85%20WSL%202/" class="post-title-link" itemprop="url">安装 WSL 2</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-08-28 00:00:00 / Modified: 20:22:47" itemprop="dateCreated datePublished" datetime="2021-08-28T00:00:00+08:00">2021-08-28</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">Linux学习</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="安装-WSL-2"><a href="#安装-WSL-2" class="headerlink" title="安装 WSL 2"></a><strong>安装 WSL 2</strong></h2><p><strong>WSL</strong>，Windows Subsystem for Linux（适用于 Linux 的 Windows 子系统）的简写。它有两个版本，WSL 1 和 WSL 2。 建议使用 WSL 2，它具有更好的整体性能。</p>
-<p>查看Win10 版本号  cmd内输入<code>winver</code>命令</p>
-<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210828181817908.png" alt="image-20210828181817908"></p>
-<p>需要保证Win10版本号为2004，或者内部版本19041，或是更高。</p>
-<p>“虚拟机平台”可选功能。使用管理员身份打开 PowerShell，执行以下命令：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/08/28/%E5%AE%89%E8%A3%85%20WSL%202/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/26/%E5%9C%A8Vue%E5%BC%80%E5%8F%91%E4%B8%AD%E4%BD%BF%E7%94%A8SVG%E5%9B%BE%E6%A0%87/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
-      <meta itemprop="name" content="gezi_lzq">
-      <meta itemprop="description" content="Blog of lizhenqi ">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gezi's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/08/26/%E5%9C%A8Vue%E5%BC%80%E5%8F%91%E4%B8%AD%E4%BD%BF%E7%94%A8SVG%E5%9B%BE%E6%A0%87/" class="post-title-link" itemprop="url">在Vue开发中使用SVG图标</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-08-26 00:00:00 / Modified: 19:39:59" itemprop="dateCreated datePublished" datetime="2021-08-26T00:00:00+08:00">2021-08-26</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">前端学习</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%AD%A6%E4%B9%A0/vue/" itemprop="url" rel="index"><span itemprop="name">vue</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <blockquote>
-<p>本文章是在使用<a target="_blank" rel="noopener" href="https://panjiachen.gitee.io/vue-element-admin-site/zh/">vue-element-admin项目</a>时，遇到的svg图标问题，查找资料解决后的总结文。</p>
-<p>参考文章：</p>
-<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903517564436493">手摸手，带你优雅的使用 icon</a></p>
-<p><a target="_blank" rel="noopener" href="https://cn.vuejs.org/v2/cookbook/editable-svg-icons.html">vue文档</a></p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_39802055/article/details/111136325">SVG图标不显示异常记录</a></p>
-</blockquote>
-<h4 id="iconfont和SVG的区别"><a href="#iconfont和SVG的区别" class="headerlink" title="iconfont和SVG的区别"></a>iconfont和SVG的区别</h4><ol>
-<li><p>iconFont采用字体渲染,放大容易失真,会出现明细的锯齿; </p>
-<p>SVG采用图形渲染,不管怎么放大都不会失真。</p>
-</li>
-<li><p> iconFont图标色调单一,只支持单色; </p>
-</li>
-</ol>
-<p>   SVG可以做出生动又复杂的图标。</p>
-<ol start="3">
-<li><p>iconFont载入需附带很多其他资源,且文件较大影响加载速度; </p>
-<p>SVG文件小且单个引用,灵活快捷,可以减少HTTP请求。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/08/26/%E5%9C%A8Vue%E5%BC%80%E5%8F%91%E4%B8%AD%E4%BD%BF%E7%94%A8SVG%E5%9B%BE%E6%A0%87/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/23/%E9%80%9A%E8%BF%87OpenCV%E5%AE%9E%E7%8E%B0%E8%99%9A%E6%8B%9F%E9%94%AE%E7%9B%98/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
-      <meta itemprop="name" content="gezi_lzq">
-      <meta itemprop="description" content="Blog of lizhenqi ">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gezi's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/08/23/%E9%80%9A%E8%BF%87OpenCV%E5%AE%9E%E7%8E%B0%E8%99%9A%E6%8B%9F%E9%94%AE%E7%9B%98/" class="post-title-link" itemprop="url">通过OpenCV实现虚拟键盘</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-08-23 00:00:00 / Modified: 21:27:39" itemprop="dateCreated datePublished" datetime="2021-08-23T00:00:00+08:00">2021-08-23</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" itemprop="url" rel="index"><span itemprop="name">人工智能</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=jzXZVFqEE2I&list=RDCMUCYUjYU5FveRAscQ8V21w81A&start_radio=1">参考学习的项目</a></p>
-<h2 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h2><p>在Anaconda中创建一个<code>python=3.7</code>的环境</p>
-<p>可在pycharm内直接新建环境，也可以通过命令行的方式</p>
-<p><code>conda create -n your_env_name python=x.x</code></p>
-<p>激活或者切换虚拟环境  <code>activate your_env_name</code></p>
-<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210823121359108.png" alt="image-20210823121359108"></p>
-<p>然后对此虚拟环境中安装额外的包</p>
-<p><code>pip install cvzone</code></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/08/23/%E9%80%9A%E8%BF%87OpenCV%E5%AE%9E%E7%8E%B0%E8%99%9A%E6%8B%9F%E9%94%AE%E7%9B%98/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1083,20 +1240,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-count">20</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories">
           
-        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags">
           
-        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-count">19</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
