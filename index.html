@@ -157,6 +157,649 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/09/Thrift%E7%9A%84%E4%BD%BF%E7%94%A8%E5%AE%9E%E8%B7%B5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
+      <meta itemprop="name" content="gezi_lzq">
+      <meta itemprop="description" content="Blog of lizhenqi ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gezi's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/09/Thrift%E7%9A%84%E4%BD%BF%E7%94%A8%E5%AE%9E%E8%B7%B5/" class="post-title-link" itemprop="url">Thrift的使用实践</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-01-09 00:00:00 / Modified: 21:39:53" itemprop="dateCreated datePublished" datetime="2022-01-09T00:00:00+08:00">2022-01-09</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Thrift/" itemprop="url" rel="index"><span itemprop="name">Thrift</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="Thrift介绍"><a href="#Thrift介绍" class="headerlink" title="Thrift介绍"></a>Thrift介绍</h2><p>RPC(Remote Procedure Call)，远程过程调用，）是一个计算机通信协议，此协议允许进程间通信。</p>
+<p>简单来说，当机器 A 上的进程调用机器 B 上的进程时，A 上的调用进程被挂起，而 B 上的被调用进程开始执行。</p>
+<p>调用方可以通过参数将信息传送给被调用方，然后可以通过被调用方传回的结果得到返回。</p>
+<p>RPC 框架屏蔽了底层传输方式（TCP/UDP）、序列化和反序列化（XML/JSON/二进制）等内容，使用框架只需要知道被调用者的地址和接口就可以了，无须额外地为这些底层内部编程。</p>
+<p>大部分的RPC框架都遵循如下三个开发步骤：</p>
+<ol>
+<li>定义一个接口说明文件：描述了对象(结构体)、对象成员、接口方法等一系列信息；</li>
+<li>通过RPC框架所提供的编译器，将接口说明文件编译成具体的语言文件；</li>
+<li>在客户端和服务器端分别引入RPC编译器所生成的文件，即可像调用本地方法一样调用服务端代码；</li>
+</ol>
+<p>RPC通信过程如下图所示</p>
+<p><img src="https://gitee.com/gezilzq/image-host/raw/master//img/image-20220109211029591.png" alt="image-20220109211029591"></p>
+<h3 id="Thrift架构"><a href="#Thrift架构" class="headerlink" title="Thrift架构"></a>Thrift架构</h3><p>thrift主要用于各个服务之间的RPC通信，支持跨语言。thrift是一个典型的CS结构，客户端和服务端可以使用不同的语言开发，thrift通过IDL(Interface Description Language)来关联客户端和服务端。thrift的整体架构图如下图所示</p>
+<img src="https://gitee.com/gezilzq/image-host/raw/master//img/image-20220109211042820.png" alt="image-20220109211042820" style="zoom:50%;" />
+
+<p>Your Code是用户实现的业务逻辑，接下来的 FooService.Client和 Foo.write()/read()是thrift根据IDL生成的客户端和服务端的代码，对应于RPC中Client stub和Server stub。TProtocol 用来对数据进行序列化与反序列化，具体方法包括二进制，JSON 或者 Apache Thrift 定义的格式。</p>
+<h2 id="具体实践"><a href="#具体实践" class="headerlink" title="具体实践"></a>具体实践</h2><blockquote>
+<p>开发一个匹配系统，根据用户的积分和等待时间，两两进行相互匹配。</p>
+</blockquote>
+<h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><ol>
+<li>创建项目文件夹<code>thrift_project</code></li>
+<li>架构梳理</li>
+</ol>
+<p><img src="https://gitee.com/gezilzq/image-host/raw/master//img/image-20220109123732448.png" alt="image-20220109123732448"></p>
+<p>三个节点之间的有向边则是Thrift的工作</p>
+<ol start="3">
+<li><p>游戏节点，创建<code>game</code>文件夹</p>
+<p>匹配系统节点，创建<code>match_s=system</code>文件夹</p>
+<p>接口<code>thrift</code>相关文件，创建<code>thrift</code>文件夹</p>
+</li>
+</ol>
+<h3 id="Thritf简单语法介绍"><a href="#Thritf简单语法介绍" class="headerlink" title="Thritf简单语法介绍"></a>Thritf简单语法介绍</h3><p>使用Thrift开发程序，首先要做的事情就是对接口进行描述， 然后再使用Thrift将接口的描述文件编译成对应语言的版本</p>
+<ol>
+<li><p><strong>命名空间</strong></p>
+<p>Thrift 中的命名空间类似于 C++ 中的命名空间或 Java 中的包 — 它们提供了一种组织（或隔离）代码的便捷方式。命名空间还可用于防止类型定义之间的名称冲突。</p>
+<p>thrift文件命名一般都是以.thrift作为后缀：XXX.thrift，可以在该文件的开头为该文件加上命名空间限制，格式为：</p>
+</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> 语言名称 名称</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><strong>数据类型</strong><br>大小写敏感，它共支持以下几种基本的数据类型：</li>
+</ol>
+<ul>
+<li><p><code>string</code>， 字符串类型，注意是全部小写形式；</p>
+</li>
+<li><p><code>i16</code>, 16位整形类型，</p>
+</li>
+<li><p><code>i32</code>，32位整形类型，对应C/C++/java中的int类型；</p>
+</li>
+<li><p><code>i64</code>，64位整形，对应C/C++/java中的long类型；</p>
+</li>
+<li><p><code>byte</code>，8位的字符类型，对应C/C++中的char，java中的byte类型</p>
+</li>
+<li><p><code>bool</code>, 布尔类型，对应C/C++中的bool，java中的boolean类型；</p>
+</li>
+<li><p><code>double</code>，双精度浮点类型，对应C/C++/java中的double类型；</p>
+</li>
+<li><p><code>void</code>，空类型，对应C/C++/java中的void类型；该类型主要用作函数的返回值，<br>除上述基本类型外，ID还支持以下类型：</p>
+</li>
+<li><p><code>map</code>，map类型，例如，定义一个map对象：map[HTML_REMOVED] newmap;</p>
+</li>
+<li><p><code>set</code>，集合类型，例如，定义set[HTML_REMOVED]对象：set[HTML_REMOVED] aSet;</p>
+</li>
+<li><p><code>list</code>，链表类型，例如，定义一个list[HTML_REMOVED]对象：list[HTML_REMOVED] aList;</p>
+</li>
+<li><p><code>struct</code>，自定义结构体类型，在IDL中可以自己定义结构体，对应C中的struct，c++中的struct和class，java中的class。</p>
+<blockquote>
+<p>Structs（在某些系统中也称为<em>messages</em>）是 Thrift IDL 中的基本构建块。struct 由<em>fields</em>组成;每个fields都有一个唯一的整数标识符、一个类型、一个名称和一个可选的默认值。</p>
+<p>考虑一个简单的示例。假设你想构建一个类似<a target="_blank" rel="noopener" href="http://twitter.com/">Twitter</a>的服务。以下是你如何定义推文：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Location</span> &#123;</span>                            <span class="comment">// </span></span><br><span class="line">    <span class="number">1</span>: required <span class="keyword">double</span> latitude;</span><br><span class="line">    <span class="number">2</span>: required <span class="keyword">double</span> longitude;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Tweet</span> &#123;</span></span><br><span class="line">    <span class="number">1</span>: required i32 userId;                  <span class="comment">// </span></span><br><span class="line">    <span class="number">2</span>: required string userName;             <span class="comment">// </span></span><br><span class="line">    <span class="number">3</span>: required string text;</span><br><span class="line">    <span class="number">4</span>: optional Location loc;                <span class="comment">// </span></span><br><span class="line">    <span class="number">16</span>: optional string language = <span class="string">&quot;english&quot;</span> <span class="comment">// </span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>![1](data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAAAAABzHgM7AAAAAmJLR0QAAKqNIzIAAABjSURBVHja%0AVY6xDcAwCAS/pPQaLim9QmajdOk2I2SNrMEIlARIoigU8Cek/4e7zdHaWOYOVwaoA6wOCw05Y7FB%0AgE0tIWQ+sBcwKM8qoD/wB5wGL8hjfdzWrh01GRp1hInGjDoXwHgsFuzBVLQAAABDdEVYdFNvZnR3%0AYXJlAEAoIylJbWFnZU1hZ2ljayA0LjIuOCA5OS8wOC8wMSBjcmlzdHlAbXlzdGljLmVzLmR1cG9u%0AdC5jb22RuiG4AAAAKnRFWHRTaWduYXR1cmUANThhMDcyZTA3MGRhMjJmNjEzNWNiZDNlNDE0NTQ2%0AZjloaiHtAAAADnRFWHRQYWdlADEyeDEyKzArMIRtu30AAAAASUVORK5CYII=)</th>
+<th>每个字段<strong>都必须</strong>具有唯一的正整数标识符</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>![2](data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAAAAABzHgM7AAAAAmJLR0QAAKqNIzIAAAB7SURBVHja%0AHY6hFcMwDEQ/NDQsNSwU9Apdo7Cw0CsIBoZmhKzQEQJLDQsFVclHpHu693W429Zr7bu541Pg3kCm%0AY0K75u9TEUPhuGgWU4mQDvieEaSQEnsT6zKPeZY0EUNtrHMCXvYUuSUg0PsMjUSvpysUT6OOSil9%0Aizp/VNk1YJ8vf6MAAABDdEVYdFNvZnR3YXJlAEAoIylJbWFnZU1hZ2ljayA0LjIuOCA5OS8wOC8w%0AMSBjcmlzdHlAbXlzdGljLmVzLmR1cG9udC5jb22RuiG4AAAAKnRFWHRTaWduYXR1cmUAODBlYWU1%0AMjljOTRhN2Y0N2RlY2NmYWRhMjhhY2I5ZGblb7ENAAAADnRFWHRQYWdlADEyeDEyKzArMIRtu30A%0AAAAASUVORK5CYII=)</td>
+<td>字段可以标记为必填或可选</td>
+</tr>
+<tr>
+<td>![3](data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAAAAABzHgM7AAAAAmJLR0QAAKqNIzIAAAB4SURBVHja%0AJU6rFcNADBM09BqBhl6ltDCwKxQeDOwKB7tGYGCoYaChK6cmlt7TD1W5uap/sgoVBnEXWBTSoOdx%0A7gpLDOAVorWC0ABdcBPqwZtx8Muf+DPXJpQ96Nu/LSMYl/n17oCOnplTOrpiwW3sUs4ZJmob5/wA%0AUbg1Y/zrjUwAAABDdEVYdFNvZnR3YXJlAEAoIylJbWFnZU1hZ2ljayA0LjIuOCA5OS8wOC8wMSBj%0AcmlzdHlAbXlzdGljLmVzLmR1cG9udC5jb22RuiG4AAAAKnRFWHRTaWduYXR1cmUAODBiYmRhMjcy%0ANmRkYWNlOGFiOGEwMWY1OWRlMmViZGII/Q51AAAADnRFWHRQYWdlADEyeDEyKzArMIRtu30AAAAA%0ASUVORK5CYII=)</td>
+<td>结构可能包含其他结构</td>
+</tr>
+<tr>
+<td>![4](data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAAAAABzHgM7AAAAAmJLR0QAAKqNIzIAAABzSURBVHja%0AHY0hEoUwEEMjkZVYZGVlr1CJxCKRXKPyy28reyVsZeXKsCFi573ZzAQk+x5jaQ6gFQAxIA8XceEN%0AZEN3DkOCH/TobUoSVuAYwSSLyzbvaHWVFJxUmmp+PF+twrLkuXzLwPmZ8+OjtH8KS6pGvuoGNo5b%0A6rzDAAAAQ3RFWHRTb2Z0d2FyZQBAKCMpSW1hZ2VNYWdpY2sgNC4yLjggOTkvMDgvMDEgY3Jpc3R5%0AQG15c3RpYy5lcy5kdXBvbnQuY29tkbohuAAAACp0RVh0U2lnbmF0dXJlADlmODJmY2FjOWUwMzlj%0AYmRiNzIzODBhNDU5MTMyNGY1gLv4dgAAAA50RVh0UGFnZQAxMngxMiswKzCEbbt9AAAAAElFTkSu%0AQmCC)</td>
+<td>您可以为字段指定可选的”默认值”</td>
+</tr>
+<tr>
+<td>![5](data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAAAAABzHgM7AAAAAmJLR0QAAKqNIzIAAAB2SURBVHja%0AFY6hEcQwDAQPChqGGhoaqgWX8PUYBhqGBn4rX0JooKDh/UlsZ3b2BJKXH8XPTYLh1lpt1h+BwxkR%0AA23jhsCQd2IkfH9T3HEkzPFegCXUKSUSpJUPsN7UFOgc9VkZUBoz9l0yrVHZarUcJZeb9XznDyNb%0ANy9CX3/7AAAAQ3RFWHRTb2Z0d2FyZQBAKCMpSW1hZ2VNYWdpY2sgNC4yLjggOTkvMDgvMDEgY3Jp%0Ac3R5QG15c3RpYy5lcy5kdXBvbnQuY29tkbohuAAAACp0RVh0U2lnbmF0dXJlAGZlNjkwNDYzMzc5%0AZWIyNWU1NjJmY2M4Y2M5YjNjN2Uw37I5ngAAAA50RVh0UGFnZQAxMngxMiswKzCEbbt9AAAAAElF%0ATkSuQmCC)</td>
+<td>可以在同一个 Thrift 文件中定义和引用多个结构</td>
+</tr>
+</tbody></table>
+<p>如您所见，struct定义中的每个字段都有一个唯一的编号标记。这些标记用于以连线格式标识字段，一旦使用struct类型，就不应更改这些标记。</p>
+</blockquote>
+</li>
+</ul>
+<ol start="3">
+<li><strong>函数接口</strong></li>
+</ol>
+<p>文件中对所有接口函数的描述都放在<code>service</code>中，<code>service</code>的名字可以自己指定，该名字也将被用作生成的特定语言接口文件的名字。</p>
+<p>接口函数需要对参数使用序号标号，除最后一个接口函数外，要以<code>,</code>结束对函数的描述。`</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">service Twitter &#123;</span><br><span class="line">    <span class="comment">// A method definition looks like C code. It has a return type, arguments,</span></span><br><span class="line">    <span class="comment">// and optionally a list of exceptions that it may throw. Note that argument</span></span><br><span class="line">    <span class="comment">// lists and exception list are specified using the exact same syntax as</span></span><br><span class="line">    <span class="comment">// field lists in structs.</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">ping</span><span class="params">()</span>,                                                             <span class="comment">// 1</span></span></span><br><span class="line"><span class="function">    <span class="keyword">bool</span> <span class="title">postTweet</span><span class="params">(<span class="number">1</span>:Tweet tweet)</span> <span class="title">throws</span> <span class="params">(<span class="number">1</span>:TwitterUnavailable unavailable)</span>, <span class="comment">// 2</span></span></span><br><span class="line"><span class="function">    TweetSearchResult <span class="title">searchTweets</span><span class="params">(<span class="number">1</span>:string query)</span></span>;                          <span class="comment">// 3</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// The &#x27;oneway&#x27; modifier indicates that the client only makes a request and</span></span><br><span class="line">    <span class="comment">// does not wait for any response at all. Oneway methods MUST be void.</span></span><br><span class="line">    <span class="function">oneway <span class="keyword">void</span> <span class="title">zip</span><span class="params">()</span>                                                        <span class="comment">// 4</span></span></span><br><span class="line"><span class="function">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>![1](data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAAAAABzHgM7AAAAAmJLR0QAAKqNIzIAAABjSURBVHja%0AVY6xDcAwCAS/pPQaLim9QmajdOk2I2SNrMEIlARIoigU8Cek/4e7zdHaWOYOVwaoA6wOCw05Y7FB%0AgE0tIWQ+sBcwKM8qoD/wB5wGL8hjfdzWrh01GRp1hInGjDoXwHgsFuzBVLQAAABDdEVYdFNvZnR3%0AYXJlAEAoIylJbWFnZU1hZ2ljayA0LjIuOCA5OS8wOC8wMSBjcmlzdHlAbXlzdGljLmVzLmR1cG9u%0AdC5jb22RuiG4AAAAKnRFWHRTaWduYXR1cmUANThhMDcyZTA3MGRhMjJmNjEzNWNiZDNlNDE0NTQ2%0AZjloaiHtAAAADnRFWHRQYWdlADEyeDEyKzArMIRtu30AAAAASUVORK5CYII=)</th>
+<th>method definitions 可以使用分号或者逗号结尾</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>![2](data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAAAAABzHgM7AAAAAmJLR0QAAKqNIzIAAAB7SURBVHja%0AHY6hFcMwDEQ/NDQsNSwU9Apdo7Cw0CsIBoZmhKzQEQJLDQsFVclHpHu693W429Zr7bu541Pg3kCm%0AY0K75u9TEUPhuGgWU4mQDvieEaSQEnsT6zKPeZY0EUNtrHMCXvYUuSUg0PsMjUSvpysUT6OOSil9%0Aizp/VNk1YJ8vf6MAAABDdEVYdFNvZnR3YXJlAEAoIylJbWFnZU1hZ2ljayA0LjIuOCA5OS8wOC8w%0AMSBjcmlzdHlAbXlzdGljLmVzLmR1cG9udC5jb22RuiG4AAAAKnRFWHRTaWduYXR1cmUAODBlYWU1%0AMjljOTRhN2Y0N2RlY2NmYWRhMjhhY2I5ZGblb7ENAAAADnRFWHRQYWdlADEyeDEyKzArMIRtu30A%0AAAAASUVORK5CYII=)</td>
+<td>参数可以为基本类型或者自定义结构体</td>
+</tr>
+<tr>
+<td>![3](data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAAAAABzHgM7AAAAAmJLR0QAAKqNIzIAAAB4SURBVHja%0AJU6rFcNADBM09BqBhl6ltDCwKxQeDOwKB7tGYGCoYaChK6cmlt7TD1W5uap/sgoVBnEXWBTSoOdx%0A7gpLDOAVorWC0ABdcBPqwZtx8Muf+DPXJpQ96Nu/LSMYl/n17oCOnplTOrpiwW3sUs4ZJmob5/wA%0AUbg1Y/zrjUwAAABDdEVYdFNvZnR3YXJlAEAoIylJbWFnZU1hZ2ljayA0LjIuOCA5OS8wOC8wMSBj%0AcmlzdHlAbXlzdGljLmVzLmR1cG9udC5jb22RuiG4AAAAKnRFWHRTaWduYXR1cmUAODBiYmRhMjcy%0ANmRkYWNlOGFiOGEwMWY1OWRlMmViZGII/Q51AAAADnRFWHRQYWdlADEyeDEyKzArMIRtu30AAAAA%0ASUVORK5CYII=)</td>
+<td>返回类型也如上</td>
+</tr>
+<tr>
+<td>![4](data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAAAAABzHgM7AAAAAmJLR0QAAKqNIzIAAABzSURBVHja%0AHY0hEoUwEEMjkZVYZGVlr1CJxCKRXKPyy28reyVsZeXKsCFi573ZzAQk+x5jaQ6gFQAxIA8XceEN%0AZEN3DkOCH/TobUoSVuAYwSSLyzbvaHWVFJxUmmp+PF+twrLkuXzLwPmZ8+OjtH8KS6pGvuoGNo5b%0A6rzDAAAAQ3RFWHRTb2Z0d2FyZQBAKCMpSW1hZ2VNYWdpY2sgNC4yLjggOTkvMDgvMDEgY3Jpc3R5%0AQG15c3RpYy5lcy5kdXBvbnQuY29tkbohuAAAACp0RVh0U2lnbmF0dXJlADlmODJmY2FjOWUwMzlj%0AYmRiNzIzODBhNDU5MTMyNGY1gLv4dgAAAA50RVh0UGFnZQAxMngxMiswKzCEbbt9AAAAAElFTkSu%0AQmCC)</td>
+<td>void也是一个有效的返回类型</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="match-server实现"><a href="#match-server实现" class="headerlink" title="match_server实现"></a><code>match_server</code>实现</h2><h3 id="创建-IDL文件"><a href="#创建-IDL文件" class="headerlink" title="创建 IDL文件"></a>创建 <strong>IDL</strong>文件</h3><p><code>match_system</code>采用C++实现，因此<code>match_server</code>对应的<code>match.thrift</code>文件内，命名空间设置为</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> cpp match_service</span><br></pre></td></tr></table></figure>
+
+<p>使用自定义的结构体,来传输User信息</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">User</span>&#123;</span></span><br><span class="line">      <span class="number">1</span>: i32 id,</span><br><span class="line">      <span class="number">2</span>: string name,</span><br><span class="line">      <span class="number">3</span>: i32 score</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意，在struct定义结构体时需要对每个结构体成员用序号标识：<code>序号: 类型 变量名</code>。</p>
+<p>服务接口</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">service Match &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * user: 添加的用户信息</span></span><br><span class="line"><span class="comment">     * info: 附加信息</span></span><br><span class="line"><span class="comment">     * 在匹配池中添加一个名用户</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function">i32 <span class="title">add_user</span><span class="params">(<span class="number">1</span>: User user, <span class="number">2</span>: <span class="built_in">string</span> info)</span>,</span></span><br><span class="line"><span class="function">    **</span></span><br><span class="line"><span class="function">     * user: 删除的用户信息</span></span><br><span class="line"><span class="function">     * info: 附加信息</span></span><br><span class="line"><span class="function">     * 从匹配池中删除一名用户</span></span><br><span class="line"><span class="function">     */</span></span><br><span class="line"><span class="function">    i32 <span class="title">remove_user</span><span class="params">(<span class="number">1</span>: User user, <span class="number">2</span>: <span class="built_in">string</span> info)</span>,</span></span><br><span class="line"><span class="function">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="生成代码"><a href="#生成代码" class="headerlink" title="生成代码"></a>生成代码</h3><p>执行命令<code>thrift -r --gen &lt;语言名&gt; &lt;.thrift文件的路径&gt;</code>可以生成各种配置和连接文件，还有代码框架，只需在框架中实现自己业务即可。</p>
+<p>进入到<code>match_system</code>文件夹，创建<code>src</code>文件夹。在<code>src</code>下执行语句：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">thrift -r --gen cpp ../../thrift/match.thrift</span><br></pre></td></tr></table></figure>
+
+<p>这样，thrift服务端的一系列文件就会生成在<code>src</code>文件夹中的<code>gen-cpp</code>文件夹下，为了划分业务模块将<code>gen-cpp</code>重命名为<code>match_server</code></p>
+<p>文件结构如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">-- match_server</span><br><span class="line">    |-- Match.cpp</span><br><span class="line">    |-- Match.h</span><br><span class="line">    |-- Match_server.skeleton.cpp</span><br><span class="line">    |-- match_types.cpp</span><br><span class="line">    `-- match_types.h</span><br></pre></td></tr></table></figure>
+
+<p>其中<code>Match_server.skeleton.cpp</code>: 服务端的代码框架，具体业务就是在这个文件夹下编写实现</p>
+<p>将<code>Match_server.skeleton.cpp</code>移动到<code>match_system/src</code>下并重命名为<code>main.cpp</code>，<code>match_system</code>的整个业务逻辑就是在这个文件中实现</p>
+<h3 id="初始main-cpp的改动"><a href="#初始main-cpp的改动" class="headerlink" title="初始main.cpp的改动"></a>初始main.cpp的改动</h3><p>之前<code>main.cpp</code>在<code>match_server</code>下，现在在<code>match_system/src</code>下，所以<code>main.cpp</code>中对<code>Match.h</code>头文件的引入需要修改路径<br>文件中的两个函数<code>int32_t add_user</code>和<code>int32_t remove_user</code>需要有返回值，原来没有，会报警告，需要手动加上</p>
+<p><code>main.cpp</code>当前文件内容如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// This autogenerated skeleton file illustrates how to build a server.</span></span><br><span class="line"><span class="comment">// You should copy it to another filename to avoid overwriting it.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//手动添加</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;match_server/Match.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thrift/protocol/TBinaryProtocol.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thrift/server/TSimpleServer.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thrift/transport/TServerSocket.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thrift/transport/TBufferTransports.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> ::apache::thrift;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> ::apache::thrift::protocol;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> ::apache::thrift::transport;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> ::apache::thrift::server;</span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span>  ::match_service;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MatchHandler</span> :</span> <span class="keyword">virtual</span> <span class="keyword">public</span> MatchIf &#123;</span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">  <span class="built_in">MatchHandler</span>() &#123;</span><br><span class="line">    <span class="comment">// Your initialization goes here</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">int32_t</span> <span class="title">add_user</span><span class="params">(<span class="keyword">const</span> User&amp; user, <span class="keyword">const</span> std::string&amp; info)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Your implementation goes here</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;add_user\n&quot;</span>);</span><br><span class="line">   	<span class="comment">// TODO：add User</span></span><br><span class="line">      </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">int32_t</span> <span class="title">remove_user</span><span class="params">(<span class="keyword">const</span> User&amp; user, <span class="keyword">const</span> std::string&amp; info)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Your implementation goes here</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;remove_user\n&quot;</span>);</span><br><span class="line">    <span class="comment">// <span class="doctag">TODO:</span> remove User</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> port = <span class="number">9090</span>;</span><br><span class="line">  ::<span class="function">std::shared_ptr&lt;MatchHandler&gt; <span class="title">handler</span><span class="params">(<span class="keyword">new</span> MatchHandler())</span></span>;</span><br><span class="line">  ::<span class="function">std::shared_ptr&lt;TProcessor&gt; <span class="title">processor</span><span class="params">(<span class="keyword">new</span> MatchProcessor(handler))</span></span>;</span><br><span class="line">  ::<span class="function">std::shared_ptr&lt;TServerTransport&gt; <span class="title">serverTransport</span><span class="params">(<span class="keyword">new</span> TServerSocket(port))</span></span>;</span><br><span class="line">  ::<span class="function">std::shared_ptr&lt;TTransportFactory&gt; <span class="title">transportFactory</span><span class="params">(<span class="keyword">new</span> TBufferedTransportFactory())</span></span>;</span><br><span class="line">  ::<span class="function">std::shared_ptr&lt;TProtocolFactory&gt; <span class="title">protocolFactory</span><span class="params">(<span class="keyword">new</span> TBinaryProtocolFactory())</span></span>;</span><br><span class="line"></span><br><span class="line">  <span class="function">TSimpleServer <span class="title">server</span><span class="params">(processor, serverTransport, transportFactory, protocolFactory)</span></span>;</span><br><span class="line">  server.<span class="built_in">serve</span>();</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="c-文件的编译、链接和运行"><a href="#c-文件的编译、链接和运行" class="headerlink" title="c++文件的编译、链接和运行"></a>c++文件的编译、链接和运行</h3><h4 id="C-编译过程"><a href="#C-编译过程" class="headerlink" title="C++编译过程"></a><strong>C++编译过程</strong></h4><p>假设我有一个<code>main.cpp</code>文件</p>
+<ul>
+<li><p><code>-E</code>：只对文件进行预处理，不进行编译和汇编。<code>g++ -E main.cpp</code>——&gt;在dos命令行查看某文件的预处理过程，如果你想查看详细的预处理，可以重定向到一个文件中，如：g++ -E main.cpp -o main.i</p>
+</li>
+<li><p><code>-s</code>：编译到汇编语言，不进行汇编和链接,即只激活预处理和编译，生成汇编语言,如果你想查看详细的编译，可以重定向到一个文件中，如：<code>g++ -S main.cpp -o main.s</code></p>
+</li>
+<li><p><code>-c</code>:   编译到目标代码,<code>g++ -c main.cpp</code></p>
+</li>
+<li><p><code>-o</code>:   生成链接文件: 如果该文件是独立的，与其他自己编写的文件无依赖关系。直接<code>g++ main.o -o </code>生成的可执行文件的文件名，</p>
+</li>
+</ul>
+<p>假设该文件依赖其他源文件（不需要加入头文件）<code>temp.cpp</code>,在对<code>temp.cpp</code>文件进行预处理-&gt;编译-&gt;汇编后，使用指令<code>g++ temp.o main.o -o main</code></p>
+<ul>
+<li><code>.\:执行文件</code>，输出结果。如: <code>.\main</code>，当然你可以直接<code>g++ main.cpp temp.cpp -o main</code> 生成目标文件让编译器自动为你处理其他流程。</li>
+</ul>
+<h4 id="具体步骤"><a href="#具体步骤" class="headerlink" title="具体步骤"></a>具体步骤</h4><p>1.编译src文件夹下的所有.cpp文件</p>
+<p><code>g++ -c *.cpp</code><br>2.将所有生成的.o文件链接成一个可执行文件，要用到thrift动态链接库</p>
+<p><code>g++ *.o -o main -lthrift</code><br>3.执行生成的可执行文件main</p>
+<p><code>./main</code><br>为了判断文件是否正确执行，可以在<code>main.cpp</code>中写一些输出语句，验证效果</p>
+<p>4.将项目版本提交git，提交时，一般会删除中间生成的文件和可执行文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git add .</span><br><span class="line">git restore --stage *.o</span><br><span class="line">git restore --stage match_system/src/main</span><br><span class="line">git commit -m &quot;first can run&quot;</span><br></pre></td></tr></table></figure>
+
+<h2 id="game-client实现"><a href="#game-client实现" class="headerlink" title="game_client实现"></a>game_client实现</h2><p><strong>game_client</strong>采用<code>python</code>来实现</p>
+<h3 id="生成代码-1"><a href="#生成代码-1" class="headerlink" title="生成代码"></a>生成代码</h3><p><strong>在<code>game</code>目录下创建<code>src</code>文件夹，在<code>src</code>下执行</strong></p>
+<p><strong><code>thrift -r --gen py ../../thrift/match.thrift</code></strong></p>
+<p>这样，<code>thrift</code>服务端的一系列文件就会生成在<code>src</code>文件夹中的<code>gen-py</code>文件夹下，为了划分业务模块将<code>gen-py</code>重命名为<code>match_client</code></p>
+<p>文件结构如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">|-- __init__.py</span><br><span class="line">`-- match</span><br><span class="line">    |-- Match-remote</span><br><span class="line">    |-- Match.py</span><br><span class="line">    |-- __init__.py</span><br><span class="line">    |-- constants.py</span><br><span class="line">    `-- ttypes.py</span><br></pre></td></tr></table></figure>
+
+<p>因为我们只需要实现客户端，不需要服务端，所以可以把<code>Match-remote</code>删除</p>
+<h3 id="client-py文件的创建"><a href="#client-py文件的创建" class="headerlink" title="client.py文件的创建"></a><strong><code>client.py</code>文件的创建</strong></h3><p>在<code>src</code>下创建文件<code>client.py</code>，将 <a target="_blank" rel="noopener" href="https://thrift.apache.org/tutorial/py.html">Apache Thrift - Python</a> 文档中<strong>client</strong>的示范代码复制到该文件中，并将代码进行适当的改动和删除，<code>client.py</code>中的初始代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 手动导入</span></span><br><span class="line"><span class="keyword">from</span> match_client.match <span class="keyword">import</span> Match</span><br><span class="line"><span class="keyword">from</span> match_client.match.ttypes <span class="keyword">import</span> User</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> thrift <span class="keyword">import</span> Thrift</span><br><span class="line"><span class="keyword">from</span> thrift.transport <span class="keyword">import</span> TSocket</span><br><span class="line"><span class="keyword">from</span> thrift.transport <span class="keyword">import</span> TTransport</span><br><span class="line"><span class="keyword">from</span> thrift.protocol <span class="keyword">import</span> TBinaryProtocol</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span>():</span></span><br><span class="line">    <span class="comment"># Make socket</span></span><br><span class="line">    transport = TSocket.TSocket(<span class="string">&#x27;127.0.0.1&#x27;</span>, <span class="number">9090</span>)</span><br><span class="line">    <span class="comment"># Buffering is critical. Raw sockets are very slow</span></span><br><span class="line">    transport = TTransport.TBufferedTransport(transport)</span><br><span class="line">    <span class="comment"># Wrap in a protocol</span></span><br><span class="line">    protocol = TBinaryProtocol.TBinaryProtocol(transport)</span><br><span class="line">    <span class="comment"># Create a client to use the protocol encoder</span></span><br><span class="line">    client = Match.Client(protocol)</span><br><span class="line">    <span class="comment"># Connect!</span></span><br><span class="line">    transport.<span class="built_in">open</span>()</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 具体客户端操作</span></span><br><span class="line">    user = User(<span class="number">1</span>,<span class="string">&quot;lyt&quot;</span>,<span class="number">50000</span>)</span><br><span class="line">    client.add_user(user,<span class="string">&quot;&quot;</span>)    <span class="comment"># 测试代码</span></span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Close!</span></span><br><span class="line">    transport.close()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    main()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><p>逻辑实现</p>
+<p>功能:运行后，命令行中输入<code>add/remove username userScore</code>即可完成增加或者删除用户操作</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> match_client.match <span class="keyword">import</span> Match</span><br><span class="line"><span class="keyword">from</span> match_client.match.ttypes <span class="keyword">import</span> User</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> thrift <span class="keyword">import</span> Thrift</span><br><span class="line"><span class="keyword">from</span> thrift.transport <span class="keyword">import</span> TSocket</span><br><span class="line"><span class="keyword">from</span> thrift.transport <span class="keyword">import</span> TTransport</span><br><span class="line"><span class="keyword">from</span> thrift.protocol <span class="keyword">import</span> TBinaryProtocol</span><br><span class="line"><span class="keyword">from</span> sys <span class="keyword">import</span> stdin</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">operate</span>(<span class="params">op: <span class="built_in">str</span>, user_id: <span class="built_in">int</span>, username: <span class="built_in">str</span>, score: <span class="built_in">int</span></span>):</span></span><br><span class="line">    <span class="comment"># Make socket</span></span><br><span class="line">    transport = TSocket.TSocket(<span class="string">&#x27;localhost&#x27;</span>, <span class="number">9090</span>)</span><br><span class="line">    <span class="comment"># Buffering is critical. Raw sockets are very slow</span></span><br><span class="line">    transport = TTransport.TBufferedTransport(transport)</span><br><span class="line">    <span class="comment"># Wrap in a protocol</span></span><br><span class="line">    protocol = TBinaryProtocol.TBinaryProtocol(transport)</span><br><span class="line">    <span class="comment"># Create a client to use the protocol encoder</span></span><br><span class="line">    client = Match.Client(protocol)</span><br><span class="line">    <span class="comment"># Connect!</span></span><br><span class="line">    transport.<span class="built_in">open</span>()</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 具体客户端操作</span></span><br><span class="line">    user = User(user_id, username, score)</span><br><span class="line">    <span class="keyword">if</span> op == <span class="string">&quot;add&quot;</span>:</span><br><span class="line">        client.add_user(user, <span class="string">&quot;&quot;</span>)</span><br><span class="line">    <span class="keyword">elif</span> op == <span class="string">&quot;remove&quot;</span>:</span><br><span class="line">        client.remove_user(user, <span class="string">&quot;&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Close!</span></span><br><span class="line">    transport.close()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span>():</span></span><br><span class="line">    <span class="comment">#逐行读入命令行输入,执行操作</span></span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> stdin:</span><br><span class="line">        op, user_id, username, score = line.split(<span class="string">&quot; &quot;</span>)</span><br><span class="line">        operate(op, <span class="built_in">int</span>(user_id), username, <span class="built_in">int</span>(score))</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    main()</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="服务端具体匹配业务的实现"><a href="#服务端具体匹配业务的实现" class="headerlink" title="服务端具体匹配业务的实现"></a>服务端具体匹配业务的实现</h2><blockquote>
+<p>多线程前置知识</p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/kaleidopink/p/13817039.html">C++多线程编程博客</a></p>
+<p>用哪些头文件<br>如何创建一个线程(创建线程要用哪些函数)<br>如何使用锁(相关的函数)<br>如何使用条件变量</p>
+</blockquote>
+<h3 id="给main-cpp添加线程相关头文件"><a href="#给main-cpp添加线程相关头文件" class="headerlink" title="给main.cpp添加线程相关头文件"></a>给<code>main.cpp</code>添加线程相关头文件</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;mutex&quot;</span>  <span class="comment">//锁的头文件</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;thread&quot;</span>  <span class="comment">//线程的头文件</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;condition_variable&quot;</span>  <span class="comment">//条件变量的头文件</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;queue&quot;</span> <span class="comment">//实现消息队列时使用</span></span></span><br></pre></td></tr></table></figure>
+
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><ul>
+<li><p>初期匹配逻辑：在线程池内匹配前两个用户</p>
+</li>
+<li><p>当任务队列为空时，释放锁，阻塞该线程</p>
+</li>
+<li><p>当任务队列被添加任务时，唤醒被阻塞的线程，开始匹配</p>
+</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 这个自动生成的框架文件演示了如何构建服务器。</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thrift/protocol/TBinaryProtocol.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thrift/server/TSimpleServer.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thrift/transport/TServerSocket.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thrift/transport/TBufferTransports.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;match_server/Match.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span> </span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;mutex&quot;</span>  <span class="comment">//锁的头文件</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;thread&quot;</span>  <span class="comment">//线程的头文件</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;condition_variable&quot;</span>  <span class="comment">//条件变量的头文件</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;queue&gt;</span> <span class="comment">//实现消息队列时使用</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vector&gt;</span> </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> ::apache::thrift;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> ::apache::thrift::protocol;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> ::apache::thrift::transport;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> ::apache::thrift::server;</span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="comment">//手动添加</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> ::match_service;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Task</span> &#123;</span></span><br><span class="line">    User user;</span><br><span class="line">    string type;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//消息队列 管理Task</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">MessageQueue</span> &#123;</span></span><br><span class="line">    <span class="comment">//队列是互斥的，同时只能有一个线程访问队列</span></span><br><span class="line">    queue&lt;Task&gt; q; <span class="comment">//管理Task</span></span><br><span class="line">    mutex m; <span class="comment">//锁</span></span><br><span class="line">    condition_variable cv; <span class="comment">//条件变量</span></span><br><span class="line">&#125; message_queue;</span><br><span class="line"></span><br><span class="line"><span class="comment">//匹配池</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Poll</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">add</span><span class="params">(User user)</span> </span>&#123;</span><br><span class="line">        users.<span class="built_in">push_back</span>(user);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">remove</span><span class="params">(User user)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">uint32_t</span> i = <span class="number">0</span>; i &lt; users.<span class="built_in">size</span>(); i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (users[i].id == user.id) &#123;</span><br><span class="line">                users.<span class="built_in">erase</span>(users.<span class="built_in">begin</span>() + i);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">match</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">while</span> (users.<span class="built_in">size</span>() &gt; <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="comment">// 初期匹配逻辑-每次令匹配池内前两个User进行匹配</span></span><br><span class="line">            <span class="keyword">auto</span> player1 = users[<span class="number">0</span>];</span><br><span class="line">            <span class="keyword">auto</span> player2 = users[<span class="number">1</span>];</span><br><span class="line">            users.<span class="built_in">erase</span>(users.<span class="built_in">begin</span>());</span><br><span class="line">            users.<span class="built_in">erase</span>(users.<span class="built_in">begin</span>());</span><br><span class="line"></span><br><span class="line">            <span class="built_in">save_result</span>(player1.id, player2.id);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">save_result</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> </span>&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot; %d 和 %d 匹配成功\n&quot;</span>, a, b);</span><br><span class="line">        <span class="comment">//<span class="doctag">TODO:</span>实现保存匹配结果</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    vector&lt;User&gt; users;	<span class="comment">//存储当前匹配池用户列表</span></span><br><span class="line">&#125; pool;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MatchHandler</span> :</span> <span class="keyword">virtual</span> <span class="keyword">public</span> MatchIf &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">MatchHandler</span>() &#123;</span><br><span class="line">        <span class="comment">// 在这里初始化</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">int32_t</span> <span class="title">add_user</span><span class="params">(<span class="keyword">const</span> User &amp;user, <span class="keyword">const</span> std::string &amp;info)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 在这里实现接口</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;add_user\n&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="function">unique_lock&lt;mutex&gt; <span class="title">lock1</span><span class="params">(message_queue.m)</span></span>; <span class="comment">//加锁</span></span><br><span class="line">        message_queue.q.<span class="built_in">push</span>(&#123;user, <span class="string">&quot;add&quot;</span>&#125;);</span><br><span class="line">        <span class="comment">//队列内已被push了一个Task，应该唤醒当前被阻塞的线程</span></span><br><span class="line">        message_queue.cv.<span class="built_in">notify_all</span>();</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">int32_t</span> <span class="title">remove_user</span><span class="params">(<span class="keyword">const</span> User &amp;user, <span class="keyword">const</span> std::string &amp;info)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 在这里实现接口</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;remove_user\n&quot;</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="function">unique_lock&lt;mutex&gt; <span class="title">lock1</span><span class="params">(message_queue.m)</span></span>;<span class="comment">//加锁,在队列为空的时候，不能拿到锁</span></span><br><span class="line">        message_queue.q.<span class="built_in">push</span>(&#123;user, <span class="string">&quot;remove&quot;</span>&#125;);</span><br><span class="line">        <span class="comment">//当有操作时，应该唤醒线程</span></span><br><span class="line">        message_queue.cv.<span class="built_in">notify_all</span>();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//线程操作的函数</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">consume_task</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">        <span class="function">unique_lock&lt;mutex&gt; <span class="title">lock1</span><span class="params">(message_queue.m)</span></span>;<span class="comment">//加锁</span></span><br><span class="line">        <span class="keyword">if</span> (message_queue.q.<span class="built_in">empty</span>()) &#123;</span><br><span class="line">            <span class="comment">//因为队列初始一定是空的，如果直接continue，会死循环。因此在初始时，应在有add操作后，才应该执行这里</span></span><br><span class="line">            <span class="comment">//continue</span></span><br><span class="line">            message_queue.cv.<span class="built_in">wait</span>(lock1);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">auto</span> task = message_queue.q.<span class="built_in">front</span>();</span><br><span class="line">            message_queue.q.<span class="built_in">pop</span>();</span><br><span class="line">            <span class="comment">//因为只有队列是互斥的，为了保证程序的快速运行，操作完队列就应该释放锁</span></span><br><span class="line">            lock1.<span class="built_in">unlock</span>();</span><br><span class="line">            <span class="comment">//具体任务</span></span><br><span class="line">            <span class="keyword">if</span> (task.type == <span class="string">&quot;add&quot;</span>) &#123;</span><br><span class="line">                pool.<span class="built_in">add</span>(task.user);</span><br><span class="line"><span class="comment">//                printf(&quot;执行了1次add&quot;);</span></span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (task.type == <span class="string">&quot;remove&quot;</span>) &#123;</span><br><span class="line">                pool.<span class="built_in">remove</span>(task.user);</span><br><span class="line">            &#125;</span><br><span class="line">            pool.<span class="built_in">match</span>();</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> port = <span class="number">9090</span>;</span><br><span class="line">    ::<span class="function">std::shared_ptr&lt;MatchHandler&gt; <span class="title">handler</span><span class="params">(<span class="keyword">new</span> MatchHandler())</span></span>;</span><br><span class="line">    ::<span class="function">std::shared_ptr&lt;TProcessor&gt; <span class="title">processor</span><span class="params">(<span class="keyword">new</span> MatchProcessor(handler))</span></span>;</span><br><span class="line">    ::<span class="function">std::shared_ptr&lt;TServerTransport&gt; <span class="title">serverTransport</span><span class="params">(<span class="keyword">new</span> TServerSocket(port))</span></span>;</span><br><span class="line">    ::<span class="function">std::shared_ptr&lt;TTransportFactory&gt; <span class="title">transportFactory</span><span class="params">(<span class="keyword">new</span> TBufferedTransportFactory())</span></span>;</span><br><span class="line">    ::<span class="function">std::shared_ptr&lt;TProtocolFactory&gt; <span class="title">protocolFactory</span><span class="params">(<span class="keyword">new</span> TBinaryProtocolFactory())</span></span>;</span><br><span class="line">    <span class="function">TSimpleServer <span class="title">server</span><span class="params">(processor, serverTransport, transportFactory, protocolFactory)</span></span>;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Match server start\n&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="function">thread <span class="title">matching_thread</span><span class="params">(consume_task)</span></span>;</span><br><span class="line"></span><br><span class="line">    server.<span class="built_in">serve</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="编译链接main-cpp"><a href="#编译链接main-cpp" class="headerlink" title="编译链接main.cpp"></a>编译链接<code>main.cpp</code></h3><p>先编译<code>main.cpp</code>,在链接时，要用到<code>thrift</code>动态链接库和线程相关的动态链接库，所以链接时应该执行：</p>
+<p><code>g++ *.o -o main -lthrift -pthread</code></p>
+<h2 id="数据储存客户端实现"><a href="#数据储存客户端实现" class="headerlink" title="数据储存客户端实现"></a>数据储存客户端实现</h2><h3 id="thrift文件编写"><a href="#thrift文件编写" class="headerlink" title="thrift文件编写"></a>thrift文件编写</h3><ul>
+<li>在<code>thrift</code>文件夹下，编辑<code>save.thrift</code>，用来生成数据存储客户端的一系列文件</li>
+</ul>
+<p>代码如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> cpp save_service</span><br><span class="line"></span><br><span class="line">service Save &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * username: myserver的名称</span></span><br><span class="line"><span class="comment">     * password: myserver的密码的md5sum的前8位</span></span><br><span class="line"><span class="comment">     * 用户名密码验证成功会返回0，验证失败会返回1</span></span><br><span class="line"><span class="comment">     * 验证成功后，结果会被保存到myserver:homework/lesson_6/result.txt中</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function">i32 <span class="title">save_data</span><span class="params">(<span class="number">1</span>: string username, <span class="number">2</span>: string password, <span class="number">3</span>: i32 player1_id, <span class="number">4</span>: i32 player2_id)</span></span></span><br><span class="line"><span class="function">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="生成代码-2"><a href="#生成代码-2" class="headerlink" title="生成代码"></a>生成代码</h3><p>在<code>match_system/src</code>下执行：<code>thrift -r --gen cpp ../../thrift/save.thrift</code></p>
+<p>thrift服务端的一系列文件就会生成在src文件夹中的<code>gen-cpp</code>文件夹下，为了划分业务模块将<code>gen-cpp</code>重命名为<code>save_client</code></p>
+<p><strong>注意：</strong></p>
+<p>由于c++整个项目只能有一个<code>main函数</code>，而整个服务端的逻辑都在<code>thrift_project/match_system/src</code>下的<code>main.cpp</code>实现。所以一定要删除<code>thrift_project/match_system/src/save_client</code>下的<code>Save_server.skeleton.cpp</code>。而python没有这个问题，所以在用python实现客户端时，主框架文件可删可不删。</p>
+<ul>
+<li><p>改动<code>main.cpp</code>将数据存储端的业务写进去</p>
+<p>改动点：</p>
+<ul>
+<li>引入头文件，即<code>save_client/Save.h</code></li>
+<li>补全命名空间，即添加<code>using namespace ::save_service;</code></li>
+<li>在<code>class Pool</code>中的<code>save_resut</code>函数中，添加官网 C++样例的<code>client</code>中的<code>main</code>函数中的所有代码</li>
+<li>由于数据存储是实现在<code>myserver</code>上，所以在连接时要更改ip地址。</li>
+<li>将样例代码中的<code>CalculatorClient</code>改为<code>SaveClient</code></li>
+<li>将<code>transport-&gt;open()</code>和<code>transport-&gt;close();</code>之间的教程代码删除，在此之间实现自己的业务</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">save_result</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> </span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot; %d 和 %d 匹配成功\n&quot;</span>, a, b);</span><br><span class="line"></span><br><span class="line">    <span class="function">std::shared_ptr&lt;TTransport&gt; <span class="title">socket</span><span class="params">(<span class="keyword">new</span> TSocket(<span class="string">&quot;xxx.xxx.xxx.xxx&quot;</span>, <span class="number">9090</span>))</span></span>;</span><br><span class="line">    <span class="function">std::shared_ptr&lt;TTransport&gt; <span class="title">transport</span><span class="params">(<span class="keyword">new</span> TBufferedTransport(socket))</span></span>;</span><br><span class="line">    <span class="function">std::shared_ptr&lt;TProtocol&gt; <span class="title">protocol</span><span class="params">(<span class="keyword">new</span> TBinaryProtocol(transport))</span></span>;</span><br><span class="line">    <span class="function">SaveClient <span class="title">client</span><span class="params">(protocol)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        transport-&gt;<span class="built_in">open</span>();</span><br><span class="line">        <span class="comment">//----------在此之间实现自己的业务------------</span></span><br><span class="line">            <span class="comment">//第二个参数是myserver密码的MD5值的前8位</span></span><br><span class="line">        client.<span class="built_in">save_data</span>(<span class="string">&quot;acs_1642&quot;</span>,<span class="string">&quot;6a46581f&quot;</span>,a,b);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//-----------------------------------------</span></span><br><span class="line">        transport-&gt;<span class="built_in">close</span>();</span><br><span class="line">    &#125; <span class="built_in"><span class="keyword">catch</span></span> (TException &amp;tx) &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;ERROR: &quot;</span> &lt;&lt; tx.<span class="built_in">what</span>() &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="编译运行"><a href="#编译运行" class="headerlink" title="编译运行"></a>编译运行</h3><p>编译链接：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">g++ -c save_client/*.cpp</span><br><span class="line">g++ -c main.cpp</span><br><span class="line">g++ *.o -o main -lthrift -pthread</span><br></pre></td></tr></table></figure>
+
+<h2 id="更新匹配系统逻辑"><a href="#更新匹配系统逻辑" class="headerlink" title="更新匹配系统逻辑"></a>更新匹配系统逻辑</h2><ul>
+<li>按着分差进行匹配，当两用户分差小于50，即可匹配</li>
+<li>更改为每一秒钟进行一次匹配</li>
+</ul>
+<p>代码如下：</p>
+<p>匹配逻辑更改：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">match</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">while</span> (users.<span class="built_in">size</span>() &gt; <span class="number">1</span>) &#123;</span><br><span class="line"><span class="comment">//            printf(&quot;队列长度为: %ld\n&quot;, users.size());</span></span><br><span class="line">            <span class="built_in">sort</span>(users.<span class="built_in">begin</span>(),users.<span class="built_in">end</span>(),[&amp;](User &amp;a,User b)&#123;</span><br><span class="line">                <span class="keyword">return</span> a.score&lt;b.score;</span><br><span class="line">            &#125;);</span><br><span class="line">            <span class="keyword">bool</span> flag = <span class="literal">true</span>;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">uint32_t</span> i = <span class="number">1</span> ; i &lt;users.<span class="built_in">size</span>(); i++) &#123;</span><br><span class="line">              <span class="keyword">auto</span> a = users[i<span class="number">-1</span>],b = users[i];</span><br><span class="line">                <span class="keyword">if</span> (b.score-a.score&lt;=<span class="number">50</span>)&#123;</span><br><span class="line">                    users.<span class="built_in">erase</span>(users.<span class="built_in">begin</span>()+i,users.<span class="built_in">begin</span>()+i+<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">                    <span class="built_in">save_result</span>(a.id,b.id);</span><br><span class="line">                    flag = <span class="literal">false</span>;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (flag)&#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>线程操作</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//线程操作的函数</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">consume_task</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">        unique_lock &lt;mutex&gt; <span class="built_in">lock1</span>(message_queue.m);<span class="comment">//加锁</span></span><br><span class="line">        <span class="keyword">if</span> (message_queue.q.<span class="built_in">empty</span>()) &#123;</span><br><span class="line"><span class="comment">//            message_queue.cv.wait(lock1);</span></span><br><span class="line">            lock1.<span class="built_in">unlock</span>();</span><br><span class="line">            pool.<span class="built_in">match</span>();</span><br><span class="line">            <span class="built_in">sleep</span>(<span class="number">1</span>);<span class="comment">//实现每一秒进行一次匹配,不再进行阻塞,故也不需要唤醒了</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">auto</span> task = message_queue.q.<span class="built_in">front</span>();</span><br><span class="line">            message_queue.q.<span class="built_in">pop</span>();</span><br><span class="line">            <span class="comment">//因为只有队列是互斥的，为了保证程序的快速运行，操作完队列就应该释放锁</span></span><br><span class="line">            lock1.<span class="built_in">unlock</span>();</span><br><span class="line">            <span class="comment">//具体任务</span></span><br><span class="line">            <span class="keyword">if</span> (task.type == <span class="string">&quot;add&quot;</span>) &#123;</span><br><span class="line">                pool.<span class="built_in">add</span>(task.user);</span><br><span class="line"><span class="comment">//                printf(&quot;执行了1次add&quot;);</span></span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (task.type == <span class="string">&quot;remove&quot;</span>) &#123;</span><br><span class="line">                pool.<span class="built_in">remove</span>(task.user);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// pool.match();</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="升级为多线程服务器"><a href="#升级为多线程服务器" class="headerlink" title="升级为多线程服务器"></a>升级为多线程服务器</h2><p>之前的版本都是用一个线程来<code>add</code>和<code>remove user</code>，想要提高效率和并发量，可以将服务端升级为多线程版本。</p>
+<p>参考<a target="_blank" rel="noopener" href="https://thrift.apache.org/tutorial/cpp.html">官网 C++样例</a></p>
+<ul>
+<li>新增头文件</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thrift/concurrency/ThreadManager.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thrift/concurrency/ThreadFactory.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thrift/server/TThreadedServer.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;thrift/TToString.h&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>添加工厂类</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MatchCloneFactory</span> :</span> <span class="keyword">virtual</span> <span class="keyword">public</span> MatchIfFactory &#123;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">        ~<span class="built_in">MatchCloneFactory</span>() <span class="keyword">override</span> = <span class="keyword">default</span>;</span><br><span class="line">        <span class="function">MatchIf* <span class="title">getHandler</span><span class="params">(<span class="keyword">const</span> ::apache::thrift::TConnectionInfo&amp; connInfo)</span> <span class="keyword">override</span></span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">            std::shared_ptr&lt;TSocket&gt; sock = std::dynamic_pointer_cast&lt;TSocket&gt;(connInfo.transport);</span><br><span class="line">            <span class="comment">/*cout &lt;&lt; &quot;Incoming connection\n&quot;;</span></span><br><span class="line"><span class="comment">            cout &lt;&lt; &quot;\tSocketInfo: &quot;  &lt;&lt; sock-&gt;getSocketInfo() &lt;&lt; &quot;\n&quot;;</span></span><br><span class="line"><span class="comment">            cout &lt;&lt; &quot;\tPeerHost: &quot;    &lt;&lt; sock-&gt;getPeerHost() &lt;&lt; &quot;\n&quot;;</span></span><br><span class="line"><span class="comment">            cout &lt;&lt; &quot;\tPeerAddress: &quot; &lt;&lt; sock-&gt;getPeerAddress() &lt;&lt; &quot;\n&quot;;</span></span><br><span class="line"><span class="comment">            cout &lt;&lt; &quot;\tPeerPort: &quot;    &lt;&lt; sock-&gt;getPeerPort() &lt;&lt; &quot;\n&quot;;*/</span></span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> MatchHandler;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">releaseHandler</span><span class="params">(MatchIf* handler)</span> <span class="keyword">override</span> </span>&#123;</span><br><span class="line">            <span class="keyword">delete</span> handler;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>main</code>函数改写</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span> </span>&#123;</span><br><span class="line">    <span class="function">TSimpleServer <span class="title">server</span><span class="params">(processor, serverTransport, transportFactory, protocolFactory)</span></span>;</span><br><span class="line">    <span class="function">TThreadedServer <span class="title">server</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">            std::make_shared&lt;MatchProcessorFactory&gt;(std::make_shared&lt;MatchCloneFactory&gt;()),</span></span></span><br><span class="line"><span class="params"><span class="function">            std::make_shared&lt;TServerSocket&gt;(<span class="number">9090</span>), <span class="comment">//port</span></span></span></span><br><span class="line"><span class="params"><span class="function">            std::make_shared&lt;TBufferedTransportFactory&gt;(),</span></span></span><br><span class="line"><span class="params"><span class="function">            std::make_shared&lt;TBinaryProtocolFactory&gt;())</span></span>;</span><br><span class="line"></span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;Start Match Server&quot;</span> &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    <span class="function">thread <span class="title">matching_thread</span><span class="params">(consume_task)</span></span>;</span><br><span class="line"></span><br><span class="line">    server.<span class="built_in">serve</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="再次更新匹配逻辑"><a href="#再次更新匹配逻辑" class="headerlink" title="再次更新匹配逻辑"></a>再次更新匹配逻辑</h2><ul>
+<li>设置为匹配分差范围与用户等待时间成正比的匹配系统</li>
+<li>等待时间越久,所能匹配的分差就越大</li>
+</ul>
+<p><strong>匹配池类的成员变量</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span>:</span><br><span class="line">        vector&lt;User&gt; users; <span class="comment">//匹配池内用户列表</span></span><br><span class="line">        vector&lt;<span class="keyword">int</span>&gt; wt;  <span class="comment">// 等待时间, 单位：s</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>匹配池内增加用户</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">add</span><span class="params">(User user)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    users.<span class="built_in">push_back</span>(user);</span><br><span class="line">    wt.<span class="built_in">push_back</span>(<span class="number">0</span>);<span class="comment">//增加等待时间列表</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>匹配池内删去用户</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">remove</span><span class="params">(User user)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (users[i].id == user.id)</span><br><span class="line">    &#123;</span><br><span class="line">         users.<span class="built_in">erase</span>(users.<span class="built_in">begin</span>() + i);</span><br><span class="line">         wt.<span class="built_in">erase</span>(wt.<span class="built_in">begin</span>() + i);</span><br><span class="line">         <span class="keyword">break</span>;</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>匹配逻辑代码</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">match</span><span class="params">()</span></span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">uint32_t</span> i = <span class="number">0</span>; i &lt; wt.<span class="built_in">size</span>(); i ++ )</span><br><span class="line">                wt[i] ++ ;   <span class="comment">// 等待秒数 + 1</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">while</span> (users.<span class="built_in">size</span>() &gt; <span class="number">1</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">bool</span> flag = <span class="literal">true</span>;</span><br><span class="line">                <span class="comment">// 时间复杂度为n^2</span></span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">uint32_t</span> i = <span class="number">0</span>; i &lt; users.<span class="built_in">size</span>(); i ++ )</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">for</span> (<span class="keyword">uint32_t</span> j = i + <span class="number">1</span>; j &lt; users.<span class="built_in">size</span>(); j ++ )</span><br><span class="line">                    &#123;</span><br><span class="line">                        <span class="keyword">if</span> (<span class="built_in">check_match</span>(i, j))</span><br><span class="line">                        &#123;</span><br><span class="line">                            <span class="keyword">auto</span> a = users[i], b = users[j];</span><br><span class="line">                            <span class="comment">//将2个用户移出用户列表</span></span><br><span class="line">                            users.<span class="built_in">erase</span>(users.<span class="built_in">begin</span>() + j);</span><br><span class="line">                            users.<span class="built_in">erase</span>(users.<span class="built_in">begin</span>() + i);</span><br><span class="line">                            wt.<span class="built_in">erase</span>(wt.<span class="built_in">begin</span>() + j);</span><br><span class="line">                            wt.<span class="built_in">erase</span>(wt.<span class="built_in">begin</span>() + i);</span><br><span class="line">                            <span class="built_in">save_result</span>(a.id, b.id);</span><br><span class="line">                            flag = <span class="literal">false</span>;</span><br><span class="line">                            <span class="keyword">break</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    <span class="keyword">if</span> (!flag) <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (flag) <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+
+<p>判断是否可以匹配成功</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">check_match</span><span class="params">(<span class="keyword">uint32_t</span> i, <span class="keyword">uint32_t</span> j)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   <span class="keyword">auto</span> a = users[i], b = users[j];</span><br><span class="line"></span><br><span class="line">   <span class="keyword">int</span> dt = <span class="built_in">abs</span>(a.score - b.score);</span><br><span class="line">   <span class="keyword">int</span> a_max_dif = wt[i] * <span class="number">50</span>;</span><br><span class="line">   <span class="keyword">int</span> b_max_dif = wt[j] * <span class="number">50</span>;</span><br><span class="line">   <span class="keyword">return</span> dt &lt;= a_max_dif &amp;&amp; dt &lt;= b_max_dif;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<p>参考文章</p>
+<p><a target="_blank" rel="noopener" href="https://www.acwing.com/blog/content/7852/">linux基础课thrift详细开发过程</a></p>
+<p><a target="_blank" rel="noopener" href="https://thrift.apache.org/tutorial/py.html">thrift文档</a></p>
+<p><a target="_blank" rel="noopener" href="https://diwakergupta.github.io/thrift-missing-guide/#_translations">thrift教程</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/lihao21/article/details/54909236">RPC 基本原理与 Apach Thrift 初体验</a></p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/10/09/%E6%89%8B%E5%86%99%E7%BC%96%E8%AF%91%E5%99%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
+      <meta itemprop="name" content="gezi_lzq">
+      <meta itemprop="description" content="Blog of lizhenqi ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gezi's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/10/09/%E6%89%8B%E5%86%99%E7%BC%96%E8%AF%91%E5%99%A8/" class="post-title-link" itemprop="url">手写编译器</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-10-09 00:00:00" itemprop="dateCreated datePublished" datetime="2021-10-09T00:00:00+08:00">2021-10-09</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-09 21:42:33" itemprop="dateModified" datetime="2022-01-09T21:42:33+08:00">2022-01-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/" itemprop="url" rel="index"><span itemprop="name">编译原理</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="手写编译器"><a href="#手写编译器" class="headerlink" title="手写编译器"></a>手写编译器</h1><h2 id="编译器"><a href="#编译器" class="headerlink" title="编译器"></a>编译器</h2><p>wiki关于编译器的定义：</p>
+<blockquote>
+<p>将便于人编写、阅读、维护的高级计算机语言所写作的源代码程序，翻译为计算机能解读、运行的低阶机器语言的程序，也就是可执行文件。</p>
+<p>编译器将原始程序（source program）作为输入，翻译产生使用目标语言（target language）的等价程序。源代码一般为高级语言（High-level language），如Pascal、C、C++、C# 、Java等，而目标语言则是汇编语言或目标机器的目标代码（Object code），有时也称作机器代码（Machine code）。 </p>
+<p>一个现代编译器的工作流程：源代码（source code）→ 预处理器（preprocessor）→ 编译器（compiler）→ 汇编程序（assembler）→ 目标代码（object code）→ 链接器（linker）→ 可执行文件（executables）。</p>
+</blockquote>
+<p>一个工业级别的编译器往往分为前端与后端</p>
+<ul>
+<li>前端：parser ，通过词法分析，语法分析，语义分析，对程序代码进行分析和理解，将其转化为中间代码<ul>
+<li>词法分析器，用于将字符串转化成内部的表示结构。</li>
+<li>语法分析器，将词法分析得到的标记流（token）生成一棵语法树。</li>
+</ul>
+</li>
+<li>后端：<ul>
+<li>optimizer 优化器 （可选）：中间代码经历一系列优化过程转换为中间代码</li>
+<li>codeGen: 中间代码到目标代码，</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>补充知识：</p>
+<p><strong>抽象语法树</strong>（<strong>A</strong>bstract <strong>S</strong>yntax <strong>T</strong>ree，AST），或简称<strong>语法树</strong>（Syntax tree），是<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E6%BA%90%E4%BB%A3%E7%A0%81">源代码</a><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E8%AF%AD%E6%B3%95%E5%AD%A6">语法</a>结构的一种抽象表示。它以<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E6%A0%91_(%E5%9B%BE%E8%AE%BA)">树状</a>的形式表现<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80">编程语言</a>的语法结构，树上的每个节点都表示源代码中的一种结构。</p>
+<p><strong>LLVM IR</strong>(Intermediate Representation，中间表示)连接着编译器前端和编译器后端。通常情况下，设计一门新的编程语言只需要完成能够生成LLVM IR的编译器前端即可，然后就可以轻松使用LLVM的各种编译优化、JIT支持、目标代码生成等功能。</p>
+<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/v2-f5d09e6bd835d41f6c98ea696f00cb45_720w.jpg" alt="img"></p>
+</blockquote>
+<h2 id="设计思路"><a href="#设计思路" class="headerlink" title="设计思路"></a>设计思路</h2><ul>
+<li>运行在极简的虚拟机上。</li>
+<li>独立的词法分析，语法语义分析和代码生成合为一体，没有中间优化过程，代码生成过程中为特定的结构生成特定的指令，没有也不需要指令调度和寄存器分配。</li>
+<li>语法分析过程中变量、函数定义部分使用递归下降进行处理，表达式采用优先级分析法进行处理。</li>
+</ul>
+<h3 id="VM设计"><a href="#VM设计" class="headerlink" title="VM设计"></a>VM设计</h3><h4 id="总览"><a href="#总览" class="headerlink" title="总览"></a>总览</h4><p>极简设计的虚拟机：</p>
+<ul>
+<li>基于寄存器和栈。只有一个通用寄存器ax，一元运算操作ax，二元运算操作ax和栈顶。</li>
+<li>寄存器：<ul>
+<li>PC/IP，Program Counter/Instruction Pointer，即程序计数器或者叫指令指针，指向当前运行的指令。后续统一称PC。它存放的是一个内存地址，该地址中存放着 <strong>下一条</strong> 要执行的计算机指令</li>
+<li>SP，Stack Pointer，栈顶指针。永远指向当前的栈顶。注意的是由于栈是位于高地址并向低地址增长的，所以入栈时 <code>SP</code> 的值减小</li>
+<li>BP，Base Pointer，上一个栈的栈顶指针，函数调用时需要切换栈，返回时需要切回来就会用到。LEA相对寻址的基址。</li>
+<li>ax，通用寄存器，存储操作数。我们的虚拟机中，它用于存放一条指令执行后的结果</li>
+</ul>
+</li>
+<li>内存空间：<ul>
+<li>代码段（code）：存储指令序列，PC指向当前运行的指令地址。</li>
+<li>数据段（data）：存储静态数据、字面量等。</li>
+<li>运行时栈（stack）：局部变量、函数调用等。</li>
+<li>没有堆（heap）：动态内存通过作弊的方式实现（native-call）。</li>
+<li>和一个C程序的内存空间（kernel、stack、heap、data、code）很像。</li>
+</ul>
+</li>
+<li>指令集：<ul>
+<li>Save &amp; Load类：内存到寄存器，寄存器到内存。</li>
+<li>运算类：算术（arithmetic）运算、位（bit-wise）运算、逻辑（logical）运算。</li>
+<li>分支跳转类：branch、jump、cmp、ret等。</li>
+<li>native-call：处理IO（printf/open/write等），动态内存（malloc/free/memset等）。这里是为了实现实现方便加上这些，属于作弊的手段。</li>
+</ul>
+</li>
+<li>细节：<ul>
+<li>栈从高地址向低地址生长，单位为4字节，压栈*–sp = xxx。</li>
+<li>32位内存地址，用int即可保存指针。</li>
+<li>变长指令，指令长度为4字节长的指令（只是为了方便，其实不需要这么长），加上每一个操作数4字节。</li>
+<li>PC单位就是4字节，PC+1用来提取操作数或者取下一条指令。</li>
+<li>如果指令有操作数，那么实现指令时就需要将取出操作数并移到下一条指令开头，基本操作就是*pc++。</li>
+<li>也就是说无论是栈还是code段用一个int数组即可轻松实现。如何改成64位：最简单的方法就是将PC、寄存器、栈单位改成8个字节，c4的实现中的<code>#define int long long</code>。</li>
+</ul>
+</li>
+</ul>
+<h3 id="指令集细节"><a href="#指令集细节" class="headerlink" title="指令集细节"></a>指令集细节</h3><p>Save &amp; Load：内存与寄存器之间的数据流通，IMM和LEA是<strong>单操作数</strong>指令，其他都没有操作数。</p>
+<ul>
+<li>IMM：加载立即数到寄存器ax。</li>
+<li>LEA：load effective address（x86经典指令，这里含义有一些区别），取立即数（相对地址）加到bp上然后将得到的地址（绝对地址）保存到ax中。</li>
+<li>LC：load char to ax。</li>
+<li>LI：load int to ax。</li>
+<li>SC：save char to stack top。</li>
+<li>SI：save int to stack top。</li>
+<li>PUSH：寄存器ax压到栈顶。</li>
+</ul>
+<img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20211007110200711.png" alt="image-20211007110200711"  />
+
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (op == IMM) ax = *pc++; <span class="comment">// load immediate to ax</span></span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (op == LEA) ax = (<span class="keyword">int</span>)(bp + *pc++); <span class="comment">// load address to ax</span></span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (op == LC) ax = *(<span class="keyword">char</span>*)ax; <span class="comment">// load char to ax</span></span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (op == LI) ax = *(<span class="keyword">int</span>*)ax; <span class="comment">// load int to ax</span></span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (op == SC) *(<span class="keyword">char</span>*)*sp++ = ax; <span class="comment">// save char to adress that is saved in stack top, then pop.</span></span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (op == SI) *(<span class="keyword">int</span>*)*sp++ = ax; <span class="comment">// save int to address then pop.</span></span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (op == PUSH) *--sp = ax; <span class="comment">// push ax to stack top</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>运算类：指令<strong>无操作数</strong>，运算的两个操作数是栈顶和ax，结果保存在ax。</p>
+<ul>
+<li>算术运算：ADD、SUB、MUL、DIV、MOD，即加减乘除取模。</li>
+<li>位运算：AND、OR、XOR、SHL、SHR，即与、或、异或、左移、右移。没有NOT，为了简化非运算直接在parse过程中实现了。</li>
+<li>逻辑运算：EQ、NE、LT、LE、GT、GE，=、!=、&lt;、&lt;=、&gt;、&gt;=。</li>
+</ul>
+<p>分支跳转类：<strong>单操作数</strong>。</p>
+<ul>
+<li>JMP：无条件跳转，PC to XXX。</li>
+<li>JZ：有条件跳转，寄存器为0时跳转。</li>
+<li>JNZ：有条件跳转，寄存器不为0时跳转。</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (op == JMP)          pc = (<span class="keyword">int</span>*)*pc; <span class="comment">// jump to </span></span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (op == JZ)      pc = ax ? pc+<span class="number">1</span> : (<span class="keyword">int</span>*)*pc; <span class="comment">// jump if ax is zero.</span></span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (op == JNZ)     pc = ax ? (<span class="keyword">int</span>*)*pc ? pc+<span class="number">1</span>; <span class="comment">// jump if ax is not zero.</span></span><br></pre></td></tr></table></figure>
+
+<p>函数跳转相关指令：</p>
+<ul>
+<li>JSR：jump subroutine，跳转到子程序，操作数为子程序的地址。</li>
+<li>ENT：enter subroutine，进入子程序，放在子程序开头，切换栈帧，并为子程序内的局部变量分配内存，操作数为内存单元数量。</li>
+<li>ADJ：adjust stack，调整栈指针sp，比如用于快速释放主调函数为参数分配的栈内存，操作数是栈帧数量。</li>
+<li>LEV：leave subroutine，退出子程序，放在子程序的末尾，将栈帧切换回主调函数，释放子程序中的内存。</li>
+</ul>
+<p>native-call：直接调用C库函数。</p>
+<ul>
+<li>OPEN：打开文件。</li>
+<li>CLOS：关闭文件。</li>
+<li>READ：从设备读数据。</li>
+<li>WRIT：写数据到设备。</li>
+<li>PRTF：写到标准输出（fd=1）。</li>
+<li>MALC：malloc。</li>
+<li>FREE：free。</li>
+<li>MSET：memset。</li>
+<li>MCMP：memcmp。</li>
+<li>EXIT：exit，结束程序。</li>
+</ul>
+<p>函数调用细节：</p>
+<ul>
+<li>实现一个函数调用需要的东西<ul>
+<li>函数地址：由parser生成，体现为JSR的操作数。</li>
+<li>参数的值：执行JSR前将参数压栈，主调函数负责，JSR执行后主调函数负责清理。</li>
+<li>函数返回值：最终保存在ax中。</li>
+<li>返回地址：JSR下一条指令。</li>
+</ul>
+</li>
+<li>函数的指令保存在什么位置：code区。</li>
+<li>如何知道函数地址：编译生成VM指令时由编译器确定。</li>
+<li>调用函数需要保存和恢复现场，现场有些什么东西：bp和sp。</li>
+<li>bp是什么：<ul>
+<li>用来做相对寻址的基地址，LEA的地址是相对于bp的。</li>
+<li>每个函数都有自己的bp，在函数内的LEA用的相对地址都是相对于它自己的bp。</li>
+</ul>
+</li>
+<li>讨论实现时结合实例讨论细节。</li>
+</ul>
+<p>考虑多层函数调用，最后调用的那一层一定是最先释放的，整个后进先出的关系就可以用栈来描述。用栈实现是最简单的。</p>
+<p>一个编程语言并不一定必须要有函数调用，函数调用的存在只是为了代码复用、减少冗余。</p>
+<h2 id="词法分析"><a href="#词法分析" class="headerlink" title="词法分析"></a>词法分析</h2><p>词法分析也称为 <strong>分词</strong> ，此阶段编译器从左向右扫描源文件，将其字符流分割成一个个的 <strong>词</strong> （ <strong>token</strong> 、 <strong>记号</strong> ，后文中将称为 <strong>token</strong> ）。所谓 <strong>token</strong> ，就是源文件中不可再进一步分割的一串字符，类似于英语中单词，或汉语中的词。</p>
+<p><a target="_blank" rel="noopener" href="https://pandolia.net/tinyc/images/lexical_analysis.png"><img src="https://gitee.com/gezilzq/image-host/raw/master/img/lexical_analysis.png" alt="images/lexical_analysis.png"></a></p>
+<p>英语中的单词的数量是有限的，程序语言中可用的 token 的类别也是有限的，而且是非常少的。</p>
+<p>一般来说程序语言中的 token 有：常数（整数、小数、字符、字符串等），操作符（算术操作符、比较操作符、逻辑操作符），分隔符（逗号、分号、括号等），保留字，标识符（变量名、函数名、类名等）等。</p>
+<blockquote>
+<p>开始所写的程序对于计算机来说只是一个很长的字符串，通过词法分析器把程序变为只由一个个token所构成的程序，用token赋予一段字符串具有的意义。</p>
+</blockquote>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// tokens and classes (operators last and in precedence order)</span></span><br><span class="line"><span class="class"><span class="keyword">enum</span> &#123;</span></span><br><span class="line">  Num = <span class="number">128</span>, Fun, Sys, Glo, Loc, Id,</span><br><span class="line">  Char, Else, Enum, If, Int, Return, Sizeof, While,</span><br><span class="line">  Assign, Cond, Lor, Lan, Or, Xor, And, Eq, Ne, Lt, Gt, Le, Ge, Shl, Shr, Add, Sub, Mul, Div, Mod, Inc, Dec, Brak</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>这些就是我们要支持的标记符。例如，我们会将 <code>=</code> 解析为 <code>Assign</code>；将 <code>==</code> 解析为 <code>Eq</code>；将 <code>!=</code> 解析为 <code>Ne</code> 等等。</p>
+<p>所以这里我们会有这样的印象，一个标记（token）可能包含多个字符，且多数情况下如此。而词法分析器能减小语法分析复杂度的原因，正是因为它相当于通过一定的编码（更多的标记）来压缩了源码字符串。</p>
+<p>当然，上面这些标记是有顺序的，跟它们在 C 语言中的优先级有关，如 <code>*(Mul)</code> 的优先级就要高于 <code>+(Add)</code>。</p>
+<h2 id="直接扫描法"><a href="#直接扫描法" class="headerlink" title="直接扫描法"></a>直接扫描法</h2><p>直接扫描法的思路非常简单，每轮扫描，根据第一个字符判断属于哪种类型的 token ，然后采取不同的策略扫描出一个完整的 token ，再接着进行下一轮扫描。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">next</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">char</span> *last_pos;</span><br><span class="line">    <span class="keyword">int</span> hash;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (token = *src) &#123;</span><br><span class="line">        ++src;</span><br><span class="line">        <span class="comment">// parse token here</span></span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>若仅考虑一些简单的情况，按 token 的第一个字符，可以将所有类别的 token 分为以下 7 大类：</p>
+<p><strong>（1）A型单字符运算符</strong></p>
+<p>包括：+, -, *, /, %， 这种 token 只有一个字符，若本轮扫描的第一个字符为上述字符，则立即返回此字符所代表的 token ，然后移到下一个字符开始下一轮扫描。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">next</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        ...</span><br><span class="line"></span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (token == <span class="string">&#x27;=&#x27;</span>) &#123;</span><br><span class="line">            <span class="comment">// parse &#x27;==&#x27; and &#x27;=&#x27;</span></span><br><span class="line">            <span class="keyword">if</span> (*src == <span class="string">&#x27;=&#x27;</span>) &#123;</span><br><span class="line">                src ++;</span><br><span class="line">                token = Eq;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                token = Assign;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (token == <span class="string">&#x27;+&#x27;</span>) &#123;</span><br><span class="line">            <span class="comment">// parse &#x27;+&#x27; and &#x27;++&#x27;</span></span><br><span class="line">            <span class="keyword">if</span> (*src == <span class="string">&#x27;+&#x27;</span>) &#123;</span><br><span class="line">                src ++;</span><br><span class="line">                token = Inc;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                token = Add;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (token == <span class="string">&#x27;^&#x27;</span>) &#123;</span><br><span class="line">            token = Xor;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (token == <span class="string">&#x27;%&#x27;</span>) &#123;</span><br><span class="line">            token = Mod;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (token == <span class="string">&#x27;*&#x27;</span>) &#123;</span><br><span class="line">            token = Mul;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (token == <span class="string">&#x27;[&#x27;</span>) &#123;</span><br><span class="line">            token = Brak;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (token == <span class="string">&#x27;?&#x27;</span>) &#123;</span><br><span class="line">            token = Cond;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (token == <span class="string">&#x27;~&#x27;</span> || token == <span class="string">&#x27;;&#x27;</span> || token == <span class="string">&#x27;&#123;&#x27;</span> || token == <span class="string">&#x27;&#125;&#x27;</span> || token == <span class="string">&#x27;(&#x27;</span> || token == <span class="string">&#x27;)&#x27;</span> || token == <span class="string">&#x27;]&#x27;</span> || token == <span class="string">&#x27;,&#x27;</span> || token == <span class="string">&#x27;:&#x27;</span>) &#123;</span><br><span class="line">            <span class="comment">// directly return the character as token;</span></span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>（2）B型单字符运算符和双字符运算符</strong></p>
+<p>B型单字符运算符包括： &lt; &gt; = ! ，双字符运算符包括： &lt;=, &gt;=, ==, != 。 若本轮扫描的第一个字符为B型单字符运算符时，先查看下一个字符是否是 “=” ，如果是，则返回这两个字符代表的 token ，如果否，则返回这个字符代表的 token 。例如，如果扫描到 “&gt;” ，则查看下一个字符是否是 “=” ，是则返回<code>Ge</code> ，否则返回 <code>Gt</code> 。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (token == <span class="string">&#x27;-&#x27;</span>) &#123;</span><br><span class="line">     <span class="comment">// parse &#x27;-&#x27; and &#x27;--&#x27;</span></span><br><span class="line">     <span class="keyword">if</span> (*src == <span class="string">&#x27;-&#x27;</span>) &#123;</span><br><span class="line">         src ++;</span><br><span class="line">         token = Dec;</span><br><span class="line">     &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">         token = Sub;</span><br><span class="line">     &#125;</span><br><span class="line">     <span class="keyword">return</span>;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="keyword">else</span> <span class="keyword">if</span> (token == <span class="string">&#x27;!&#x27;</span>) &#123;</span><br><span class="line">     <span class="comment">// parse &#x27;!=&#x27;</span></span><br><span class="line">     <span class="keyword">if</span> (*src == <span class="string">&#x27;=&#x27;</span>) &#123;</span><br><span class="line">         src++;</span><br><span class="line">         token = Ne;</span><br><span class="line">     &#125;</span><br><span class="line">     <span class="keyword">return</span>;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="keyword">else</span> <span class="keyword">if</span> (token == <span class="string">&#x27;&lt;&#x27;</span>) &#123;</span><br><span class="line">     <span class="comment">// parse &#x27;&lt;=&#x27;, &#x27;&lt;&lt;&#x27; or &#x27;&lt;&#x27;</span></span><br><span class="line">     <span class="keyword">if</span> (*src == <span class="string">&#x27;=&#x27;</span>) &#123;</span><br><span class="line">         src ++;</span><br><span class="line">         token = Le;</span><br><span class="line">     &#125; <span class="keyword">else</span> <span class="keyword">if</span> (*src == <span class="string">&#x27;&lt;&#x27;</span>) &#123;</span><br><span class="line">         src ++;</span><br><span class="line">         token = Shl;</span><br><span class="line">     &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">         token = Lt;</span><br><span class="line">     &#125;</span><br><span class="line">     <span class="keyword">return</span>;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="keyword">else</span> <span class="keyword">if</span> (token == <span class="string">&#x27;&gt;&#x27;</span>) &#123;</span><br><span class="line">     <span class="comment">// parse &#x27;&gt;=&#x27;, &#x27;&gt;&gt;&#x27; or &#x27;&gt;&#x27;</span></span><br><span class="line">     <span class="keyword">if</span> (*src == <span class="string">&#x27;=&#x27;</span>) &#123;</span><br><span class="line">         src ++;</span><br><span class="line">         token = Ge;</span><br><span class="line">     &#125; <span class="keyword">else</span> <span class="keyword">if</span> (*src == <span class="string">&#x27;&gt;&#x27;</span>) &#123;</span><br><span class="line">         src ++;</span><br><span class="line">         token = Shr;</span><br><span class="line">     &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">         token = Gt;</span><br><span class="line">     &#125;</span><br><span class="line">     <span class="keyword">return</span>;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="keyword">else</span> <span class="keyword">if</span> (token == <span class="string">&#x27;|&#x27;</span>) &#123;</span><br><span class="line">     <span class="comment">// parse &#x27;|&#x27; or &#x27;||&#x27;</span></span><br><span class="line">     <span class="keyword">if</span> (*src == <span class="string">&#x27;|&#x27;</span>) &#123;</span><br><span class="line">         src ++;</span><br><span class="line">         token = Lor;</span><br><span class="line">     &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">         token = Or;</span><br><span class="line">     &#125;</span><br><span class="line">     <span class="keyword">return</span>;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="keyword">else</span> <span class="keyword">if</span> (token == <span class="string">&#x27;&amp;&#x27;</span>) &#123;</span><br><span class="line">     <span class="comment">// parse &#x27;&amp;&#x27; and &#x27;&amp;&amp;&#x27;</span></span><br><span class="line">     <span class="keyword">if</span> (*src == <span class="string">&#x27;&amp;&#x27;</span>) &#123;</span><br><span class="line">         src ++;</span><br><span class="line">         token = Lan;</span><br><span class="line">     &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">         token = And;</span><br><span class="line">     &#125;</span><br><span class="line">     <span class="keyword">return</span>;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>（3）关键词和标识符</strong></p>
+<p>关键词和标识符都是以字母或下划线开始、且只有字母、下划线或数字组成。</p>
+<p>若本轮扫描的第一个字符为字母或下划线时，则一直向后扫描，直到遇到第一个既不是字母、也不是下划线或数字的字符，此时一个完整的词就被扫描出来了，然后，查看这个词是不是为<strong>关键字</strong>，如果是，则返回关键字代表的 token ，如果不是，则返回 IDENTIFIER 以及这个词的字面值。</p>
+<ul>
+<li>标识符存入一个表内<ul>
+<li><code>token</code>：该标识符返回的标记，理论上所有的变量返回的标记都应该是 <code>Id</code>，但实际上由于我们还将在符号表中加入关键字  如 <code>if</code>, <code>while</code> 等，它们都有对应的标记。</li>
+<li><code>hash</code>：顾名思义，就是这个标识符的哈希值，用于标识符的快速比较。</li>
+<li><code>name</code>：存放标识符本身的字符串。</li>
+<li>语法分析后再添加的信息<ul>
+<li><code>class</code>：该标识符的类别，如数字，全局变量或局部变量等。</li>
+<li><code>type</code>：标识符的类型，即如果它是个变量，变量是 <code>int</code> 型、<code>char</code> 型还是指针型。</li>
+<li><code>value</code>：存放这个标识符的值，如标识符是函数，刚存放函数的地址。</li>
+<li><code>BXXXX</code>：C 语言中标识符可以是全局的也可以是局部的，当局部标识符的名字与全局标识符相同时，用作保存全局标识符的信息。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>由于我们的目标是能自举，而我们定义的语法不支持 <code>struct</code>，故而使用下列方式。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Symbol table:</span><br><span class="line">----+-----+----+----+----+-----+-----+-----+------+------+----</span><br><span class="line"> .. |token|hash|name|type|class|value|btype|bclass|bvalue| ..</span><br><span class="line">----+-----+----+----+----+-----+-----+-----+------+------+----</span><br><span class="line">    |&lt;---       one single identifier                ---&gt;|</span><br></pre></td></tr></table></figure>
+
+<p><strong>关键字与内置函数</strong></p>
+<ul>
+<li>例如 <code>if</code>, <code>while</code>, <code>return</code> 等。它们不能被作为普通的标识符，因为有特殊的含义</li>
+<li>一般有两种处理方法：<ol>
+<li>词法分析器中直接解析这些关键字。</li>
+<li>在语法分析前将关键字提前加入符号表。</li>
+</ol>
+</li>
+<li>这里我们就采用第二种方法，将它们加入符号表，并提前为它们赋予必要的信息（还记得前面说的标识符 <code>Token</code> 字段吗？）。这样当源代码中出现关键字时，它们会被解析成标识符，但由于符号表中已经有了相关的信息，我们就能知道它们是特殊的关键字。</li>
+</ul>
+<p>内置函数的行为也和关键字类似，不同的只是赋值的信息，在<code>main</code>函数中进行初始化如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// types of variable/function</span></span><br><span class="line"><span class="class"><span class="keyword">enum</span> &#123;</span> CHAR, INT, PTR &#125;;</span><br><span class="line"><span class="keyword">int</span> *idmain;                  <span class="comment">// the `main` function</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    src = <span class="string">&quot;char else enum if int return sizeof while &quot;</span></span><br><span class="line">          <span class="string">&quot;open read close printf malloc memset memcmp exit void main&quot;</span>;</span><br><span class="line"></span><br><span class="line">     <span class="comment">// add keywords to symbol table</span></span><br><span class="line">    i = Char;</span><br><span class="line">    <span class="keyword">while</span> (i &lt;= While) &#123;</span><br><span class="line">        next();</span><br><span class="line">        current_id[Token] = i++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// add library to symbol table</span></span><br><span class="line">    i = OPEN;</span><br><span class="line">    <span class="keyword">while</span> (i &lt;= EXIT) &#123;</span><br><span class="line">        next();</span><br><span class="line">        current_id[Class] = Sys;</span><br><span class="line">        current_id[Type] = INT;</span><br><span class="line">        current_id[Value] = i++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    next(); current_id[Token] = Char; <span class="comment">// handle void type</span></span><br><span class="line">    next(); idmain = current_id; <span class="comment">// keep track of main</span></span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line">    program();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>扫描整个程序，标记token</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> token_val;                <span class="comment">// value of current token (mainly for number)</span></span><br><span class="line"><span class="keyword">int</span> *current_id,              <span class="comment">// current parsed ID</span></span><br><span class="line">    *symbols;                 <span class="comment">// symbol table</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// fields of identifier</span></span><br><span class="line"><span class="class"><span class="keyword">enum</span> &#123;</span>Token, Hash, Name, Type, Class, Value, BType, BClass, BValue, IdSize&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">next</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        ...</span><br><span class="line"></span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> ((token &gt;= <span class="string">&#x27;a&#x27;</span> &amp;&amp; token &lt;= <span class="string">&#x27;z&#x27;</span>) || (token &gt;= <span class="string">&#x27;A&#x27;</span> &amp;&amp; token &lt;= <span class="string">&#x27;Z&#x27;</span>) || (token == <span class="string">&#x27;_&#x27;</span>)) &#123;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// parse identifier</span></span><br><span class="line">            last_pos = src - <span class="number">1</span>;</span><br><span class="line">            hash = token;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">while</span> ((*src &gt;= <span class="string">&#x27;a&#x27;</span> &amp;&amp; *src &lt;= <span class="string">&#x27;z&#x27;</span>) || (*src &gt;= <span class="string">&#x27;A&#x27;</span> &amp;&amp; *src &lt;= <span class="string">&#x27;Z&#x27;</span>) || (*src &gt;= <span class="string">&#x27;0&#x27;</span> &amp;&amp; *src &lt;= <span class="string">&#x27;9&#x27;</span>) || (*src == <span class="string">&#x27;_&#x27;</span>)) &#123;</span><br><span class="line">                hash = hash * <span class="number">147</span> + *src;</span><br><span class="line">                src++;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// look for existing identifier, linear search</span></span><br><span class="line">            current_id = symbols;</span><br><span class="line">            <span class="keyword">while</span> (current_id[Token]) &#123;</span><br><span class="line">                <span class="keyword">if</span> (current_id[Hash] == hash &amp;&amp; !<span class="built_in">memcmp</span>((<span class="keyword">char</span> *)current_id[Name], last_pos, src - last_pos)) &#123;</span><br><span class="line">                    <span class="comment">//found one, return</span></span><br><span class="line">                    token = current_id[Token];</span><br><span class="line">                    <span class="keyword">return</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                current_id = current_id + IdSize;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            <span class="comment">// store new ID</span></span><br><span class="line">            current_id[Name] = (<span class="keyword">int</span>)last_pos;</span><br><span class="line">            current_id[Hash] = hash;</span><br><span class="line">            token = current_id[Token] = Id;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>（4）整数常量</strong></p>
+<p>整数常量以数字开始，若本轮扫描的第一个字符为数字，则一直向后扫描</p>
+<p>数字中较为复杂的一点是需要支持十进制、十六进制及八进制。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">next</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        ...</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (token &gt;= <span class="string">&#x27;0&#x27;</span> &amp;&amp; token &lt;= <span class="string">&#x27;9&#x27;</span>) &#123;</span><br><span class="line">            <span class="comment">// parse number, three kinds: dec(123) hex(0x123) oct(017)</span></span><br><span class="line">            token_val = token - <span class="string">&#x27;0&#x27;</span>;</span><br><span class="line">            <span class="keyword">if</span> (token_val &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="comment">// dec, starts with [1-9]</span></span><br><span class="line">                <span class="keyword">while</span> (*src &gt;= <span class="string">&#x27;0&#x27;</span> &amp;&amp; *src &lt;= <span class="string">&#x27;9&#x27;</span>) &#123;</span><br><span class="line">                    token_val = token_val*<span class="number">10</span> + *src++ - <span class="string">&#x27;0&#x27;</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// starts with number 0</span></span><br><span class="line">                <span class="keyword">if</span> (*src == <span class="string">&#x27;x&#x27;</span> || *src == <span class="string">&#x27;X&#x27;</span>) &#123;</span><br><span class="line">                    <span class="comment">//hex</span></span><br><span class="line">                    token = *++src;</span><br><span class="line">                    <span class="keyword">while</span> ((token &gt;= <span class="string">&#x27;0&#x27;</span> &amp;&amp; token &lt;= <span class="string">&#x27;9&#x27;</span>) || (token &gt;= <span class="string">&#x27;a&#x27;</span> &amp;&amp; token &lt;= <span class="string">&#x27;f&#x27;</span>) || (token &gt;= <span class="string">&#x27;A&#x27;</span> &amp;&amp; token &lt;= <span class="string">&#x27;F&#x27;</span>)) &#123;</span><br><span class="line">                        token_val = token_val * <span class="number">16</span> + (token &amp; <span class="number">15</span>) + (token &gt;= <span class="string">&#x27;A&#x27;</span> ? <span class="number">9</span> : <span class="number">0</span>);</span><br><span class="line">                        token = *++src;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="comment">// oct</span></span><br><span class="line">                    <span class="keyword">while</span> (*src &gt;= <span class="string">&#x27;0&#x27;</span> &amp;&amp; *src &lt;= <span class="string">&#x27;7&#x27;</span>) &#123;</span><br><span class="line">                        token_val = token_val*<span class="number">8</span> + *src++ - <span class="string">&#x27;0&#x27;</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            token = Num;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>八进制和十六进制的转换逻辑</li>
+</ul>
+<p><strong>（5）字符串常量</strong></p>
+<p>字符串常量以双引号开始和结束，若本轮扫描的第一个字符为双引号或者单引号（比较的时候需要用一下转义符<code>token == &#39;&quot;&#39; || token == &#39;\&#39;&#39;</code>），则一直向后扫描，直到遇到第一个双引号或者单引号，然后返回 T_STRINGCONSTANT 和这个字符串。</p>
+<p><strong>（6）空格</strong></p>
+<p>若本轮扫描的第一个字符为为空格，则跳过此字符。</p>
+<p><strong>（7）注释</strong></p>
+<p>注释仅考虑以 <strong>#</strong> 开始的情况，若本轮扫描的第一个字符为 **#**，则直接跳过此行字符流。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/10/01/%E5%AD%A6%E4%B9%A0%E6%97%A5%E5%BF%97/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -216,6 +859,171 @@
             </div>
           <!--/noindex-->
         
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/10/01/JavaScript%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
+      <meta itemprop="name" content="gezi_lzq">
+      <meta itemprop="description" content="Blog of lizhenqi ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gezi's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/10/01/JavaScript%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/" class="post-title-link" itemprop="url">JavaScript异步编程</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-10-01 00:00:00" itemprop="dateCreated datePublished" datetime="2021-10-01T00:00:00+08:00">2021-10-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-09 21:41:09" itemprop="dateModified" datetime="2022-01-09T21:41:09+08:00">2022-01-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="JavaScript异步编程"><a href="#JavaScript异步编程" class="headerlink" title="JavaScript异步编程"></a>JavaScript异步编程</h1><h3 id="javaScript采用单线程工作的原因"><a href="#javaScript采用单线程工作的原因" class="headerlink" title="javaScript采用单线程工作的原因"></a>javaScript采用单线程工作的原因</h3><p>JavaScript的单线程，与它的用途有关。作为浏览器脚本语言，JavaScript的主要用途是与用户互动，以及操作DOM。这决定了它只能是单线程，否则会带来很复杂的同步问题。比如，假定JavaScript同时有两个线程，一个线程在某个DOM节点上添加内容，另一个线程删除了这个节点，这时浏览器应该以哪个线程为准？</p>
+<p>所以，为了避免复杂性，从一诞生，JavaScript就是单线程，这已经成了这门语言的核心特征，将来也不会改变。</p>
+<p>为了利用多核CPU的计算能力，HTML5提出Web Worker标准，允许JavaScript脚本创建多个线程，但是子线程完全受主线程控制，且不得操作DOM。所以，这个新标准并没有改变JavaScript单线程的本质。</p>
+<p>单线程就意味着，所有任务需要排队，前一个任务结束，才会执行后一个任务。如果前一个任务耗时很长，后一个任务就不得不一直等着。</p>
+<p>如果排队是因为计算量大，CPU忙不过来，倒也算了，但是很多时候CPU是闲着的，因为IO设备（输入输出设备）很慢（比如Ajax操作从网络读取数据），不得不等着结果出来，再往下执行。</p>
+<h2 id="同步模式与异步模式"><a href="#同步模式与异步模式" class="headerlink" title="同步模式与异步模式"></a>同步模式与异步模式</h2><p>一般而言，操作分为：<strong>发出调用</strong>和<strong>得到结果</strong>两步。</p>
+<ul>
+<li><p><strong>发出调用，立即得到结果是为同步。</strong></p>
+</li>
+<li><p><strong>发出调用，但无法立即得到结果，需要额外的操作才能得到预期的结果是为异步。</strong></p>
+</li>
+</ul>
+<p><strong>同步</strong>就是调用之后一直等待，直到返回结果。</p>
+<p><strong>异步</strong>则是调用之后，不能直接拿到结果，通过一系列的手段才最终拿到结果（调用之后，拿到结果中间的时间可以介入其他任务）。</p>
+<h3 id="同步模式（Synchronous）"><a href="#同步模式（Synchronous）" class="headerlink" title="同步模式（Synchronous）"></a>同步模式（Synchronous）</h3><p>代码中的任务依次排队执行，执行顺序与代码的编写顺序是完全一致的。在单线程下大多数任务都会以同步模式去执行</p>
+<p>执行讲解：<br>例：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="string">&#x27;begin&#x27;</span>)   </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">A</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">&#x27;A task&#x27;</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">B</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">&#x27;B task&#x27;</span>)</span><br><span class="line">	A()</span><br><span class="line">&#125;</span><br><span class="line">B()</span><br><span class="line">cosnole.log(<span class="string">&#x27;end&#x27;</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>js执行引擎会把整体的代码全部加载进来</li>
+<li>然后在调用栈（Call stack）当中压入一个匿名（anonymous）的调用，这个匿名的调用可以理解为把全部的代码放入到一个匿名的函数当中去执行，然后去逐行执行</li>
+<li>调用栈中依次压入上述代码去执行.</li>
+</ol>
+<h4 id="调用栈的理解"><a href="#调用栈的理解" class="headerlink" title="调用栈的理解"></a>调用栈的理解</h4><p>调用栈只是一个更专业的说法，通俗的解释是，<strong>js在执行引擎中维护了一个正在执行的工作表</strong>，当工作表中的所有任务被清空完后，这一轮的工作就结束了</p>
+<p>问题：如果某一任务执行时间过长，后面的任务就要延迟（阻塞），一直等待，这种阻塞对用户来说，界面就会卡顿或者卡死，<strong>这就必须要异步任务来解决程序中无法避免的耗时操作</strong>，例如ajax，node.js中的大文件读写等避免代码被卡死</p>
+<h3 id="异步模式（Asynchronous）"><a href="#异步模式（Asynchronous）" class="headerlink" title="异步模式（Asynchronous）"></a>异步模式（Asynchronous）</h3><p><strong>概念:</strong><br>不会去等待这个任务的结束才开始下一个任务，开启过后就立即往后执行下一个任务，后续逻辑一般会通过回调函数的方式定义。</p>
+<p>很长一段时间以来，web平台为JavaScript程序员提供了许多函数，这些函数允许您在一段时间间隔过后异步执行代码，或者重复异步执行代码块，直到您告诉它停止为止。这些都是:</p>
+<ul>
+<li><p><code>setTimeout()</code></p>
+<p>在指定的时间后执行一段代码.</p>
+</li>
+<li><p><code>setInterval()</code></p>
+<p>以固定的时间间隔，重复运行一段代码.</p>
+</li>
+<li><p><code>requestAnimationFrame()</code></p>
+<p>setInterval()的现代版本;在浏览器下一次重新绘制显示之前执行指定的代码块，从而允许动画在适当的帧率下运行，而不管它在什么环境中运行.</p>
+</li>
+</ul>
+<p>这些函数设置的<strong>异步代码实际上在主线程上运行</strong>（在其指定的计时器过去之后）。</p>
+<p>在 <code>setTimeout()</code> 调用执行之前或 <code>setInterval()</code> 迭代之间可以（并且经常会）运行其他代码。根据这些操作的处理器密集程度，它们可以进一步延迟异步代码，因为任何异步代码仅在主线程可用后才执行（换句话说，当调用栈为空时）。</p>
+<blockquote>
+<p>执行代码的是单线程，像是计时之类是通过内部的API，由特定单独的线程来做的</p>
+<p><strong>运行环境提供的API的以同步或异步模式的方式工作</strong></p>
+</blockquote>
+<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20211005160041979.png" alt="image-20211005160041979"></p>
+<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20211005160210755.png" alt="image-20211005160210755"></p>
+<h2 id="回调函数"><a href="#回调函数" class="headerlink" title="回调函数"></a>回调函数</h2><p><strong>概念</strong>：被作为实参传入另一函数，并在该外部函数内被调用，用以来完成某些任务的函数，称为回调函数。</p>
+<blockquote>
+<p>我在烹饪店对店员说，蛋糕做好了给我打电话。</p>
+<p>打电话则就是一个回调函数</p>
+<p>店员在听我这么说后，会依然做自己的事情</p>
+<p>但当蛋糕做好后</p>
+<p>会触发回调函数，执行给我打电话的动作</p>
+</blockquote>
+<p>传统的回调方式去完成复杂的异步流程，容易产生回调地狱</p>
+<p>Promise则是一种更优的异步编程的统一方案</p>
+<p>一个 <code>Promise</code> 对象代表一个在这个 promise 被创建出来时不一定已知的值。</p>
+<p>它让您能够<strong>把异步操作最终的成功返回值或者失败原因和相应的处理程序关联起来</strong>。 </p>
+<p>这样使得异步方法可以像同步方法那样返回值：异步方法并不会立即返回最终的值，而是会返回一个 <em>promise</em>，以便在未来某个时候把值交给使用者。</p>
+<p>一个 <code>Promise</code> 必然处于以下几种状态之一：</p>
+<ul>
+<li><em>待定（pending）</em>: 初始状态，既没有被兑现，也没有被拒绝。</li>
+<li><em>已兑现（fulfilled）</em>: 意味着操作成功完成。</li>
+<li><em>已拒绝（rejected）</em>: 意味着操作失败。</li>
+</ul>
+<p>一个 <code>Promise</code> 对象代表一个在这个 promise 被创建出来时不一定已知的值。它让您能够把异步操作最终的成功返回值或者失败原因和相应的处理程序关联起来。 这样使得异步方法可以像同步方法那样返回值：异步方法并不会立即返回最终的值，而是会返回一个 <em>promise</em>，以便在未来某个时候把值交给使用者。</p>
+<p>一个 <code>Promise</code> 必然处于以下几种状态之一：</p>
+<ul>
+<li><em>待定（pending）</em>: 初始状态，既没有被兑现，也没有被拒绝。</li>
+<li><em>已兑现（fulfilled）</em>: 意味着操作成功完成。</li>
+<li><em>已拒绝（rejected）</em>: 意味着操作失败。</li>
+</ul>
+<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20211005162207923.png" alt="image-20211005162207923"></p>
+<p>待定状态的 Promise 对象要么会通过一个值<em>被兑现（fulfilled）</em>，要么会通过一个原因（错误）<em>被拒绝（rejected）</em>。</p>
+<p>当这些情况之一发生时，我们用 promise 的 then 方法排列起来的相关处理程序就会被调用。</p>
+<p>如果 promise 在一个相应的处理程序被绑定时就已经被兑现或被拒绝了，那么这个处理程序就会被调用，因此在完成异步操作和绑定处理方法之间不会存在竞争状态。</p>
+<p>因为 <code>Promise.prototype.then</code> 和 <code>Promise.prototype.catch</code> 方法返回的是 promise， 所以它们可以被链式调用。</p>
+<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/promises.png" alt="img"></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Promise方式的AJAX</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">ajax</span>(<span class="params">url</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span>(<span class="params">resolve,reject</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">var</span> xhr = <span class="keyword">new</span> XMLHttpRequest();</span><br><span class="line">        xhr.open(<span class="string">&#x27;GET&#x27;</span>,url);</span><br><span class="line">        xhr.responseType = <span class="string">&#x27;json&#x27;</span>;</span><br><span class="line">        <span class="comment">//请求完成后，状态为4后才会执行此函数</span></span><br><span class="line">        xhr.onload = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            <span class="keyword">if</span>(<span class="built_in">this</span>.status===<span class="number">200</span>)&#123;</span><br><span class="line">                resolve(<span class="built_in">this</span>.response);</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                reject(<span class="keyword">new</span> <span class="built_in">Error</span>(<span class="built_in">this</span>.statusText))</span><br><span class="line">            &#125;</span><br><span class="line">            xhr.send();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Promise的链式调用"><a href="#Promise的链式调用" class="headerlink" title="Promise的链式调用"></a><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Promise#promise%E7%9A%84%E9%93%BE%E5%BC%8F%E8%B0%83%E7%94%A8">Promise的链式调用</a></h3><p>我们可以用 <code>promise.then()</code>，<code>promise.catch()</code> 和 <code>promise.finally()</code> 这些方法将进一步的操作与一个变为已敲定状态的 promise 关联起来。这些方法还会返回一个新生成的 promise 对象，这个对象可以被非强制性的用来做链式调用</p>
+<ul>
+<li>Promise对象的then方法会返回一个全新的Promise对象</li>
+<li>后面的then方法就是在为上一个then返回的Promise注册回调</li>
+<li>前面then方法中回调函数的返回值会作为后面then方法回调的参数</li>
+<li>如果回调中返回的是Promise,那后面then方法的回调会等待它的结束</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_38550182/article/details/112218243">同步模式（Synchronous）</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/lin_credible/article/details/40143961">【朴灵评注】JavaScript 运行机制详解：再谈Event Loop</a></p>
+<p><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></p>
+
       
     </div>
 
@@ -769,282 +1577,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/09/19/%E4%BB%8Ejava%20IO%E6%B5%81%20%E4%BA%86%E8%A7%A3%20%E8%A3%85%E9%A5%B0%E8%80%85%E6%A8%A1%E5%BC%8F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
-      <meta itemprop="name" content="gezi_lzq">
-      <meta itemprop="description" content="Blog of lizhenqi ">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gezi's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/09/19/%E4%BB%8Ejava%20IO%E6%B5%81%20%E4%BA%86%E8%A7%A3%20%E8%A3%85%E9%A5%B0%E8%80%85%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">从java I/O流 了解 装饰者模式</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-09-19 00:00:00 / Modified: 12:57:14" itemprop="dateCreated datePublished" datetime="2021-09-19T00:00:00+08:00">2021-09-19</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="从java-I-O流-了解-装饰者模式"><a href="#从java-I-O流-了解-装饰者模式" class="headerlink" title="从java I/O流 了解 装饰者模式"></a>从java I/O流 了解 装饰者模式</h1><h2 id="装饰者模式（Decorator）"><a href="#装饰者模式（Decorator）" class="headerlink" title="装饰者模式（Decorator）"></a>装饰者模式（Decorator）</h2><p>Decorator是一种结构设计模式，通过将<strong>对象</strong>放置在<strong>包含行为的特殊包装器对象</strong>中，可以将新行为附加到此对象。</p>
-<blockquote>
-<p>当 小明 穿上了一个军事外骨骼装备，小明就有了战士的能力。</p>
-<p>当 小红 穿上了一个腿部外骨骼，小红就有了田径运动员的能力</p>
-<p>但 小亮 穿上了一个军事外骨骼装备，又套上了一个腿部外骨骼，小亮能力就又提升了。</p>
-</blockquote>
-<p>使用装饰者模型的目的往往是计划增强或者改进某个类的功能，但是单纯的创造新类或者说是继承，都会导致类爆炸，随着功能之间的组合，类会越来越多，而装饰者模型就可以避免这个。</p>
-<p>装饰者较为核心的是运用了<em>聚合</em>或<em>组合</em> 的理念，</p>
-<p>之前为了增进改变某个类的行为，往往会采用继承的方式，但是继承是静态的，你不能在运行时改变现有对象的行为，只能将整个对象替换成另一个子类创建的对象。</p>
-<p>用<em>聚合</em>或<em>组合</em> ， 而不是<em>继承</em>。 两者的工作方式几乎一模一样： 一个对象<em>包含</em>指向另一个对象的引用， 并将部分工作委派给引用对象； 继承中的对象则继承了父类的行为， 它们自己<em>能够</em>完成这些工作。</p>
-<p>你可以使用这个新方法来轻松替换各种连接的 “小帮手” 对象， 从而能在运行时改变容器的行为。 一个对象可以使用多个类的行为， 包含多个指向其他对象的引用， 并将各种工作委派给引用对象。</p>
-<p>聚合 （或组合） 组合是许多设计模式背后的关键原则 （包括装饰在内）。 </p>
-<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210918105854687.png" alt="image-20210918105854687"></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/09/19/%E4%BB%8Ejava%20IO%E6%B5%81%20%E4%BA%86%E8%A7%A3%20%E8%A3%85%E9%A5%B0%E8%80%85%E6%A8%A1%E5%BC%8F/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/09/19/%E4%B9%98%E6%B3%95%E8%BF%90%E7%AE%97%E5%92%8C%E5%BF%AB%E9%80%9F%E5%B9%82/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
-      <meta itemprop="name" content="gezi_lzq">
-      <meta itemprop="description" content="Blog of lizhenqi ">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gezi's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/09/19/%E4%B9%98%E6%B3%95%E8%BF%90%E7%AE%97%E5%92%8C%E5%BF%AB%E9%80%9F%E5%B9%82/" class="post-title-link" itemprop="url">乘法运算和快速幂</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-09-19 00:00:00 / Modified: 16:22:34" itemprop="dateCreated datePublished" datetime="2021-09-19T00:00:00+08:00">2021-09-19</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/CSAPP%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">CSAPP学习</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="乘法运算和快速幂"><a href="#乘法运算和快速幂" class="headerlink" title="乘法运算和快速幂"></a>乘法运算和快速幂</h1><p>程序进行乘法运算，用编程程序描述起来十分简单，一个<code>*</code>（乘号）足以表示，可是计算机究竟做了什么呢，有没有办法不使用<code>*</code>，来自己实现一个乘法的函数呢？</p>
-<p>众所周知的是，各种信息都是以<code>0</code>,<code>1</code>（二进制）的形式在电脑内储存的，要运算的整数数据也是一样的，无符号整数就是普通的十进制转换为二进制，而有符号整数则是通过补码的形式来存储的。</p>
-<h2 id="lt-lt-运算符"><a href="#lt-lt-运算符" class="headerlink" title="&lt;&lt;运算符"></a><code>&lt;&lt;</code>运算符</h2><p>在了解乘法是如何处理之前，必须要知道<code>&lt;&lt;</code>运算符的作用。这个家伙叫做移位运算符，顾名思义，它就是来移动这个二进制数的位置的，而<code>&lt;&lt;</code>符号箭头的方向就是那一串<code>01</code>移动的方向，<code>&lt;&lt;3</code>后面跟的数字就是要移动的位数。</p>
-<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210919145750149.png" alt="移位操作示范"></p>
-<p>先说一下结论：</p>
-<p><code>x&lt;&lt;4</code>就等同于把<code>x</code>的值乘以2的4次方，再对<code>M</code>取一次模，而<code>M</code>的值则是这个<code>x</code>所能存储的位数w所决定的。</p>
-<p>打个比方：</p>
-<blockquote>
-<p><code>x</code>是个无符号整数，只有4位，x最大也只能是<code>1111</code>了，对应的十进制数就是 2^4-1，也就是15。如果<code>x</code>现在等于<code>[0101]</code>也就是5，我通过<code>x&lt;&lt;2</code>操作，就变成了<code>010100</code>也就是5* 2^2=20，但是<code>x</code>内只能存储4位，所以前面2位就被丢弃了<del>01</del><code>[0100]</code>,换算成十进制就是<code>4</code>。这个过程整体表示就是    <code>x&lt;&lt;4=(5*2^2)mod16=4</code></p>
-</blockquote>
-<ul>
-<li><em>需要知道的，以上为了方便理解只通过无符号数来说，而对于补码形式，也都是类似的</em></li>
-</ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/09/19/%E4%B9%98%E6%B3%95%E8%BF%90%E7%AE%97%E5%92%8C%E5%BF%AB%E9%80%9F%E5%B9%82/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/09/18/Learn%20CSS%EF%BC%88%E4%B8%80%EF%BC%89/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
-      <meta itemprop="name" content="gezi_lzq">
-      <meta itemprop="description" content="Blog of lizhenqi ">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gezi's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/09/18/Learn%20CSS%EF%BC%88%E4%B8%80%EF%BC%89/" class="post-title-link" itemprop="url">Learn CSS（一）</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-09-18 00:00:00" itemprop="dateCreated datePublished" datetime="2021-09-18T00:00:00+08:00">2021-09-18</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-09-21 16:03:20" itemprop="dateModified" datetime="2021-09-21T16:03:20+08:00">2021-09-21</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">前端学习</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%AD%A6%E4%B9%A0/CSS/" itemprop="url" rel="index"><span itemprop="name">CSS</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <ul>
-<li><em>CSS</em> 指的是层叠样式表* (<em>C</em>ascading <em>S</em>tyle <em>S</em>heets)</li>
-<li>CSS 描述了<em>如何在屏幕、纸张或其他媒体上显示 HTML 元素</em></li>
-<li>CSS <em>节省了大量工作</em>。它可以同时控制多张网页的布局</li>
-<li>外部样式表存储在 <em>CSS 文件</em>中</li>
-</ul>
-<p>*<strong>：</strong>也称级联样式表。</p>
-<p>创建 HTML 的目的是<em>描述网页</em>的内容,CSS 从 HTML 页面中删除了样式格式！</p>
-<h2 id="CSS-语法"><a href="#CSS-语法" class="headerlink" title="CSS 语法"></a>CSS 语法</h2><p>CSS 规则集（rule-set）由选择器和声明块组成：</p>
-<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/selector.gif" alt="CSS 选择器"></p>
-<p><strong>选择器</strong>指向您需要设置样式的 HTML 元素。</p>
-<p><strong>声明块</strong>包含一条或多条用分号分隔的声明。</p>
-<p>每条声明都包含一个 <strong>CSS 属性名称</strong>和一个<strong>值</strong>，以冒号分隔。</p>
-<p>多条 CSS 声明用<strong>分号</strong>分隔，声明块用<strong>花括号</strong>括起来。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/09/18/Learn%20CSS%EF%BC%88%E4%B8%80%EF%BC%89/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -1112,20 +1648,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-count">23</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories">
           
-        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags">
           
-        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-count">24</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -1163,7 +1699,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

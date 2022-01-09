@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="手写编译器编译器wiki关于编译器的定义：  将便于人编写、阅读、维护的高级计算机语言所写作的源代码程序，翻译为计算机能解读、运行的低阶机器语言的程序，也就是可执行文件。 编译器将原始程序（source program）作为输入，翻译产生使用目标语言（target language）的等价程序。源代码一般为高级语言（High-level language），如Pascal、C、C++、C# 、Ja">
+<meta property="og:type" content="article">
+<meta property="og:title" content="手写编译器">
+<meta property="og:url" content="http://example.com/2021/10/09/%E6%89%8B%E5%86%99%E7%BC%96%E8%AF%91%E5%99%A8/index.html">
+<meta property="og:site_name" content="Gezi&#39;s blog">
+<meta property="og:description" content="手写编译器编译器wiki关于编译器的定义：  将便于人编写、阅读、维护的高级计算机语言所写作的源代码程序，翻译为计算机能解读、运行的低阶机器语言的程序，也就是可执行文件。 编译器将原始程序（source program）作为输入，翻译产生使用目标语言（target language）的等价程序。源代码一般为高级语言（High-level language），如Pascal、C、C++、C# 、Ja">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/v2-f5d09e6bd835d41f6c98ea696f00cb45_720w.jpg">
+<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20211007110200711.png">
+<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/lexical_analysis.png">
+<meta property="article:published_time" content="2021-10-08T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-01-09T13:42:33.681Z">
+<meta property="article:author" content="gezi_lzq">
+<meta property="article:tag" content="编译器">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/gezilzq/image-host/raw/master/img/v2-f5d09e6bd835d41f6c98ea696f00cb45_720w.jpg">
+
+<link rel="canonical" href="http://example.com/2021/10/09/%E6%89%8B%E5%86%99%E7%BC%96%E8%AF%91%E5%99%A8/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>手写编译器 | Gezi's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Gezi's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/10/09/%E6%89%8B%E5%86%99%E7%BC%96%E8%AF%91%E5%99%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
+      <meta itemprop="name" content="gezi_lzq">
+      <meta itemprop="description" content="Blog of lizhenqi ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gezi's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          手写编译器
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-10-09 00:00:00" itemprop="dateCreated datePublished" datetime="2021-10-09T00:00:00+08:00">2021-10-09</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-09 21:42:33" itemprop="dateModified" datetime="2022-01-09T21:42:33+08:00">2022-01-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/" itemprop="url" rel="index"><span itemprop="name">编译原理</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="手写编译器"><a href="#手写编译器" class="headerlink" title="手写编译器"></a>手写编译器</h1><h2 id="编译器"><a href="#编译器" class="headerlink" title="编译器"></a>编译器</h2><p>wiki关于编译器的定义：</p>
+<blockquote>
+<p>将便于人编写、阅读、维护的高级计算机语言所写作的源代码程序，翻译为计算机能解读、运行的低阶机器语言的程序，也就是可执行文件。</p>
+<p>编译器将原始程序（source program）作为输入，翻译产生使用目标语言（target language）的等价程序。源代码一般为高级语言（High-level language），如Pascal、C、C++、C# 、Java等，而目标语言则是汇编语言或目标机器的目标代码（Object code），有时也称作机器代码（Machine code）。 </p>
+<p>一个现代编译器的工作流程：源代码（source code）→ 预处理器（preprocessor）→ 编译器（compiler）→ 汇编程序（assembler）→ 目标代码（object code）→ 链接器（linker）→ 可执行文件（executables）。</p>
+</blockquote>
+<p>一个工业级别的编译器往往分为前端与后端</p>
+<ul>
+<li>前端：parser ，通过词法分析，语法分析，语义分析，对程序代码进行分析和理解，将其转化为中间代码<ul>
+<li>词法分析器，用于将字符串转化成内部的表示结构。</li>
+<li>语法分析器，将词法分析得到的标记流（token）生成一棵语法树。</li>
+</ul>
+</li>
+<li>后端：<ul>
+<li>optimizer 优化器 （可选）：中间代码经历一系列优化过程转换为中间代码</li>
+<li>codeGen: 中间代码到目标代码，</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>补充知识：</p>
+<p><strong>抽象语法树</strong>（<strong>A</strong>bstract <strong>S</strong>yntax <strong>T</strong>ree，AST），或简称<strong>语法树</strong>（Syntax tree），是<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E6%BA%90%E4%BB%A3%E7%A0%81">源代码</a><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E8%AF%AD%E6%B3%95%E5%AD%A6">语法</a>结构的一种抽象表示。它以<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E6%A0%91_(%E5%9B%BE%E8%AE%BA)">树状</a>的形式表现<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80">编程语言</a>的语法结构，树上的每个节点都表示源代码中的一种结构。</p>
+<p><strong>LLVM IR</strong>(Intermediate Representation，中间表示)连接着编译器前端和编译器后端。通常情况下，设计一门新的编程语言只需要完成能够生成LLVM IR的编译器前端即可，然后就可以轻松使用LLVM的各种编译优化、JIT支持、目标代码生成等功能。</p>
+<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/v2-f5d09e6bd835d41f6c98ea696f00cb45_720w.jpg" alt="img"></p>
+</blockquote>
+<h2 id="设计思路"><a href="#设计思路" class="headerlink" title="设计思路"></a>设计思路</h2><ul>
+<li>运行在极简的虚拟机上。</li>
+<li>独立的词法分析，语法语义分析和代码生成合为一体，没有中间优化过程，代码生成过程中为特定的结构生成特定的指令，没有也不需要指令调度和寄存器分配。</li>
+<li>语法分析过程中变量、函数定义部分使用递归下降进行处理，表达式采用优先级分析法进行处理。</li>
+</ul>
+<h3 id="VM设计"><a href="#VM设计" class="headerlink" title="VM设计"></a>VM设计</h3><h4 id="总览"><a href="#总览" class="headerlink" title="总览"></a>总览</h4><p>极简设计的虚拟机：</p>
+<ul>
+<li>基于寄存器和栈。只有一个通用寄存器ax，一元运算操作ax，二元运算操作ax和栈顶。</li>
+<li>寄存器：<ul>
+<li>PC/IP，Program Counter/Instruction Pointer，即程序计数器或者叫指令指针，指向当前运行的指令。后续统一称PC。它存放的是一个内存地址，该地址中存放着 <strong>下一条</strong> 要执行的计算机指令</li>
+<li>SP，Stack Pointer，栈顶指针。永远指向当前的栈顶。注意的是由于栈是位于高地址并向低地址增长的，所以入栈时 <code>SP</code> 的值减小</li>
+<li>BP，Base Pointer，上一个栈的栈顶指针，函数调用时需要切换栈，返回时需要切回来就会用到。LEA相对寻址的基址。</li>
+<li>ax，通用寄存器，存储操作数。我们的虚拟机中，它用于存放一条指令执行后的结果</li>
+</ul>
+</li>
+<li>内存空间：<ul>
+<li>代码段（code）：存储指令序列，PC指向当前运行的指令地址。</li>
+<li>数据段（data）：存储静态数据、字面量等。</li>
+<li>运行时栈（stack）：局部变量、函数调用等。</li>
+<li>没有堆（heap）：动态内存通过作弊的方式实现（native-call）。</li>
+<li>和一个C程序的内存空间（kernel、stack、heap、data、code）很像。</li>
+</ul>
+</li>
+<li>指令集：<ul>
+<li>Save &amp; Load类：内存到寄存器，寄存器到内存。</li>
+<li>运算类：算术（arithmetic）运算、位（bit-wise）运算、逻辑（logical）运算。</li>
+<li>分支跳转类：branch、jump、cmp、ret等。</li>
+<li>native-call：处理IO（printf/open/write等），动态内存（malloc/free/memset等）。这里是为了实现实现方便加上这些，属于作弊的手段。</li>
+</ul>
+</li>
+<li>细节：<ul>
+<li>栈从高地址向低地址生长，单位为4字节，压栈*–sp = xxx。</li>
+<li>32位内存地址，用int即可保存指针。</li>
+<li>变长指令，指令长度为4字节长的指令（只是为了方便，其实不需要这么长），加上每一个操作数4字节。</li>
+<li>PC单位就是4字节，PC+1用来提取操作数或者取下一条指令。</li>
+<li>如果指令有操作数，那么实现指令时就需要将取出操作数并移到下一条指令开头，基本操作就是*pc++。</li>
+<li>也就是说无论是栈还是code段用一个int数组即可轻松实现。如何改成64位：最简单的方法就是将PC、寄存器、栈单位改成8个字节，c4的实现中的<code>#define int long long</code>。</li>
+</ul>
+</li>
+</ul>
+<h3 id="指令集细节"><a href="#指令集细节" class="headerlink" title="指令集细节"></a>指令集细节</h3><p>Save &amp; Load：内存与寄存器之间的数据流通，IMM和LEA是<strong>单操作数</strong>指令，其他都没有操作数。</p>
+<ul>
+<li>IMM：加载立即数到寄存器ax。</li>
+<li>LEA：load effective address（x86经典指令，这里含义有一些区别），取立即数（相对地址）加到bp上然后将得到的地址（绝对地址）保存到ax中。</li>
+<li>LC：load char to ax。</li>
+<li>LI：load int to ax。</li>
+<li>SC：save char to stack top。</li>
+<li>SI：save int to stack top。</li>
+<li>PUSH：寄存器ax压到栈顶。</li>
+</ul>
+<img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20211007110200711.png" alt="image-20211007110200711"  />
+
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (op == IMM) ax = *pc++; <span class="comment">// load immediate to ax</span></span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (op == LEA) ax = (<span class="keyword">int</span>)(bp + *pc++); <span class="comment">// load address to ax</span></span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (op == LC) ax = *(<span class="keyword">char</span>*)ax; <span class="comment">// load char to ax</span></span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (op == LI) ax = *(<span class="keyword">int</span>*)ax; <span class="comment">// load int to ax</span></span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (op == SC) *(<span class="keyword">char</span>*)*sp++ = ax; <span class="comment">// save char to adress that is saved in stack top, then pop.</span></span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (op == SI) *(<span class="keyword">int</span>*)*sp++ = ax; <span class="comment">// save int to address then pop.</span></span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (op == PUSH) *--sp = ax; <span class="comment">// push ax to stack top</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>运算类：指令<strong>无操作数</strong>，运算的两个操作数是栈顶和ax，结果保存在ax。</p>
+<ul>
+<li>算术运算：ADD、SUB、MUL、DIV、MOD，即加减乘除取模。</li>
+<li>位运算：AND、OR、XOR、SHL、SHR，即与、或、异或、左移、右移。没有NOT，为了简化非运算直接在parse过程中实现了。</li>
+<li>逻辑运算：EQ、NE、LT、LE、GT、GE，=、!=、&lt;、&lt;=、&gt;、&gt;=。</li>
+</ul>
+<p>分支跳转类：<strong>单操作数</strong>。</p>
+<ul>
+<li>JMP：无条件跳转，PC to XXX。</li>
+<li>JZ：有条件跳转，寄存器为0时跳转。</li>
+<li>JNZ：有条件跳转，寄存器不为0时跳转。</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (op == JMP)          pc = (<span class="keyword">int</span>*)*pc; <span class="comment">// jump to </span></span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (op == JZ)      pc = ax ? pc+<span class="number">1</span> : (<span class="keyword">int</span>*)*pc; <span class="comment">// jump if ax is zero.</span></span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (op == JNZ)     pc = ax ? (<span class="keyword">int</span>*)*pc ? pc+<span class="number">1</span>; <span class="comment">// jump if ax is not zero.</span></span><br></pre></td></tr></table></figure>
+
+<p>函数跳转相关指令：</p>
+<ul>
+<li>JSR：jump subroutine，跳转到子程序，操作数为子程序的地址。</li>
+<li>ENT：enter subroutine，进入子程序，放在子程序开头，切换栈帧，并为子程序内的局部变量分配内存，操作数为内存单元数量。</li>
+<li>ADJ：adjust stack，调整栈指针sp，比如用于快速释放主调函数为参数分配的栈内存，操作数是栈帧数量。</li>
+<li>LEV：leave subroutine，退出子程序，放在子程序的末尾，将栈帧切换回主调函数，释放子程序中的内存。</li>
+</ul>
+<p>native-call：直接调用C库函数。</p>
+<ul>
+<li>OPEN：打开文件。</li>
+<li>CLOS：关闭文件。</li>
+<li>READ：从设备读数据。</li>
+<li>WRIT：写数据到设备。</li>
+<li>PRTF：写到标准输出（fd=1）。</li>
+<li>MALC：malloc。</li>
+<li>FREE：free。</li>
+<li>MSET：memset。</li>
+<li>MCMP：memcmp。</li>
+<li>EXIT：exit，结束程序。</li>
+</ul>
+<p>函数调用细节：</p>
+<ul>
+<li>实现一个函数调用需要的东西<ul>
+<li>函数地址：由parser生成，体现为JSR的操作数。</li>
+<li>参数的值：执行JSR前将参数压栈，主调函数负责，JSR执行后主调函数负责清理。</li>
+<li>函数返回值：最终保存在ax中。</li>
+<li>返回地址：JSR下一条指令。</li>
+</ul>
+</li>
+<li>函数的指令保存在什么位置：code区。</li>
+<li>如何知道函数地址：编译生成VM指令时由编译器确定。</li>
+<li>调用函数需要保存和恢复现场，现场有些什么东西：bp和sp。</li>
+<li>bp是什么：<ul>
+<li>用来做相对寻址的基地址，LEA的地址是相对于bp的。</li>
+<li>每个函数都有自己的bp，在函数内的LEA用的相对地址都是相对于它自己的bp。</li>
+</ul>
+</li>
+<li>讨论实现时结合实例讨论细节。</li>
+</ul>
+<p>考虑多层函数调用，最后调用的那一层一定是最先释放的，整个后进先出的关系就可以用栈来描述。用栈实现是最简单的。</p>
+<p>一个编程语言并不一定必须要有函数调用，函数调用的存在只是为了代码复用、减少冗余。</p>
+<h2 id="词法分析"><a href="#词法分析" class="headerlink" title="词法分析"></a>词法分析</h2><p>词法分析也称为 <strong>分词</strong> ，此阶段编译器从左向右扫描源文件，将其字符流分割成一个个的 <strong>词</strong> （ <strong>token</strong> 、 <strong>记号</strong> ，后文中将称为 <strong>token</strong> ）。所谓 <strong>token</strong> ，就是源文件中不可再进一步分割的一串字符，类似于英语中单词，或汉语中的词。</p>
+<p><a target="_blank" rel="noopener" href="https://pandolia.net/tinyc/images/lexical_analysis.png"><img src="https://gitee.com/gezilzq/image-host/raw/master/img/lexical_analysis.png" alt="images/lexical_analysis.png"></a></p>
+<p>英语中的单词的数量是有限的，程序语言中可用的 token 的类别也是有限的，而且是非常少的。</p>
+<p>一般来说程序语言中的 token 有：常数（整数、小数、字符、字符串等），操作符（算术操作符、比较操作符、逻辑操作符），分隔符（逗号、分号、括号等），保留字，标识符（变量名、函数名、类名等）等。</p>
+<blockquote>
+<p>开始所写的程序对于计算机来说只是一个很长的字符串，通过词法分析器把程序变为只由一个个token所构成的程序，用token赋予一段字符串具有的意义。</p>
+</blockquote>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// tokens and classes (operators last and in precedence order)</span></span><br><span class="line"><span class="class"><span class="keyword">enum</span> &#123;</span></span><br><span class="line">  Num = <span class="number">128</span>, Fun, Sys, Glo, Loc, Id,</span><br><span class="line">  Char, Else, Enum, If, Int, Return, Sizeof, While,</span><br><span class="line">  Assign, Cond, Lor, Lan, Or, Xor, And, Eq, Ne, Lt, Gt, Le, Ge, Shl, Shr, Add, Sub, Mul, Div, Mod, Inc, Dec, Brak</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>这些就是我们要支持的标记符。例如，我们会将 <code>=</code> 解析为 <code>Assign</code>；将 <code>==</code> 解析为 <code>Eq</code>；将 <code>!=</code> 解析为 <code>Ne</code> 等等。</p>
+<p>所以这里我们会有这样的印象，一个标记（token）可能包含多个字符，且多数情况下如此。而词法分析器能减小语法分析复杂度的原因，正是因为它相当于通过一定的编码（更多的标记）来压缩了源码字符串。</p>
+<p>当然，上面这些标记是有顺序的，跟它们在 C 语言中的优先级有关，如 <code>*(Mul)</code> 的优先级就要高于 <code>+(Add)</code>。</p>
+<h2 id="直接扫描法"><a href="#直接扫描法" class="headerlink" title="直接扫描法"></a>直接扫描法</h2><p>直接扫描法的思路非常简单，每轮扫描，根据第一个字符判断属于哪种类型的 token ，然后采取不同的策略扫描出一个完整的 token ，再接着进行下一轮扫描。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">next</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">char</span> *last_pos;</span><br><span class="line">    <span class="keyword">int</span> hash;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (token = *src) &#123;</span><br><span class="line">        ++src;</span><br><span class="line">        <span class="comment">// parse token here</span></span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>若仅考虑一些简单的情况，按 token 的第一个字符，可以将所有类别的 token 分为以下 7 大类：</p>
+<p><strong>（1）A型单字符运算符</strong></p>
+<p>包括：+, -, *, /, %， 这种 token 只有一个字符，若本轮扫描的第一个字符为上述字符，则立即返回此字符所代表的 token ，然后移到下一个字符开始下一轮扫描。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">next</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        ...</span><br><span class="line"></span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (token == <span class="string">&#x27;=&#x27;</span>) &#123;</span><br><span class="line">            <span class="comment">// parse &#x27;==&#x27; and &#x27;=&#x27;</span></span><br><span class="line">            <span class="keyword">if</span> (*src == <span class="string">&#x27;=&#x27;</span>) &#123;</span><br><span class="line">                src ++;</span><br><span class="line">                token = Eq;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                token = Assign;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (token == <span class="string">&#x27;+&#x27;</span>) &#123;</span><br><span class="line">            <span class="comment">// parse &#x27;+&#x27; and &#x27;++&#x27;</span></span><br><span class="line">            <span class="keyword">if</span> (*src == <span class="string">&#x27;+&#x27;</span>) &#123;</span><br><span class="line">                src ++;</span><br><span class="line">                token = Inc;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                token = Add;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (token == <span class="string">&#x27;^&#x27;</span>) &#123;</span><br><span class="line">            token = Xor;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (token == <span class="string">&#x27;%&#x27;</span>) &#123;</span><br><span class="line">            token = Mod;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (token == <span class="string">&#x27;*&#x27;</span>) &#123;</span><br><span class="line">            token = Mul;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (token == <span class="string">&#x27;[&#x27;</span>) &#123;</span><br><span class="line">            token = Brak;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (token == <span class="string">&#x27;?&#x27;</span>) &#123;</span><br><span class="line">            token = Cond;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (token == <span class="string">&#x27;~&#x27;</span> || token == <span class="string">&#x27;;&#x27;</span> || token == <span class="string">&#x27;&#123;&#x27;</span> || token == <span class="string">&#x27;&#125;&#x27;</span> || token == <span class="string">&#x27;(&#x27;</span> || token == <span class="string">&#x27;)&#x27;</span> || token == <span class="string">&#x27;]&#x27;</span> || token == <span class="string">&#x27;,&#x27;</span> || token == <span class="string">&#x27;:&#x27;</span>) &#123;</span><br><span class="line">            <span class="comment">// directly return the character as token;</span></span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>（2）B型单字符运算符和双字符运算符</strong></p>
+<p>B型单字符运算符包括： &lt; &gt; = ! ，双字符运算符包括： &lt;=, &gt;=, ==, != 。 若本轮扫描的第一个字符为B型单字符运算符时，先查看下一个字符是否是 “=” ，如果是，则返回这两个字符代表的 token ，如果否，则返回这个字符代表的 token 。例如，如果扫描到 “&gt;” ，则查看下一个字符是否是 “=” ，是则返回<code>Ge</code> ，否则返回 <code>Gt</code> 。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (token == <span class="string">&#x27;-&#x27;</span>) &#123;</span><br><span class="line">     <span class="comment">// parse &#x27;-&#x27; and &#x27;--&#x27;</span></span><br><span class="line">     <span class="keyword">if</span> (*src == <span class="string">&#x27;-&#x27;</span>) &#123;</span><br><span class="line">         src ++;</span><br><span class="line">         token = Dec;</span><br><span class="line">     &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">         token = Sub;</span><br><span class="line">     &#125;</span><br><span class="line">     <span class="keyword">return</span>;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="keyword">else</span> <span class="keyword">if</span> (token == <span class="string">&#x27;!&#x27;</span>) &#123;</span><br><span class="line">     <span class="comment">// parse &#x27;!=&#x27;</span></span><br><span class="line">     <span class="keyword">if</span> (*src == <span class="string">&#x27;=&#x27;</span>) &#123;</span><br><span class="line">         src++;</span><br><span class="line">         token = Ne;</span><br><span class="line">     &#125;</span><br><span class="line">     <span class="keyword">return</span>;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="keyword">else</span> <span class="keyword">if</span> (token == <span class="string">&#x27;&lt;&#x27;</span>) &#123;</span><br><span class="line">     <span class="comment">// parse &#x27;&lt;=&#x27;, &#x27;&lt;&lt;&#x27; or &#x27;&lt;&#x27;</span></span><br><span class="line">     <span class="keyword">if</span> (*src == <span class="string">&#x27;=&#x27;</span>) &#123;</span><br><span class="line">         src ++;</span><br><span class="line">         token = Le;</span><br><span class="line">     &#125; <span class="keyword">else</span> <span class="keyword">if</span> (*src == <span class="string">&#x27;&lt;&#x27;</span>) &#123;</span><br><span class="line">         src ++;</span><br><span class="line">         token = Shl;</span><br><span class="line">     &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">         token = Lt;</span><br><span class="line">     &#125;</span><br><span class="line">     <span class="keyword">return</span>;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="keyword">else</span> <span class="keyword">if</span> (token == <span class="string">&#x27;&gt;&#x27;</span>) &#123;</span><br><span class="line">     <span class="comment">// parse &#x27;&gt;=&#x27;, &#x27;&gt;&gt;&#x27; or &#x27;&gt;&#x27;</span></span><br><span class="line">     <span class="keyword">if</span> (*src == <span class="string">&#x27;=&#x27;</span>) &#123;</span><br><span class="line">         src ++;</span><br><span class="line">         token = Ge;</span><br><span class="line">     &#125; <span class="keyword">else</span> <span class="keyword">if</span> (*src == <span class="string">&#x27;&gt;&#x27;</span>) &#123;</span><br><span class="line">         src ++;</span><br><span class="line">         token = Shr;</span><br><span class="line">     &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">         token = Gt;</span><br><span class="line">     &#125;</span><br><span class="line">     <span class="keyword">return</span>;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="keyword">else</span> <span class="keyword">if</span> (token == <span class="string">&#x27;|&#x27;</span>) &#123;</span><br><span class="line">     <span class="comment">// parse &#x27;|&#x27; or &#x27;||&#x27;</span></span><br><span class="line">     <span class="keyword">if</span> (*src == <span class="string">&#x27;|&#x27;</span>) &#123;</span><br><span class="line">         src ++;</span><br><span class="line">         token = Lor;</span><br><span class="line">     &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">         token = Or;</span><br><span class="line">     &#125;</span><br><span class="line">     <span class="keyword">return</span>;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="keyword">else</span> <span class="keyword">if</span> (token == <span class="string">&#x27;&amp;&#x27;</span>) &#123;</span><br><span class="line">     <span class="comment">// parse &#x27;&amp;&#x27; and &#x27;&amp;&amp;&#x27;</span></span><br><span class="line">     <span class="keyword">if</span> (*src == <span class="string">&#x27;&amp;&#x27;</span>) &#123;</span><br><span class="line">         src ++;</span><br><span class="line">         token = Lan;</span><br><span class="line">     &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">         token = And;</span><br><span class="line">     &#125;</span><br><span class="line">     <span class="keyword">return</span>;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>（3）关键词和标识符</strong></p>
+<p>关键词和标识符都是以字母或下划线开始、且只有字母、下划线或数字组成。</p>
+<p>若本轮扫描的第一个字符为字母或下划线时，则一直向后扫描，直到遇到第一个既不是字母、也不是下划线或数字的字符，此时一个完整的词就被扫描出来了，然后，查看这个词是不是为<strong>关键字</strong>，如果是，则返回关键字代表的 token ，如果不是，则返回 IDENTIFIER 以及这个词的字面值。</p>
+<ul>
+<li>标识符存入一个表内<ul>
+<li><code>token</code>：该标识符返回的标记，理论上所有的变量返回的标记都应该是 <code>Id</code>，但实际上由于我们还将在符号表中加入关键字  如 <code>if</code>, <code>while</code> 等，它们都有对应的标记。</li>
+<li><code>hash</code>：顾名思义，就是这个标识符的哈希值，用于标识符的快速比较。</li>
+<li><code>name</code>：存放标识符本身的字符串。</li>
+<li>语法分析后再添加的信息<ul>
+<li><code>class</code>：该标识符的类别，如数字，全局变量或局部变量等。</li>
+<li><code>type</code>：标识符的类型，即如果它是个变量，变量是 <code>int</code> 型、<code>char</code> 型还是指针型。</li>
+<li><code>value</code>：存放这个标识符的值，如标识符是函数，刚存放函数的地址。</li>
+<li><code>BXXXX</code>：C 语言中标识符可以是全局的也可以是局部的，当局部标识符的名字与全局标识符相同时，用作保存全局标识符的信息。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>由于我们的目标是能自举，而我们定义的语法不支持 <code>struct</code>，故而使用下列方式。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Symbol table:</span><br><span class="line">----+-----+----+----+----+-----+-----+-----+------+------+----</span><br><span class="line"> .. |token|hash|name|type|class|value|btype|bclass|bvalue| ..</span><br><span class="line">----+-----+----+----+----+-----+-----+-----+------+------+----</span><br><span class="line">    |&lt;---       one single identifier                ---&gt;|</span><br></pre></td></tr></table></figure>
+
+<p><strong>关键字与内置函数</strong></p>
+<ul>
+<li>例如 <code>if</code>, <code>while</code>, <code>return</code> 等。它们不能被作为普通的标识符，因为有特殊的含义</li>
+<li>一般有两种处理方法：<ol>
+<li>词法分析器中直接解析这些关键字。</li>
+<li>在语法分析前将关键字提前加入符号表。</li>
+</ol>
+</li>
+<li>这里我们就采用第二种方法，将它们加入符号表，并提前为它们赋予必要的信息（还记得前面说的标识符 <code>Token</code> 字段吗？）。这样当源代码中出现关键字时，它们会被解析成标识符，但由于符号表中已经有了相关的信息，我们就能知道它们是特殊的关键字。</li>
+</ul>
+<p>内置函数的行为也和关键字类似，不同的只是赋值的信息，在<code>main</code>函数中进行初始化如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// types of variable/function</span></span><br><span class="line"><span class="class"><span class="keyword">enum</span> &#123;</span> CHAR, INT, PTR &#125;;</span><br><span class="line"><span class="keyword">int</span> *idmain;                  <span class="comment">// the `main` function</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    src = <span class="string">&quot;char else enum if int return sizeof while &quot;</span></span><br><span class="line">          <span class="string">&quot;open read close printf malloc memset memcmp exit void main&quot;</span>;</span><br><span class="line"></span><br><span class="line">     <span class="comment">// add keywords to symbol table</span></span><br><span class="line">    i = Char;</span><br><span class="line">    <span class="keyword">while</span> (i &lt;= While) &#123;</span><br><span class="line">        next();</span><br><span class="line">        current_id[Token] = i++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// add library to symbol table</span></span><br><span class="line">    i = OPEN;</span><br><span class="line">    <span class="keyword">while</span> (i &lt;= EXIT) &#123;</span><br><span class="line">        next();</span><br><span class="line">        current_id[Class] = Sys;</span><br><span class="line">        current_id[Type] = INT;</span><br><span class="line">        current_id[Value] = i++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    next(); current_id[Token] = Char; <span class="comment">// handle void type</span></span><br><span class="line">    next(); idmain = current_id; <span class="comment">// keep track of main</span></span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line">    program();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>扫描整个程序，标记token</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> token_val;                <span class="comment">// value of current token (mainly for number)</span></span><br><span class="line"><span class="keyword">int</span> *current_id,              <span class="comment">// current parsed ID</span></span><br><span class="line">    *symbols;                 <span class="comment">// symbol table</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// fields of identifier</span></span><br><span class="line"><span class="class"><span class="keyword">enum</span> &#123;</span>Token, Hash, Name, Type, Class, Value, BType, BClass, BValue, IdSize&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">next</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        ...</span><br><span class="line"></span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> ((token &gt;= <span class="string">&#x27;a&#x27;</span> &amp;&amp; token &lt;= <span class="string">&#x27;z&#x27;</span>) || (token &gt;= <span class="string">&#x27;A&#x27;</span> &amp;&amp; token &lt;= <span class="string">&#x27;Z&#x27;</span>) || (token == <span class="string">&#x27;_&#x27;</span>)) &#123;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// parse identifier</span></span><br><span class="line">            last_pos = src - <span class="number">1</span>;</span><br><span class="line">            hash = token;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">while</span> ((*src &gt;= <span class="string">&#x27;a&#x27;</span> &amp;&amp; *src &lt;= <span class="string">&#x27;z&#x27;</span>) || (*src &gt;= <span class="string">&#x27;A&#x27;</span> &amp;&amp; *src &lt;= <span class="string">&#x27;Z&#x27;</span>) || (*src &gt;= <span class="string">&#x27;0&#x27;</span> &amp;&amp; *src &lt;= <span class="string">&#x27;9&#x27;</span>) || (*src == <span class="string">&#x27;_&#x27;</span>)) &#123;</span><br><span class="line">                hash = hash * <span class="number">147</span> + *src;</span><br><span class="line">                src++;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// look for existing identifier, linear search</span></span><br><span class="line">            current_id = symbols;</span><br><span class="line">            <span class="keyword">while</span> (current_id[Token]) &#123;</span><br><span class="line">                <span class="keyword">if</span> (current_id[Hash] == hash &amp;&amp; !<span class="built_in">memcmp</span>((<span class="keyword">char</span> *)current_id[Name], last_pos, src - last_pos)) &#123;</span><br><span class="line">                    <span class="comment">//found one, return</span></span><br><span class="line">                    token = current_id[Token];</span><br><span class="line">                    <span class="keyword">return</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                current_id = current_id + IdSize;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            <span class="comment">// store new ID</span></span><br><span class="line">            current_id[Name] = (<span class="keyword">int</span>)last_pos;</span><br><span class="line">            current_id[Hash] = hash;</span><br><span class="line">            token = current_id[Token] = Id;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>（4）整数常量</strong></p>
+<p>整数常量以数字开始，若本轮扫描的第一个字符为数字，则一直向后扫描</p>
+<p>数字中较为复杂的一点是需要支持十进制、十六进制及八进制。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">next</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        ...</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (token &gt;= <span class="string">&#x27;0&#x27;</span> &amp;&amp; token &lt;= <span class="string">&#x27;9&#x27;</span>) &#123;</span><br><span class="line">            <span class="comment">// parse number, three kinds: dec(123) hex(0x123) oct(017)</span></span><br><span class="line">            token_val = token - <span class="string">&#x27;0&#x27;</span>;</span><br><span class="line">            <span class="keyword">if</span> (token_val &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="comment">// dec, starts with [1-9]</span></span><br><span class="line">                <span class="keyword">while</span> (*src &gt;= <span class="string">&#x27;0&#x27;</span> &amp;&amp; *src &lt;= <span class="string">&#x27;9&#x27;</span>) &#123;</span><br><span class="line">                    token_val = token_val*<span class="number">10</span> + *src++ - <span class="string">&#x27;0&#x27;</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// starts with number 0</span></span><br><span class="line">                <span class="keyword">if</span> (*src == <span class="string">&#x27;x&#x27;</span> || *src == <span class="string">&#x27;X&#x27;</span>) &#123;</span><br><span class="line">                    <span class="comment">//hex</span></span><br><span class="line">                    token = *++src;</span><br><span class="line">                    <span class="keyword">while</span> ((token &gt;= <span class="string">&#x27;0&#x27;</span> &amp;&amp; token &lt;= <span class="string">&#x27;9&#x27;</span>) || (token &gt;= <span class="string">&#x27;a&#x27;</span> &amp;&amp; token &lt;= <span class="string">&#x27;f&#x27;</span>) || (token &gt;= <span class="string">&#x27;A&#x27;</span> &amp;&amp; token &lt;= <span class="string">&#x27;F&#x27;</span>)) &#123;</span><br><span class="line">                        token_val = token_val * <span class="number">16</span> + (token &amp; <span class="number">15</span>) + (token &gt;= <span class="string">&#x27;A&#x27;</span> ? <span class="number">9</span> : <span class="number">0</span>);</span><br><span class="line">                        token = *++src;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="comment">// oct</span></span><br><span class="line">                    <span class="keyword">while</span> (*src &gt;= <span class="string">&#x27;0&#x27;</span> &amp;&amp; *src &lt;= <span class="string">&#x27;7&#x27;</span>) &#123;</span><br><span class="line">                        token_val = token_val*<span class="number">8</span> + *src++ - <span class="string">&#x27;0&#x27;</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            token = Num;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>八进制和十六进制的转换逻辑</li>
+</ul>
+<p><strong>（5）字符串常量</strong></p>
+<p>字符串常量以双引号开始和结束，若本轮扫描的第一个字符为双引号或者单引号（比较的时候需要用一下转义符<code>token == &#39;&quot;&#39; || token == &#39;\&#39;&#39;</code>），则一直向后扫描，直到遇到第一个双引号或者单引号，然后返回 T_STRINGCONSTANT 和这个字符串。</p>
+<p><strong>（6）空格</strong></p>
+<p>若本轮扫描的第一个字符为为空格，则跳过此字符。</p>
+<p><strong>（7）注释</strong></p>
+<p>注释仅考虑以 <strong>#</strong> 开始的情况，若本轮扫描的第一个字符为 **#**，则直接跳过此行字符流。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%BC%96%E8%AF%91%E5%99%A8/" rel="tag"># 编译器</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/10/01/%E5%AD%A6%E4%B9%A0%E6%97%A5%E5%BF%97/" rel="prev" title="学习日志">
+      <i class="fa fa-chevron-left"></i> 学习日志
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/01/09/Thrift%E7%9A%84%E4%BD%BF%E7%94%A8%E5%AE%9E%E8%B7%B5/" rel="next" title="Thrift的使用实践">
+      Thrift的使用实践 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%89%8B%E5%86%99%E7%BC%96%E8%AF%91%E5%99%A8"><span class="nav-number">1.</span> <span class="nav-text">手写编译器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E5%99%A8"><span class="nav-number">1.1.</span> <span class="nav-text">编译器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E6%80%9D%E8%B7%AF"><span class="nav-number">1.2.</span> <span class="nav-text">设计思路</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#VM%E8%AE%BE%E8%AE%A1"><span class="nav-number">1.2.1.</span> <span class="nav-text">VM设计</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%BB%E8%A7%88"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">总览</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%87%E4%BB%A4%E9%9B%86%E7%BB%86%E8%8A%82"><span class="nav-number">1.2.2.</span> <span class="nav-text">指令集细节</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%8D%E6%B3%95%E5%88%86%E6%9E%90"><span class="nav-number">1.3.</span> <span class="nav-text">词法分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%B4%E6%8E%A5%E6%89%AB%E6%8F%8F%E6%B3%95"><span class="nav-number">1.4.</span> <span class="nav-text">直接扫描法</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="gezi_lzq"
+      src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
+  <p class="site-author-name" itemprop="name">gezi_lzq</p>
+  <div class="site-description" itemprop="description">Blog of lizhenqi </div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">23</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags">
+          
+        <span class="site-state-item-count">24</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/gezi-lzq" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;gezi-lzq" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/gezilzq" title="Gitee → https:&#x2F;&#x2F;gitee.com&#x2F;gezilzq" rel="noopener" target="_blank"><i class="fa fa-fw fa-Gitee"></i>Gitee</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.acwing.com/user/myspace/index/58842/" title="Acwing → https:&#x2F;&#x2F;www.acwing.com&#x2F;user&#x2F;myspace&#x2F;index&#x2F;58842&#x2F;" rel="noopener" target="_blank"><i class="fa fa-fw fa-Acwing"></i>Acwing</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">gezi_lzq</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+</body>
+</html>
