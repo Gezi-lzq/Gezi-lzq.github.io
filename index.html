@@ -182,7 +182,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2022-01-09 00:00:00 / Modified: 21:39:53" itemprop="dateCreated datePublished" datetime="2022-01-09T00:00:00+08:00">2022-01-09</time>
+              <time title="Created: 2022-01-09 00:00:00 / Modified: 21:51:48" itemprop="dateCreated datePublished" datetime="2022-01-09T00:00:00+08:00">2022-01-09</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -221,6 +221,9 @@
 <img src="https://gitee.com/gezilzq/image-host/raw/master//img/image-20220109211042820.png" alt="image-20220109211042820" style="zoom:50%;" />
 
 <p>Your Code是用户实现的业务逻辑，接下来的 FooService.Client和 Foo.write()/read()是thrift根据IDL生成的客户端和服务端的代码，对应于RPC中Client stub和Server stub。TProtocol 用来对数据进行序列化与反序列化，具体方法包括二进制，JSON 或者 Apache Thrift 定义的格式。</p>
+<!--mroe-->
+
+
 <h2 id="具体实践"><a href="#具体实践" class="headerlink" title="具体实践"></a>具体实践</h2><blockquote>
 <p>开发一个匹配系统，根据用户的积分和等待时间，两两进行相互匹配。</p>
 </blockquote>
@@ -280,24 +283,24 @@
 <table>
 <thead>
 <tr>
-<th>![1](data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAAAAABzHgM7AAAAAmJLR0QAAKqNIzIAAABjSURBVHja%0AVY6xDcAwCAS/pPQaLim9QmajdOk2I2SNrMEIlARIoigU8Cek/4e7zdHaWOYOVwaoA6wOCw05Y7FB%0AgE0tIWQ+sBcwKM8qoD/wB5wGL8hjfdzWrh01GRp1hInGjDoXwHgsFuzBVLQAAABDdEVYdFNvZnR3%0AYXJlAEAoIylJbWFnZU1hZ2ljayA0LjIuOCA5OS8wOC8wMSBjcmlzdHlAbXlzdGljLmVzLmR1cG9u%0AdC5jb22RuiG4AAAAKnRFWHRTaWduYXR1cmUANThhMDcyZTA3MGRhMjJmNjEzNWNiZDNlNDE0NTQ2%0AZjloaiHtAAAADnRFWHRQYWdlADEyeDEyKzArMIRtu30AAAAASUVORK5CYII=)</th>
+<th>1</th>
 <th>每个字段<strong>都必须</strong>具有唯一的正整数标识符</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>![2](data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAAAAABzHgM7AAAAAmJLR0QAAKqNIzIAAAB7SURBVHja%0AHY6hFcMwDEQ/NDQsNSwU9Apdo7Cw0CsIBoZmhKzQEQJLDQsFVclHpHu693W429Zr7bu541Pg3kCm%0AY0K75u9TEUPhuGgWU4mQDvieEaSQEnsT6zKPeZY0EUNtrHMCXvYUuSUg0PsMjUSvpysUT6OOSil9%0Aizp/VNk1YJ8vf6MAAABDdEVYdFNvZnR3YXJlAEAoIylJbWFnZU1hZ2ljayA0LjIuOCA5OS8wOC8w%0AMSBjcmlzdHlAbXlzdGljLmVzLmR1cG9udC5jb22RuiG4AAAAKnRFWHRTaWduYXR1cmUAODBlYWU1%0AMjljOTRhN2Y0N2RlY2NmYWRhMjhhY2I5ZGblb7ENAAAADnRFWHRQYWdlADEyeDEyKzArMIRtu30A%0AAAAASUVORK5CYII=)</td>
+<td>2</td>
 <td>字段可以标记为必填或可选</td>
 </tr>
 <tr>
-<td>![3](data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAAAAABzHgM7AAAAAmJLR0QAAKqNIzIAAAB4SURBVHja%0AJU6rFcNADBM09BqBhl6ltDCwKxQeDOwKB7tGYGCoYaChK6cmlt7TD1W5uap/sgoVBnEXWBTSoOdx%0A7gpLDOAVorWC0ABdcBPqwZtx8Muf+DPXJpQ96Nu/LSMYl/n17oCOnplTOrpiwW3sUs4ZJmob5/wA%0AUbg1Y/zrjUwAAABDdEVYdFNvZnR3YXJlAEAoIylJbWFnZU1hZ2ljayA0LjIuOCA5OS8wOC8wMSBj%0AcmlzdHlAbXlzdGljLmVzLmR1cG9udC5jb22RuiG4AAAAKnRFWHRTaWduYXR1cmUAODBiYmRhMjcy%0ANmRkYWNlOGFiOGEwMWY1OWRlMmViZGII/Q51AAAADnRFWHRQYWdlADEyeDEyKzArMIRtu30AAAAA%0ASUVORK5CYII=)</td>
+<td>3</td>
 <td>结构可能包含其他结构</td>
 </tr>
 <tr>
-<td>![4](data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAAAAABzHgM7AAAAAmJLR0QAAKqNIzIAAABzSURBVHja%0AHY0hEoUwEEMjkZVYZGVlr1CJxCKRXKPyy28reyVsZeXKsCFi573ZzAQk+x5jaQ6gFQAxIA8XceEN%0AZEN3DkOCH/TobUoSVuAYwSSLyzbvaHWVFJxUmmp+PF+twrLkuXzLwPmZ8+OjtH8KS6pGvuoGNo5b%0A6rzDAAAAQ3RFWHRTb2Z0d2FyZQBAKCMpSW1hZ2VNYWdpY2sgNC4yLjggOTkvMDgvMDEgY3Jpc3R5%0AQG15c3RpYy5lcy5kdXBvbnQuY29tkbohuAAAACp0RVh0U2lnbmF0dXJlADlmODJmY2FjOWUwMzlj%0AYmRiNzIzODBhNDU5MTMyNGY1gLv4dgAAAA50RVh0UGFnZQAxMngxMiswKzCEbbt9AAAAAElFTkSu%0AQmCC)</td>
+<td>4</td>
 <td>您可以为字段指定可选的”默认值”</td>
 </tr>
 <tr>
-<td>![5](data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAAAAABzHgM7AAAAAmJLR0QAAKqNIzIAAAB2SURBVHja%0AFY6hEcQwDAQPChqGGhoaqgWX8PUYBhqGBn4rX0JooKDh/UlsZ3b2BJKXH8XPTYLh1lpt1h+BwxkR%0AA23jhsCQd2IkfH9T3HEkzPFegCXUKSUSpJUPsN7UFOgc9VkZUBoz9l0yrVHZarUcJZeb9XznDyNb%0ANy9CX3/7AAAAQ3RFWHRTb2Z0d2FyZQBAKCMpSW1hZ2VNYWdpY2sgNC4yLjggOTkvMDgvMDEgY3Jp%0Ac3R5QG15c3RpYy5lcy5kdXBvbnQuY29tkbohuAAAACp0RVh0U2lnbmF0dXJlAGZlNjkwNDYzMzc5%0AZWIyNWU1NjJmY2M4Y2M5YjNjN2Uw37I5ngAAAA50RVh0UGFnZQAxMngxMiswKzCEbbt9AAAAAElF%0ATkSuQmCC)</td>
+<td>5</td>
 <td>可以在同一个 Thrift 文件中定义和引用多个结构</td>
 </tr>
 </tbody></table>
@@ -315,20 +318,20 @@
 <table>
 <thead>
 <tr>
-<th>![1](data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAAAAABzHgM7AAAAAmJLR0QAAKqNIzIAAABjSURBVHja%0AVY6xDcAwCAS/pPQaLim9QmajdOk2I2SNrMEIlARIoigU8Cek/4e7zdHaWOYOVwaoA6wOCw05Y7FB%0AgE0tIWQ+sBcwKM8qoD/wB5wGL8hjfdzWrh01GRp1hInGjDoXwHgsFuzBVLQAAABDdEVYdFNvZnR3%0AYXJlAEAoIylJbWFnZU1hZ2ljayA0LjIuOCA5OS8wOC8wMSBjcmlzdHlAbXlzdGljLmVzLmR1cG9u%0AdC5jb22RuiG4AAAAKnRFWHRTaWduYXR1cmUANThhMDcyZTA3MGRhMjJmNjEzNWNiZDNlNDE0NTQ2%0AZjloaiHtAAAADnRFWHRQYWdlADEyeDEyKzArMIRtu30AAAAASUVORK5CYII=)</th>
+<th>1</th>
 <th>method definitions 可以使用分号或者逗号结尾</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>![2](data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAAAAABzHgM7AAAAAmJLR0QAAKqNIzIAAAB7SURBVHja%0AHY6hFcMwDEQ/NDQsNSwU9Apdo7Cw0CsIBoZmhKzQEQJLDQsFVclHpHu693W429Zr7bu541Pg3kCm%0AY0K75u9TEUPhuGgWU4mQDvieEaSQEnsT6zKPeZY0EUNtrHMCXvYUuSUg0PsMjUSvpysUT6OOSil9%0Aizp/VNk1YJ8vf6MAAABDdEVYdFNvZnR3YXJlAEAoIylJbWFnZU1hZ2ljayA0LjIuOCA5OS8wOC8w%0AMSBjcmlzdHlAbXlzdGljLmVzLmR1cG9udC5jb22RuiG4AAAAKnRFWHRTaWduYXR1cmUAODBlYWU1%0AMjljOTRhN2Y0N2RlY2NmYWRhMjhhY2I5ZGblb7ENAAAADnRFWHRQYWdlADEyeDEyKzArMIRtu30A%0AAAAASUVORK5CYII=)</td>
+<td>2</td>
 <td>参数可以为基本类型或者自定义结构体</td>
 </tr>
 <tr>
-<td>![3](data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAAAAABzHgM7AAAAAmJLR0QAAKqNIzIAAAB4SURBVHja%0AJU6rFcNADBM09BqBhl6ltDCwKxQeDOwKB7tGYGCoYaChK6cmlt7TD1W5uap/sgoVBnEXWBTSoOdx%0A7gpLDOAVorWC0ABdcBPqwZtx8Muf+DPXJpQ96Nu/LSMYl/n17oCOnplTOrpiwW3sUs4ZJmob5/wA%0AUbg1Y/zrjUwAAABDdEVYdFNvZnR3YXJlAEAoIylJbWFnZU1hZ2ljayA0LjIuOCA5OS8wOC8wMSBj%0AcmlzdHlAbXlzdGljLmVzLmR1cG9udC5jb22RuiG4AAAAKnRFWHRTaWduYXR1cmUAODBiYmRhMjcy%0ANmRkYWNlOGFiOGEwMWY1OWRlMmViZGII/Q51AAAADnRFWHRQYWdlADEyeDEyKzArMIRtu30AAAAA%0ASUVORK5CYII=)</td>
+<td>3</td>
 <td>返回类型也如上</td>
 </tr>
 <tr>
-<td>![4](data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAAAAABzHgM7AAAAAmJLR0QAAKqNIzIAAABzSURBVHja%0AHY0hEoUwEEMjkZVYZGVlr1CJxCKRXKPyy28reyVsZeXKsCFi573ZzAQk+x5jaQ6gFQAxIA8XceEN%0AZEN3DkOCH/TobUoSVuAYwSSLyzbvaHWVFJxUmmp+PF+twrLkuXzLwPmZ8+OjtH8KS6pGvuoGNo5b%0A6rzDAAAAQ3RFWHRTb2Z0d2FyZQBAKCMpSW1hZ2VNYWdpY2sgNC4yLjggOTkvMDgvMDEgY3Jpc3R5%0AQG15c3RpYy5lcy5kdXBvbnQuY29tkbohuAAAACp0RVh0U2lnbmF0dXJlADlmODJmY2FjOWUwMzlj%0AYmRiNzIzODBhNDU5MTMyNGY1gLv4dgAAAA50RVh0UGFnZQAxMngxMiswKzCEbbt9AAAAAElFTkSu%0AQmCC)</td>
+<td>4</td>
 <td>void也是一个有效的返回类型</td>
 </tr>
 </tbody></table>
@@ -548,7 +551,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-01-09 21:42:33" itemprop="dateModified" datetime="2022-01-09T21:42:33+08:00">2022-01-09</time>
+                <time title="Modified: 2022-01-09 21:48:27" itemprop="dateModified" datetime="2022-01-09T21:48:27+08:00">2022-01-09</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -596,192 +599,14 @@
 <p><strong>LLVM IR</strong>(Intermediate Representation，中间表示)连接着编译器前端和编译器后端。通常情况下，设计一门新的编程语言只需要完成能够生成LLVM IR的编译器前端即可，然后就可以轻松使用LLVM的各种编译优化、JIT支持、目标代码生成等功能。</p>
 <p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/v2-f5d09e6bd835d41f6c98ea696f00cb45_720w.jpg" alt="img"></p>
 </blockquote>
-<h2 id="设计思路"><a href="#设计思路" class="headerlink" title="设计思路"></a>设计思路</h2><ul>
-<li>运行在极简的虚拟机上。</li>
-<li>独立的词法分析，语法语义分析和代码生成合为一体，没有中间优化过程，代码生成过程中为特定的结构生成特定的指令，没有也不需要指令调度和寄存器分配。</li>
-<li>语法分析过程中变量、函数定义部分使用递归下降进行处理，表达式采用优先级分析法进行处理。</li>
-</ul>
-<h3 id="VM设计"><a href="#VM设计" class="headerlink" title="VM设计"></a>VM设计</h3><h4 id="总览"><a href="#总览" class="headerlink" title="总览"></a>总览</h4><p>极简设计的虚拟机：</p>
-<ul>
-<li>基于寄存器和栈。只有一个通用寄存器ax，一元运算操作ax，二元运算操作ax和栈顶。</li>
-<li>寄存器：<ul>
-<li>PC/IP，Program Counter/Instruction Pointer，即程序计数器或者叫指令指针，指向当前运行的指令。后续统一称PC。它存放的是一个内存地址，该地址中存放着 <strong>下一条</strong> 要执行的计算机指令</li>
-<li>SP，Stack Pointer，栈顶指针。永远指向当前的栈顶。注意的是由于栈是位于高地址并向低地址增长的，所以入栈时 <code>SP</code> 的值减小</li>
-<li>BP，Base Pointer，上一个栈的栈顶指针，函数调用时需要切换栈，返回时需要切回来就会用到。LEA相对寻址的基址。</li>
-<li>ax，通用寄存器，存储操作数。我们的虚拟机中，它用于存放一条指令执行后的结果</li>
-</ul>
-</li>
-<li>内存空间：<ul>
-<li>代码段（code）：存储指令序列，PC指向当前运行的指令地址。</li>
-<li>数据段（data）：存储静态数据、字面量等。</li>
-<li>运行时栈（stack）：局部变量、函数调用等。</li>
-<li>没有堆（heap）：动态内存通过作弊的方式实现（native-call）。</li>
-<li>和一个C程序的内存空间（kernel、stack、heap、data、code）很像。</li>
-</ul>
-</li>
-<li>指令集：<ul>
-<li>Save &amp; Load类：内存到寄存器，寄存器到内存。</li>
-<li>运算类：算术（arithmetic）运算、位（bit-wise）运算、逻辑（logical）运算。</li>
-<li>分支跳转类：branch、jump、cmp、ret等。</li>
-<li>native-call：处理IO（printf/open/write等），动态内存（malloc/free/memset等）。这里是为了实现实现方便加上这些，属于作弊的手段。</li>
-</ul>
-</li>
-<li>细节：<ul>
-<li>栈从高地址向低地址生长，单位为4字节，压栈*–sp = xxx。</li>
-<li>32位内存地址，用int即可保存指针。</li>
-<li>变长指令，指令长度为4字节长的指令（只是为了方便，其实不需要这么长），加上每一个操作数4字节。</li>
-<li>PC单位就是4字节，PC+1用来提取操作数或者取下一条指令。</li>
-<li>如果指令有操作数，那么实现指令时就需要将取出操作数并移到下一条指令开头，基本操作就是*pc++。</li>
-<li>也就是说无论是栈还是code段用一个int数组即可轻松实现。如何改成64位：最简单的方法就是将PC、寄存器、栈单位改成8个字节，c4的实现中的<code>#define int long long</code>。</li>
-</ul>
-</li>
-</ul>
-<h3 id="指令集细节"><a href="#指令集细节" class="headerlink" title="指令集细节"></a>指令集细节</h3><p>Save &amp; Load：内存与寄存器之间的数据流通，IMM和LEA是<strong>单操作数</strong>指令，其他都没有操作数。</p>
-<ul>
-<li>IMM：加载立即数到寄存器ax。</li>
-<li>LEA：load effective address（x86经典指令，这里含义有一些区别），取立即数（相对地址）加到bp上然后将得到的地址（绝对地址）保存到ax中。</li>
-<li>LC：load char to ax。</li>
-<li>LI：load int to ax。</li>
-<li>SC：save char to stack top。</li>
-<li>SI：save int to stack top。</li>
-<li>PUSH：寄存器ax压到栈顶。</li>
-</ul>
-<img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20211007110200711.png" alt="image-20211007110200711"  />
-
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (op == IMM) ax = *pc++; <span class="comment">// load immediate to ax</span></span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (op == LEA) ax = (<span class="keyword">int</span>)(bp + *pc++); <span class="comment">// load address to ax</span></span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (op == LC) ax = *(<span class="keyword">char</span>*)ax; <span class="comment">// load char to ax</span></span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (op == LI) ax = *(<span class="keyword">int</span>*)ax; <span class="comment">// load int to ax</span></span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (op == SC) *(<span class="keyword">char</span>*)*sp++ = ax; <span class="comment">// save char to adress that is saved in stack top, then pop.</span></span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (op == SI) *(<span class="keyword">int</span>*)*sp++ = ax; <span class="comment">// save int to address then pop.</span></span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (op == PUSH) *--sp = ax; <span class="comment">// push ax to stack top</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p>运算类：指令<strong>无操作数</strong>，运算的两个操作数是栈顶和ax，结果保存在ax。</p>
-<ul>
-<li>算术运算：ADD、SUB、MUL、DIV、MOD，即加减乘除取模。</li>
-<li>位运算：AND、OR、XOR、SHL、SHR，即与、或、异或、左移、右移。没有NOT，为了简化非运算直接在parse过程中实现了。</li>
-<li>逻辑运算：EQ、NE、LT、LE、GT、GE，=、!=、&lt;、&lt;=、&gt;、&gt;=。</li>
-</ul>
-<p>分支跳转类：<strong>单操作数</strong>。</p>
-<ul>
-<li>JMP：无条件跳转，PC to XXX。</li>
-<li>JZ：有条件跳转，寄存器为0时跳转。</li>
-<li>JNZ：有条件跳转，寄存器不为0时跳转。</li>
-</ul>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (op == JMP)          pc = (<span class="keyword">int</span>*)*pc; <span class="comment">// jump to </span></span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (op == JZ)      pc = ax ? pc+<span class="number">1</span> : (<span class="keyword">int</span>*)*pc; <span class="comment">// jump if ax is zero.</span></span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (op == JNZ)     pc = ax ? (<span class="keyword">int</span>*)*pc ? pc+<span class="number">1</span>; <span class="comment">// jump if ax is not zero.</span></span><br></pre></td></tr></table></figure>
-
-<p>函数跳转相关指令：</p>
-<ul>
-<li>JSR：jump subroutine，跳转到子程序，操作数为子程序的地址。</li>
-<li>ENT：enter subroutine，进入子程序，放在子程序开头，切换栈帧，并为子程序内的局部变量分配内存，操作数为内存单元数量。</li>
-<li>ADJ：adjust stack，调整栈指针sp，比如用于快速释放主调函数为参数分配的栈内存，操作数是栈帧数量。</li>
-<li>LEV：leave subroutine，退出子程序，放在子程序的末尾，将栈帧切换回主调函数，释放子程序中的内存。</li>
-</ul>
-<p>native-call：直接调用C库函数。</p>
-<ul>
-<li>OPEN：打开文件。</li>
-<li>CLOS：关闭文件。</li>
-<li>READ：从设备读数据。</li>
-<li>WRIT：写数据到设备。</li>
-<li>PRTF：写到标准输出（fd=1）。</li>
-<li>MALC：malloc。</li>
-<li>FREE：free。</li>
-<li>MSET：memset。</li>
-<li>MCMP：memcmp。</li>
-<li>EXIT：exit，结束程序。</li>
-</ul>
-<p>函数调用细节：</p>
-<ul>
-<li>实现一个函数调用需要的东西<ul>
-<li>函数地址：由parser生成，体现为JSR的操作数。</li>
-<li>参数的值：执行JSR前将参数压栈，主调函数负责，JSR执行后主调函数负责清理。</li>
-<li>函数返回值：最终保存在ax中。</li>
-<li>返回地址：JSR下一条指令。</li>
-</ul>
-</li>
-<li>函数的指令保存在什么位置：code区。</li>
-<li>如何知道函数地址：编译生成VM指令时由编译器确定。</li>
-<li>调用函数需要保存和恢复现场，现场有些什么东西：bp和sp。</li>
-<li>bp是什么：<ul>
-<li>用来做相对寻址的基地址，LEA的地址是相对于bp的。</li>
-<li>每个函数都有自己的bp，在函数内的LEA用的相对地址都是相对于它自己的bp。</li>
-</ul>
-</li>
-<li>讨论实现时结合实例讨论细节。</li>
-</ul>
-<p>考虑多层函数调用，最后调用的那一层一定是最先释放的，整个后进先出的关系就可以用栈来描述。用栈实现是最简单的。</p>
-<p>一个编程语言并不一定必须要有函数调用，函数调用的存在只是为了代码复用、减少冗余。</p>
-<h2 id="词法分析"><a href="#词法分析" class="headerlink" title="词法分析"></a>词法分析</h2><p>词法分析也称为 <strong>分词</strong> ，此阶段编译器从左向右扫描源文件，将其字符流分割成一个个的 <strong>词</strong> （ <strong>token</strong> 、 <strong>记号</strong> ，后文中将称为 <strong>token</strong> ）。所谓 <strong>token</strong> ，就是源文件中不可再进一步分割的一串字符，类似于英语中单词，或汉语中的词。</p>
-<p><a target="_blank" rel="noopener" href="https://pandolia.net/tinyc/images/lexical_analysis.png"><img src="https://gitee.com/gezilzq/image-host/raw/master/img/lexical_analysis.png" alt="images/lexical_analysis.png"></a></p>
-<p>英语中的单词的数量是有限的，程序语言中可用的 token 的类别也是有限的，而且是非常少的。</p>
-<p>一般来说程序语言中的 token 有：常数（整数、小数、字符、字符串等），操作符（算术操作符、比较操作符、逻辑操作符），分隔符（逗号、分号、括号等），保留字，标识符（变量名、函数名、类名等）等。</p>
-<blockquote>
-<p>开始所写的程序对于计算机来说只是一个很长的字符串，通过词法分析器把程序变为只由一个个token所构成的程序，用token赋予一段字符串具有的意义。</p>
-</blockquote>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// tokens and classes (operators last and in precedence order)</span></span><br><span class="line"><span class="class"><span class="keyword">enum</span> &#123;</span></span><br><span class="line">  Num = <span class="number">128</span>, Fun, Sys, Glo, Loc, Id,</span><br><span class="line">  Char, Else, Enum, If, Int, Return, Sizeof, While,</span><br><span class="line">  Assign, Cond, Lor, Lan, Or, Xor, And, Eq, Ne, Lt, Gt, Le, Ge, Shl, Shr, Add, Sub, Mul, Div, Mod, Inc, Dec, Brak</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<p>这些就是我们要支持的标记符。例如，我们会将 <code>=</code> 解析为 <code>Assign</code>；将 <code>==</code> 解析为 <code>Eq</code>；将 <code>!=</code> 解析为 <code>Ne</code> 等等。</p>
-<p>所以这里我们会有这样的印象，一个标记（token）可能包含多个字符，且多数情况下如此。而词法分析器能减小语法分析复杂度的原因，正是因为它相当于通过一定的编码（更多的标记）来压缩了源码字符串。</p>
-<p>当然，上面这些标记是有顺序的，跟它们在 C 语言中的优先级有关，如 <code>*(Mul)</code> 的优先级就要高于 <code>+(Add)</code>。</p>
-<h2 id="直接扫描法"><a href="#直接扫描法" class="headerlink" title="直接扫描法"></a>直接扫描法</h2><p>直接扫描法的思路非常简单，每轮扫描，根据第一个字符判断属于哪种类型的 token ，然后采取不同的策略扫描出一个完整的 token ，再接着进行下一轮扫描。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">next</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">char</span> *last_pos;</span><br><span class="line">    <span class="keyword">int</span> hash;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (token = *src) &#123;</span><br><span class="line">        ++src;</span><br><span class="line">        <span class="comment">// parse token here</span></span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>若仅考虑一些简单的情况，按 token 的第一个字符，可以将所有类别的 token 分为以下 7 大类：</p>
-<p><strong>（1）A型单字符运算符</strong></p>
-<p>包括：+, -, *, /, %， 这种 token 只有一个字符，若本轮扫描的第一个字符为上述字符，则立即返回此字符所代表的 token ，然后移到下一个字符开始下一轮扫描。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">next</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        ...</span><br><span class="line"></span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (token == <span class="string">&#x27;=&#x27;</span>) &#123;</span><br><span class="line">            <span class="comment">// parse &#x27;==&#x27; and &#x27;=&#x27;</span></span><br><span class="line">            <span class="keyword">if</span> (*src == <span class="string">&#x27;=&#x27;</span>) &#123;</span><br><span class="line">                src ++;</span><br><span class="line">                token = Eq;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                token = Assign;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (token == <span class="string">&#x27;+&#x27;</span>) &#123;</span><br><span class="line">            <span class="comment">// parse &#x27;+&#x27; and &#x27;++&#x27;</span></span><br><span class="line">            <span class="keyword">if</span> (*src == <span class="string">&#x27;+&#x27;</span>) &#123;</span><br><span class="line">                src ++;</span><br><span class="line">                token = Inc;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                token = Add;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (token == <span class="string">&#x27;^&#x27;</span>) &#123;</span><br><span class="line">            token = Xor;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (token == <span class="string">&#x27;%&#x27;</span>) &#123;</span><br><span class="line">            token = Mod;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (token == <span class="string">&#x27;*&#x27;</span>) &#123;</span><br><span class="line">            token = Mul;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (token == <span class="string">&#x27;[&#x27;</span>) &#123;</span><br><span class="line">            token = Brak;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (token == <span class="string">&#x27;?&#x27;</span>) &#123;</span><br><span class="line">            token = Cond;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (token == <span class="string">&#x27;~&#x27;</span> || token == <span class="string">&#x27;;&#x27;</span> || token == <span class="string">&#x27;&#123;&#x27;</span> || token == <span class="string">&#x27;&#125;&#x27;</span> || token == <span class="string">&#x27;(&#x27;</span> || token == <span class="string">&#x27;)&#x27;</span> || token == <span class="string">&#x27;]&#x27;</span> || token == <span class="string">&#x27;,&#x27;</span> || token == <span class="string">&#x27;:&#x27;</span>) &#123;</span><br><span class="line">            <span class="comment">// directly return the character as token;</span></span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>（2）B型单字符运算符和双字符运算符</strong></p>
-<p>B型单字符运算符包括： &lt; &gt; = ! ，双字符运算符包括： &lt;=, &gt;=, ==, != 。 若本轮扫描的第一个字符为B型单字符运算符时，先查看下一个字符是否是 “=” ，如果是，则返回这两个字符代表的 token ，如果否，则返回这个字符代表的 token 。例如，如果扫描到 “&gt;” ，则查看下一个字符是否是 “=” ，是则返回<code>Ge</code> ，否则返回 <code>Gt</code> 。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (token == <span class="string">&#x27;-&#x27;</span>) &#123;</span><br><span class="line">     <span class="comment">// parse &#x27;-&#x27; and &#x27;--&#x27;</span></span><br><span class="line">     <span class="keyword">if</span> (*src == <span class="string">&#x27;-&#x27;</span>) &#123;</span><br><span class="line">         src ++;</span><br><span class="line">         token = Dec;</span><br><span class="line">     &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">         token = Sub;</span><br><span class="line">     &#125;</span><br><span class="line">     <span class="keyword">return</span>;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="keyword">else</span> <span class="keyword">if</span> (token == <span class="string">&#x27;!&#x27;</span>) &#123;</span><br><span class="line">     <span class="comment">// parse &#x27;!=&#x27;</span></span><br><span class="line">     <span class="keyword">if</span> (*src == <span class="string">&#x27;=&#x27;</span>) &#123;</span><br><span class="line">         src++;</span><br><span class="line">         token = Ne;</span><br><span class="line">     &#125;</span><br><span class="line">     <span class="keyword">return</span>;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="keyword">else</span> <span class="keyword">if</span> (token == <span class="string">&#x27;&lt;&#x27;</span>) &#123;</span><br><span class="line">     <span class="comment">// parse &#x27;&lt;=&#x27;, &#x27;&lt;&lt;&#x27; or &#x27;&lt;&#x27;</span></span><br><span class="line">     <span class="keyword">if</span> (*src == <span class="string">&#x27;=&#x27;</span>) &#123;</span><br><span class="line">         src ++;</span><br><span class="line">         token = Le;</span><br><span class="line">     &#125; <span class="keyword">else</span> <span class="keyword">if</span> (*src == <span class="string">&#x27;&lt;&#x27;</span>) &#123;</span><br><span class="line">         src ++;</span><br><span class="line">         token = Shl;</span><br><span class="line">     &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">         token = Lt;</span><br><span class="line">     &#125;</span><br><span class="line">     <span class="keyword">return</span>;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="keyword">else</span> <span class="keyword">if</span> (token == <span class="string">&#x27;&gt;&#x27;</span>) &#123;</span><br><span class="line">     <span class="comment">// parse &#x27;&gt;=&#x27;, &#x27;&gt;&gt;&#x27; or &#x27;&gt;&#x27;</span></span><br><span class="line">     <span class="keyword">if</span> (*src == <span class="string">&#x27;=&#x27;</span>) &#123;</span><br><span class="line">         src ++;</span><br><span class="line">         token = Ge;</span><br><span class="line">     &#125; <span class="keyword">else</span> <span class="keyword">if</span> (*src == <span class="string">&#x27;&gt;&#x27;</span>) &#123;</span><br><span class="line">         src ++;</span><br><span class="line">         token = Shr;</span><br><span class="line">     &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">         token = Gt;</span><br><span class="line">     &#125;</span><br><span class="line">     <span class="keyword">return</span>;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="keyword">else</span> <span class="keyword">if</span> (token == <span class="string">&#x27;|&#x27;</span>) &#123;</span><br><span class="line">     <span class="comment">// parse &#x27;|&#x27; or &#x27;||&#x27;</span></span><br><span class="line">     <span class="keyword">if</span> (*src == <span class="string">&#x27;|&#x27;</span>) &#123;</span><br><span class="line">         src ++;</span><br><span class="line">         token = Lor;</span><br><span class="line">     &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">         token = Or;</span><br><span class="line">     &#125;</span><br><span class="line">     <span class="keyword">return</span>;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="keyword">else</span> <span class="keyword">if</span> (token == <span class="string">&#x27;&amp;&#x27;</span>) &#123;</span><br><span class="line">     <span class="comment">// parse &#x27;&amp;&#x27; and &#x27;&amp;&amp;&#x27;</span></span><br><span class="line">     <span class="keyword">if</span> (*src == <span class="string">&#x27;&amp;&#x27;</span>) &#123;</span><br><span class="line">         src ++;</span><br><span class="line">         token = Lan;</span><br><span class="line">     &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">         token = And;</span><br><span class="line">     &#125;</span><br><span class="line">     <span class="keyword">return</span>;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>（3）关键词和标识符</strong></p>
-<p>关键词和标识符都是以字母或下划线开始、且只有字母、下划线或数字组成。</p>
-<p>若本轮扫描的第一个字符为字母或下划线时，则一直向后扫描，直到遇到第一个既不是字母、也不是下划线或数字的字符，此时一个完整的词就被扫描出来了，然后，查看这个词是不是为<strong>关键字</strong>，如果是，则返回关键字代表的 token ，如果不是，则返回 IDENTIFIER 以及这个词的字面值。</p>
-<ul>
-<li>标识符存入一个表内<ul>
-<li><code>token</code>：该标识符返回的标记，理论上所有的变量返回的标记都应该是 <code>Id</code>，但实际上由于我们还将在符号表中加入关键字  如 <code>if</code>, <code>while</code> 等，它们都有对应的标记。</li>
-<li><code>hash</code>：顾名思义，就是这个标识符的哈希值，用于标识符的快速比较。</li>
-<li><code>name</code>：存放标识符本身的字符串。</li>
-<li>语法分析后再添加的信息<ul>
-<li><code>class</code>：该标识符的类别，如数字，全局变量或局部变量等。</li>
-<li><code>type</code>：标识符的类型，即如果它是个变量，变量是 <code>int</code> 型、<code>char</code> 型还是指针型。</li>
-<li><code>value</code>：存放这个标识符的值，如标识符是函数，刚存放函数的地址。</li>
-<li><code>BXXXX</code>：C 语言中标识符可以是全局的也可以是局部的，当局部标识符的名字与全局标识符相同时，用作保存全局标识符的信息。</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<p>由于我们的目标是能自举，而我们定义的语法不支持 <code>struct</code>，故而使用下列方式。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Symbol table:</span><br><span class="line">----+-----+----+----+----+-----+-----+-----+------+------+----</span><br><span class="line"> .. |token|hash|name|type|class|value|btype|bclass|bvalue| ..</span><br><span class="line">----+-----+----+----+----+-----+-----+-----+------+------+----</span><br><span class="line">    |&lt;---       one single identifier                ---&gt;|</span><br></pre></td></tr></table></figure>
-
-<p><strong>关键字与内置函数</strong></p>
-<ul>
-<li>例如 <code>if</code>, <code>while</code>, <code>return</code> 等。它们不能被作为普通的标识符，因为有特殊的含义</li>
-<li>一般有两种处理方法：<ol>
-<li>词法分析器中直接解析这些关键字。</li>
-<li>在语法分析前将关键字提前加入符号表。</li>
-</ol>
-</li>
-<li>这里我们就采用第二种方法，将它们加入符号表，并提前为它们赋予必要的信息（还记得前面说的标识符 <code>Token</code> 字段吗？）。这样当源代码中出现关键字时，它们会被解析成标识符，但由于符号表中已经有了相关的信息，我们就能知道它们是特殊的关键字。</li>
-</ul>
-<p>内置函数的行为也和关键字类似，不同的只是赋值的信息，在<code>main</code>函数中进行初始化如下：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// types of variable/function</span></span><br><span class="line"><span class="class"><span class="keyword">enum</span> &#123;</span> CHAR, INT, PTR &#125;;</span><br><span class="line"><span class="keyword">int</span> *idmain;                  <span class="comment">// the `main` function</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    src = <span class="string">&quot;char else enum if int return sizeof while &quot;</span></span><br><span class="line">          <span class="string">&quot;open read close printf malloc memset memcmp exit void main&quot;</span>;</span><br><span class="line"></span><br><span class="line">     <span class="comment">// add keywords to symbol table</span></span><br><span class="line">    i = Char;</span><br><span class="line">    <span class="keyword">while</span> (i &lt;= While) &#123;</span><br><span class="line">        next();</span><br><span class="line">        current_id[Token] = i++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// add library to symbol table</span></span><br><span class="line">    i = OPEN;</span><br><span class="line">    <span class="keyword">while</span> (i &lt;= EXIT) &#123;</span><br><span class="line">        next();</span><br><span class="line">        current_id[Class] = Sys;</span><br><span class="line">        current_id[Type] = INT;</span><br><span class="line">        current_id[Value] = i++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    next(); current_id[Token] = Char; <span class="comment">// handle void type</span></span><br><span class="line">    next(); idmain = current_id; <span class="comment">// keep track of main</span></span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line">    program();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>扫描整个程序，标记token</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> token_val;                <span class="comment">// value of current token (mainly for number)</span></span><br><span class="line"><span class="keyword">int</span> *current_id,              <span class="comment">// current parsed ID</span></span><br><span class="line">    *symbols;                 <span class="comment">// symbol table</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// fields of identifier</span></span><br><span class="line"><span class="class"><span class="keyword">enum</span> &#123;</span>Token, Hash, Name, Type, Class, Value, BType, BClass, BValue, IdSize&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">next</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        ...</span><br><span class="line"></span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> ((token &gt;= <span class="string">&#x27;a&#x27;</span> &amp;&amp; token &lt;= <span class="string">&#x27;z&#x27;</span>) || (token &gt;= <span class="string">&#x27;A&#x27;</span> &amp;&amp; token &lt;= <span class="string">&#x27;Z&#x27;</span>) || (token == <span class="string">&#x27;_&#x27;</span>)) &#123;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// parse identifier</span></span><br><span class="line">            last_pos = src - <span class="number">1</span>;</span><br><span class="line">            hash = token;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">while</span> ((*src &gt;= <span class="string">&#x27;a&#x27;</span> &amp;&amp; *src &lt;= <span class="string">&#x27;z&#x27;</span>) || (*src &gt;= <span class="string">&#x27;A&#x27;</span> &amp;&amp; *src &lt;= <span class="string">&#x27;Z&#x27;</span>) || (*src &gt;= <span class="string">&#x27;0&#x27;</span> &amp;&amp; *src &lt;= <span class="string">&#x27;9&#x27;</span>) || (*src == <span class="string">&#x27;_&#x27;</span>)) &#123;</span><br><span class="line">                hash = hash * <span class="number">147</span> + *src;</span><br><span class="line">                src++;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// look for existing identifier, linear search</span></span><br><span class="line">            current_id = symbols;</span><br><span class="line">            <span class="keyword">while</span> (current_id[Token]) &#123;</span><br><span class="line">                <span class="keyword">if</span> (current_id[Hash] == hash &amp;&amp; !<span class="built_in">memcmp</span>((<span class="keyword">char</span> *)current_id[Name], last_pos, src - last_pos)) &#123;</span><br><span class="line">                    <span class="comment">//found one, return</span></span><br><span class="line">                    token = current_id[Token];</span><br><span class="line">                    <span class="keyword">return</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                current_id = current_id + IdSize;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            <span class="comment">// store new ID</span></span><br><span class="line">            current_id[Name] = (<span class="keyword">int</span>)last_pos;</span><br><span class="line">            current_id[Hash] = hash;</span><br><span class="line">            token = current_id[Token] = Id;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>（4）整数常量</strong></p>
-<p>整数常量以数字开始，若本轮扫描的第一个字符为数字，则一直向后扫描</p>
-<p>数字中较为复杂的一点是需要支持十进制、十六进制及八进制。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">next</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        ...</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (token &gt;= <span class="string">&#x27;0&#x27;</span> &amp;&amp; token &lt;= <span class="string">&#x27;9&#x27;</span>) &#123;</span><br><span class="line">            <span class="comment">// parse number, three kinds: dec(123) hex(0x123) oct(017)</span></span><br><span class="line">            token_val = token - <span class="string">&#x27;0&#x27;</span>;</span><br><span class="line">            <span class="keyword">if</span> (token_val &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="comment">// dec, starts with [1-9]</span></span><br><span class="line">                <span class="keyword">while</span> (*src &gt;= <span class="string">&#x27;0&#x27;</span> &amp;&amp; *src &lt;= <span class="string">&#x27;9&#x27;</span>) &#123;</span><br><span class="line">                    token_val = token_val*<span class="number">10</span> + *src++ - <span class="string">&#x27;0&#x27;</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// starts with number 0</span></span><br><span class="line">                <span class="keyword">if</span> (*src == <span class="string">&#x27;x&#x27;</span> || *src == <span class="string">&#x27;X&#x27;</span>) &#123;</span><br><span class="line">                    <span class="comment">//hex</span></span><br><span class="line">                    token = *++src;</span><br><span class="line">                    <span class="keyword">while</span> ((token &gt;= <span class="string">&#x27;0&#x27;</span> &amp;&amp; token &lt;= <span class="string">&#x27;9&#x27;</span>) || (token &gt;= <span class="string">&#x27;a&#x27;</span> &amp;&amp; token &lt;= <span class="string">&#x27;f&#x27;</span>) || (token &gt;= <span class="string">&#x27;A&#x27;</span> &amp;&amp; token &lt;= <span class="string">&#x27;F&#x27;</span>)) &#123;</span><br><span class="line">                        token_val = token_val * <span class="number">16</span> + (token &amp; <span class="number">15</span>) + (token &gt;= <span class="string">&#x27;A&#x27;</span> ? <span class="number">9</span> : <span class="number">0</span>);</span><br><span class="line">                        token = *++src;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="comment">// oct</span></span><br><span class="line">                    <span class="keyword">while</span> (*src &gt;= <span class="string">&#x27;0&#x27;</span> &amp;&amp; *src &lt;= <span class="string">&#x27;7&#x27;</span>) &#123;</span><br><span class="line">                        token_val = token_val*<span class="number">8</span> + *src++ - <span class="string">&#x27;0&#x27;</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            token = Num;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>八进制和十六进制的转换逻辑</li>
-</ul>
-<p><strong>（5）字符串常量</strong></p>
-<p>字符串常量以双引号开始和结束，若本轮扫描的第一个字符为双引号或者单引号（比较的时候需要用一下转义符<code>token == &#39;&quot;&#39; || token == &#39;\&#39;&#39;</code>），则一直向后扫描，直到遇到第一个双引号或者单引号，然后返回 T_STRINGCONSTANT 和这个字符串。</p>
-<p><strong>（6）空格</strong></p>
-<p>若本轮扫描的第一个字符为为空格，则跳过此字符。</p>
-<p><strong>（7）注释</strong></p>
-<p>注释仅考虑以 <strong>#</strong> 开始的情况，若本轮扫描的第一个字符为 **#**，则直接跳过此行字符流。</p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/10/09/%E6%89%8B%E5%86%99%E7%BC%96%E8%AF%91%E5%99%A8/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -908,7 +733,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-01-09 21:41:09" itemprop="dateModified" datetime="2022-01-09T21:41:09+08:00">2022-01-09</time>
+                <time title="Modified: 2022-01-09 21:48:50" itemprop="dateModified" datetime="2022-01-09T21:48:50+08:00">2022-01-09</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -945,85 +770,14 @@
 </ul>
 <p><strong>同步</strong>就是调用之后一直等待，直到返回结果。</p>
 <p><strong>异步</strong>则是调用之后，不能直接拿到结果，通过一系列的手段才最终拿到结果（调用之后，拿到结果中间的时间可以介入其他任务）。</p>
-<h3 id="同步模式（Synchronous）"><a href="#同步模式（Synchronous）" class="headerlink" title="同步模式（Synchronous）"></a>同步模式（Synchronous）</h3><p>代码中的任务依次排队执行，执行顺序与代码的编写顺序是完全一致的。在单线程下大多数任务都会以同步模式去执行</p>
-<p>执行讲解：<br>例：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="string">&#x27;begin&#x27;</span>)   </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">A</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">&#x27;A task&#x27;</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">B</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">&#x27;B task&#x27;</span>)</span><br><span class="line">	A()</span><br><span class="line">&#125;</span><br><span class="line">B()</span><br><span class="line">cosnole.log(<span class="string">&#x27;end&#x27;</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ol>
-<li>js执行引擎会把整体的代码全部加载进来</li>
-<li>然后在调用栈（Call stack）当中压入一个匿名（anonymous）的调用，这个匿名的调用可以理解为把全部的代码放入到一个匿名的函数当中去执行，然后去逐行执行</li>
-<li>调用栈中依次压入上述代码去执行.</li>
-</ol>
-<h4 id="调用栈的理解"><a href="#调用栈的理解" class="headerlink" title="调用栈的理解"></a>调用栈的理解</h4><p>调用栈只是一个更专业的说法，通俗的解释是，<strong>js在执行引擎中维护了一个正在执行的工作表</strong>，当工作表中的所有任务被清空完后，这一轮的工作就结束了</p>
-<p>问题：如果某一任务执行时间过长，后面的任务就要延迟（阻塞），一直等待，这种阻塞对用户来说，界面就会卡顿或者卡死，<strong>这就必须要异步任务来解决程序中无法避免的耗时操作</strong>，例如ajax，node.js中的大文件读写等避免代码被卡死</p>
-<h3 id="异步模式（Asynchronous）"><a href="#异步模式（Asynchronous）" class="headerlink" title="异步模式（Asynchronous）"></a>异步模式（Asynchronous）</h3><p><strong>概念:</strong><br>不会去等待这个任务的结束才开始下一个任务，开启过后就立即往后执行下一个任务，后续逻辑一般会通过回调函数的方式定义。</p>
-<p>很长一段时间以来，web平台为JavaScript程序员提供了许多函数，这些函数允许您在一段时间间隔过后异步执行代码，或者重复异步执行代码块，直到您告诉它停止为止。这些都是:</p>
-<ul>
-<li><p><code>setTimeout()</code></p>
-<p>在指定的时间后执行一段代码.</p>
-</li>
-<li><p><code>setInterval()</code></p>
-<p>以固定的时间间隔，重复运行一段代码.</p>
-</li>
-<li><p><code>requestAnimationFrame()</code></p>
-<p>setInterval()的现代版本;在浏览器下一次重新绘制显示之前执行指定的代码块，从而允许动画在适当的帧率下运行，而不管它在什么环境中运行.</p>
-</li>
-</ul>
-<p>这些函数设置的<strong>异步代码实际上在主线程上运行</strong>（在其指定的计时器过去之后）。</p>
-<p>在 <code>setTimeout()</code> 调用执行之前或 <code>setInterval()</code> 迭代之间可以（并且经常会）运行其他代码。根据这些操作的处理器密集程度，它们可以进一步延迟异步代码，因为任何异步代码仅在主线程可用后才执行（换句话说，当调用栈为空时）。</p>
-<blockquote>
-<p>执行代码的是单线程，像是计时之类是通过内部的API，由特定单独的线程来做的</p>
-<p><strong>运行环境提供的API的以同步或异步模式的方式工作</strong></p>
-</blockquote>
-<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20211005160041979.png" alt="image-20211005160041979"></p>
-<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20211005160210755.png" alt="image-20211005160210755"></p>
-<h2 id="回调函数"><a href="#回调函数" class="headerlink" title="回调函数"></a>回调函数</h2><p><strong>概念</strong>：被作为实参传入另一函数，并在该外部函数内被调用，用以来完成某些任务的函数，称为回调函数。</p>
-<blockquote>
-<p>我在烹饪店对店员说，蛋糕做好了给我打电话。</p>
-<p>打电话则就是一个回调函数</p>
-<p>店员在听我这么说后，会依然做自己的事情</p>
-<p>但当蛋糕做好后</p>
-<p>会触发回调函数，执行给我打电话的动作</p>
-</blockquote>
-<p>传统的回调方式去完成复杂的异步流程，容易产生回调地狱</p>
-<p>Promise则是一种更优的异步编程的统一方案</p>
-<p>一个 <code>Promise</code> 对象代表一个在这个 promise 被创建出来时不一定已知的值。</p>
-<p>它让您能够<strong>把异步操作最终的成功返回值或者失败原因和相应的处理程序关联起来</strong>。 </p>
-<p>这样使得异步方法可以像同步方法那样返回值：异步方法并不会立即返回最终的值，而是会返回一个 <em>promise</em>，以便在未来某个时候把值交给使用者。</p>
-<p>一个 <code>Promise</code> 必然处于以下几种状态之一：</p>
-<ul>
-<li><em>待定（pending）</em>: 初始状态，既没有被兑现，也没有被拒绝。</li>
-<li><em>已兑现（fulfilled）</em>: 意味着操作成功完成。</li>
-<li><em>已拒绝（rejected）</em>: 意味着操作失败。</li>
-</ul>
-<p>一个 <code>Promise</code> 对象代表一个在这个 promise 被创建出来时不一定已知的值。它让您能够把异步操作最终的成功返回值或者失败原因和相应的处理程序关联起来。 这样使得异步方法可以像同步方法那样返回值：异步方法并不会立即返回最终的值，而是会返回一个 <em>promise</em>，以便在未来某个时候把值交给使用者。</p>
-<p>一个 <code>Promise</code> 必然处于以下几种状态之一：</p>
-<ul>
-<li><em>待定（pending）</em>: 初始状态，既没有被兑现，也没有被拒绝。</li>
-<li><em>已兑现（fulfilled）</em>: 意味着操作成功完成。</li>
-<li><em>已拒绝（rejected）</em>: 意味着操作失败。</li>
-</ul>
-<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20211005162207923.png" alt="image-20211005162207923"></p>
-<p>待定状态的 Promise 对象要么会通过一个值<em>被兑现（fulfilled）</em>，要么会通过一个原因（错误）<em>被拒绝（rejected）</em>。</p>
-<p>当这些情况之一发生时，我们用 promise 的 then 方法排列起来的相关处理程序就会被调用。</p>
-<p>如果 promise 在一个相应的处理程序被绑定时就已经被兑现或被拒绝了，那么这个处理程序就会被调用，因此在完成异步操作和绑定处理方法之间不会存在竞争状态。</p>
-<p>因为 <code>Promise.prototype.then</code> 和 <code>Promise.prototype.catch</code> 方法返回的是 promise， 所以它们可以被链式调用。</p>
-<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/promises.png" alt="img"></p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Promise方式的AJAX</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">ajax</span>(<span class="params">url</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span>(<span class="params">resolve,reject</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">var</span> xhr = <span class="keyword">new</span> XMLHttpRequest();</span><br><span class="line">        xhr.open(<span class="string">&#x27;GET&#x27;</span>,url);</span><br><span class="line">        xhr.responseType = <span class="string">&#x27;json&#x27;</span>;</span><br><span class="line">        <span class="comment">//请求完成后，状态为4后才会执行此函数</span></span><br><span class="line">        xhr.onload = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            <span class="keyword">if</span>(<span class="built_in">this</span>.status===<span class="number">200</span>)&#123;</span><br><span class="line">                resolve(<span class="built_in">this</span>.response);</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                reject(<span class="keyword">new</span> <span class="built_in">Error</span>(<span class="built_in">this</span>.statusText))</span><br><span class="line">            &#125;</span><br><span class="line">            xhr.send();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="Promise的链式调用"><a href="#Promise的链式调用" class="headerlink" title="Promise的链式调用"></a><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Promise#promise%E7%9A%84%E9%93%BE%E5%BC%8F%E8%B0%83%E7%94%A8">Promise的链式调用</a></h3><p>我们可以用 <code>promise.then()</code>，<code>promise.catch()</code> 和 <code>promise.finally()</code> 这些方法将进一步的操作与一个变为已敲定状态的 promise 关联起来。这些方法还会返回一个新生成的 promise 对象，这个对象可以被非强制性的用来做链式调用</p>
-<ul>
-<li>Promise对象的then方法会返回一个全新的Promise对象</li>
-<li>后面的then方法就是在为上一个then返回的Promise注册回调</li>
-<li>前面then方法中回调函数的返回值会作为后面then方法回调的参数</li>
-<li>如果回调中返回的是Promise,那后面then方法的回调会等待它的结束</li>
-</ul>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_38550182/article/details/112218243">同步模式（Synchronous）</a></p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/lin_credible/article/details/40143961">【朴灵评注】JavaScript 运行机制详解：再谈Event Loop</a></p>
-<p><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/10/01/JavaScript%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
