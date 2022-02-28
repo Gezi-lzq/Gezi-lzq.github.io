@@ -157,6 +157,583 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/02/28/%E5%8F%AF%E6%89%A9%E5%B1%95%E6%9E%B6%E6%9E%84/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
+      <meta itemprop="name" content="gezi_lzq">
+      <meta itemprop="description" content="Blog of lizhenqi ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gezi's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/02/28/%E5%8F%AF%E6%89%A9%E5%B1%95%E6%9E%B6%E6%9E%84/" class="post-title-link" itemprop="url">可扩展性架构</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-02-28 00:00:00 / Modified: 20:32:44" itemprop="dateCreated datePublished" datetime="2022-02-28T00:00:00+08:00">2022-02-28</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/" itemprop="url" rel="index"><span itemprop="name">架构设计</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="解决的问题"><a href="#解决的问题" class="headerlink" title="解决的问题"></a>解决的问题</h2><p>传统CS/BS架构，用户通过网络给服务器发送请求，服务器经过计算后返回给用户，用户再进行下一次请求……<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645804092889-dafb4209-f8b1-49f2-87ad-a23749d90286.png" alt="image.png"><br>系统在设计实现完毕后，当用户端越来越多后，服务器会受到较大的负载（数据计算，数据存储，io等等），导致响应越来越慢，甚至可能出现服务器宕机。</p>
+<h2 id="实现一个计算密集型（Computer-intensive）服务"><a href="#实现一个计算密集型（Computer-intensive）服务" class="headerlink" title="实现一个计算密集型（Computer-intensive）服务"></a>实现一个计算密集型（Computer-intensive）服务</h2><blockquote>
+<p>模拟服务器端需要大规模计算<br>同时模拟服务器在受到较多请求，承受较大负载的过程</p>
+</blockquote>
+<!--mor-->
+
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645805277910-0382faea-f992-4744-8daa-2b1c26ed9952.png" alt="image.png"></p>
+<h3 id="计算圆周率"><a href="#计算圆周率" class="headerlink" title="计算圆周率"></a>计算圆周率</h3><p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645808583279-f28c8abb-12c8-4fa2-b325-b0f54ed2a95c.png" alt="image.png"></p>
+<ul>
+<li>返回计算时间</li>
+</ul>
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645808608627-5b8a78bd-2664-4cbd-9825-7845b0d23337.png" alt="image.png"></p>
+<h3 id="具体计算实现"><a href="#具体计算实现" class="headerlink" title="具体计算实现"></a>具体计算实现</h3><p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645808630914-94e59301-8108-40ce-a158-e710f9d14577.png" alt="image.png"></p>
+<h2 id="压力测试"><a href="#压力测试" class="headerlink" title="压力测试"></a>压力测试</h2><p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645808682763-70e1766d-0ca8-4273-8bdf-941da262906f.png" alt="image.png"><br>安装：<a target="_blank" rel="noopener" href="https://gatling.io/open-source/">https://gatling.io/open-source/</a><br>解压后，<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645867778597-657c22a1-0d60-4fd9-a0b8-167d893c5da8.png" alt="image.png"><br>编写压力测试代码<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645867388471-99f87618-e4bf-438d-b684-dba778f1213f.png" alt="image.png"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> gatlingtest;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> io.gatling.javaapi.core.*;</span><br><span class="line"><span class="keyword">import</span> io.gatling.javaapi.http.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> io.gatling.javaapi.core.CoreDsl.*;</span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> io.gatling.javaapi.http.HttpDsl.*;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BasicSimulationJava</span> <span class="keyword">extends</span> <span class="title">Simulation</span> </span>&#123; </span><br><span class="line"><span class="comment">//所有 HTTP 请求的通用配置</span></span><br><span class="line">  HttpProtocolBuilder httpProtocol = http </span><br><span class="line">    .baseUrl(<span class="string">&quot;http://172.30.96.1:8080&quot;</span>) <span class="comment">// 将添加到所有相对 url 的 baseUrl</span></span><br><span class="line">    .acceptHeader(<span class="string">&quot;text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8&quot;</span>) <span class="comment">// 将与所有请求一起发送的通用 HTTP 标头</span></span><br><span class="line">    .doNotTrackHeader(<span class="string">&quot;1&quot;</span>)</span><br><span class="line">    .acceptLanguageHeader(<span class="string">&quot;en-US,en;q=0.5&quot;</span>)</span><br><span class="line">    .acceptEncodingHeader(<span class="string">&quot;gzip, deflate&quot;</span>)</span><br><span class="line">    .userAgentHeader(<span class="string">&quot;Mozilla/5.0 (Windows NT 5.1; rv:31.0) Gecko/20100101 Firefox/31.0&quot;</span>);</span><br><span class="line">  <span class="comment">// 场景定义</span></span><br><span class="line">  ScenarioBuilder scn = scenario(<span class="string">&quot;Testing Pi Caculating&quot;</span>) <span class="comment">// 7</span></span><br><span class="line">    .exec(http(<span class="string">&quot;Testpi&quot;</span>) <span class="comment">// 一个名为Testpi的 HTTP 请求。</span></span><br><span class="line">      .get(<span class="string">&quot;/pi&quot;</span>)); <span class="comment">// 此请求使用GET方法定位的 url </span></span><br><span class="line">    <span class="comment">// .pause(5); // 暂停时间5s</span></span><br><span class="line"></span><br><span class="line">  &#123;</span><br><span class="line">    setUp( <span class="comment">// 设置将在此模拟中启动的场景</span></span><br><span class="line">      scn.injectOpen(atOnceUsers(<span class="number">2</span>)) <span class="comment">// 声明我们将向名为scn的场景中注入2个用户</span></span><br><span class="line">        .protocols(httpProtocol)); <span class="comment">//附加上面声明的 HTTP 配置</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行gatling<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645868413572-f555ab54-937b-4266-a4fa-14e2987eaf05.png" alt="image.png"><br>命令：<code>./gatling.sh</code><br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645871928838-bed60816-e0c5-4d6c-b02f-cb5ade7b791b.png" alt="image.png"><br>测试结果：<br><code>request count</code>:2<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645875173704-45a0a41a-5407-46d8-9fe1-a5f7589994f8.png" alt="image.png"><br><code>request count</code>:10<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645875098499-a8fa0086-5528-4ed5-8dcd-ac893dd0105a.png" alt="image.png"><br><code>request count</code>:100<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645875346599-03156d56-aaa7-4eca-963b-948649666c18.png" alt="image.png"><br>随着并发用户越多，服务器响应时间就越长，负载就越大。<br>​</p>
+<h1 id="垂直扩展"><a href="#垂直扩展" class="headerlink" title="垂直扩展"></a>垂直扩展</h1><p>通过增强硬件设备的性能来提高服务器本身的运行性能<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645880631297-555591ba-35a2-47de-b4f3-99ed3b2836a8.png" alt="image.png"></p>
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><p>在一台电脑上，模拟不同硬件环境对服务器性能的影响。<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645880792181-967931f5-7ca6-40f1-9fc2-474fb033e7d1.png" alt="image.png"></p>
+<h2 id="打包镜像"><a href="#打包镜像" class="headerlink" title="打包镜像"></a>打包镜像</h2><blockquote>
+<p>Jib is a <a target="_blank" rel="noopener" href="https://maven.apache.org/">Maven</a> plugin for building Docker and <a target="_blank" rel="noopener" href="https://github.com/opencontainers/image-spec">OCI</a> images for your Java applications.</p>
+</blockquote>
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645881456852-7325820c-78dc-4dcd-9d54-0b414fcf940e.png" alt="image.png"><br>通过Jib实现把Springboot项目封装成为一个容器镜像，随后可在Docker虚拟化环境中直接运行此容器</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.google.cloud.tools<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jib-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.1.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">from</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">image</span>&gt;</span>amazoncorretto:11<span class="tag">&lt;/<span class="name">image</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">from</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">to</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">image</span>&gt;</span>app-pi<span class="tag">&lt;/<span class="name">image</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">to</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>执行<code>mvn compile jib:dockerBuild</code>（docker也要运行起来）<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645882895952-36d08f2b-079a-4cf3-92b2-9fe58f818b67.png" alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645886616513-18eb1b2a-a36d-45c4-a66d-eb4c9eb8e1b6.png" alt="image.png"></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">from</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">image</span>&gt;</span>amazoncorretto:11<span class="tag">&lt;/<span class="name">image</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">from</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>这几句十分重要，如果没有的话，会默认从gcr.io拉取基础镜像，但是由于某种网络原因，即使使用了某种操作依然没法连接成功（补充 全局代理下可行），一直会出现<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645886884709-75251cf1-3b6d-419d-ac6f-2d5c5cd47f6f.png" alt="image.png"><br>设置基础映像后，会从registry中找到存有此镜像的registry进行拉取，</p>
+<blockquote>
+<p>文档：<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645887266887-ed153ce1-3259-4c1f-b50f-19fa844fdb0f.png" alt="image.png"><br>（拉取镜像这部分，网络搞得真是人都麻了）</p>
+</blockquote>
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645889851441-847037e2-7476-4b7c-a181-3cbf734a14c9.png" alt="image.png"></p>
+<h2 id="启动镜像"><a href="#启动镜像" class="headerlink" title="启动镜像"></a>启动镜像</h2><p><code>docker run -d --name app-pi-0.5 --cpus=0.5 -p 18080:8080 app-pi</code></p>
+<ul>
+<li>后台运行容器</li>
+<li>名称为<code>app-pi-0.5</code></li>
+<li>占用0.5核</li>
+<li>端口映射为 本机18080端口映射到容器的8080端口<h2 id="垂直扩展实验"><a href="#垂直扩展实验" class="headerlink" title="垂直扩展实验"></a>垂直扩展实验</h2><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645892593106-318320a6-af13-4d11-a4d1-d1b00f554e0e.png" alt="image.png"><h3 id="0-5核cpu服务器性能"><a href="#0-5核cpu服务器性能" class="headerlink" title="0.5核cpu服务器性能"></a>0.5核cpu服务器性能</h3>运行命令<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645890257525-5fe59053-abb4-4d99-8028-d3faef534e9d.png" alt="image.png"><br>查看<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645890301572-777d9ec9-cd63-48f3-889d-38cdab8449c8.png" alt="image.png"><br>测试：<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645891561261-467ccc4e-05a2-4237-bdea-e600fa1983bf.png" alt="image.png"><h3 id="1核cpu服务器性能"><a href="#1核cpu服务器性能" class="headerlink" title="1核cpu服务器性能"></a>1核cpu服务器性能</h3><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645891349557-ca2128c3-9e72-478f-a1f5-450ef76fce40.png" alt="image.png"><br>测试：<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645891600163-d61ea7b1-60c8-4786-b86b-e943c90cd3a9.png" alt="image.png"><h3 id="2核cpu服务器性能"><a href="#2核cpu服务器性能" class="headerlink" title="2核cpu服务器性能"></a>2核cpu服务器性能</h3><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645891662838-4f03ff2e-eab0-4f68-b202-78875002203b.png" alt="image.png"><br>测试：<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645891646867-de07584b-1e8a-4c0d-93fc-3b3110f2a4e7.png" alt="image.png"></li>
+</ul>
+<p><strong>3核cpu服务器性能</strong><br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645892379528-b465becf-6839-4888-a782-17ca067ec0dd.png" alt="image.png"><br>测试：<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645892404150-5716dcfc-9f30-482d-9d7e-ac96f12c5801.png" alt="image.png"><br>可见，随着分配cpu数量提高，响应时间显著变快，性能提升，这种提升即为垂直向扩展的效果。</p>
+<h1 id="水平扩展"><a href="#水平扩展" class="headerlink" title="水平扩展"></a>水平扩展</h1><p>提高服务器性能，不可能单纯依靠增加机器性能，机器本身性能是存在上限的，并且性能的提高，会造成服务器成本的大幅提高。<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645892854259-7f63b24a-d98f-4eec-9ec0-989efe341052.png" alt="img"></p>
+<h2 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h2><p><img src="https://gitee.com/gezilzq/image-host/raw/master//img/1645892971061-613e3d3b-8b3d-45a3-b708-c519713298a6.png" alt="image.png"></p>
+<h3 id="DNS-Pound-Robin"><a href="#DNS-Pound-Robin" class="headerlink" title="DNS Pound Robin"></a>DNS Pound Robin</h3><p>通过DNS的ip地址的分配来实现负载均衡，将请求分摊到不同服务器上。<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645893183849-e208c13e-234e-492a-badb-e4e77fa96813.png" alt="image.png"></p>
+<h3 id="L3-L4-L7-Load-Balancing"><a href="#L3-L4-L7-Load-Balancing" class="headerlink" title="L3/L4/L7 Load Balancing"></a>L3/L4/L7 Load Balancing</h3><p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645893452815-f6eb026f-69f5-4c02-b35b-6c2b65e8b607.png" alt="image.png"></p>
+<h4 id="L3负载均衡"><a href="#L3负载均衡" class="headerlink" title="L3负载均衡"></a>L3负载均衡</h4><p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645893664470-2a0beb5d-0123-4df6-868c-ee26dbc34aa2.png" alt="image.png"><br>L3是在网络协议层实现的负载均衡，通过Load balancer（负载均衡器）来进行请求的派发，发送给后端的若干个Server。基于ip协议，将请求中，通过网络地址转换协议 来实现请求的分发。<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645893716116-d97914df-6927-4e56-a0aa-14b5e17c97ef.png" alt="image.png"><br>比如，Load Balancer 的ip地址对于用户来说，相当于整个服务的一个入口。<br>一个用户（ip为206.183.42.40），向该Load Balancer发送请求，建立一个TCP/UDP等链接。<br>负载均衡器并不处理这个请求，而是将此请求转发到后台某个Server上面。</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645893897564-617283c3-de00-4487-9bb7-c9d22ddeebdc.png" alt="image.png"><br>负载均衡器通过将客户端发送的每个数据包内的<code>destination ip</code>通过某种算法，更换为某个后台Server的ip。服务器返回的数据包会再经过Load balancer,然后Load balancer再修改<code>source ip</code>。对于客户端来说，还是感觉向负载均衡器发送请求，又由它进行响应的。<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645894632586-e1868821-c868-4836-aeff-12e78d81c27e.png" alt="image.png"><br>通过Ip层的转换，将用户请求进行分发。<br>为避免出现单点失效，即为负载均衡器宕机了，整个服务都无法进行。所以要增加冗余，防止单个Load Balancer，整个服务不可用。<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645894898062-b0cc5180-a7c8-4fd9-9a6e-4b33882c7d15.png" alt="image.png"></p>
+<blockquote>
+<p>服务器都通过负载均衡器这个网口，部署条件较高，使用较少</p>
+</blockquote>
+<h4 id="L4负载均衡"><a href="#L4负载均衡" class="headerlink" title="L4负载均衡"></a>L4负载均衡</h4><p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645895045460-6b825840-c6cb-49f7-91bb-d3dc0bc3c165.png" alt="image.png"><br>较为常用<br>类似L3，Load Balancer将请求分发<br>L3中，Load Balancer工作在传输层，当Client发送请求，与Load balancer建立起TCP连接，Load balancer则决定与另外某个Backend也建立一个TCP连接。</p>
+<h2 id="L4负载均衡实验"><a href="#L4负载均衡实验" class="headerlink" title="L4负载均衡实验"></a>L4负载均衡实验</h2><p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645895406021-c7b0b784-0f2f-412b-968c-9a422f19a8cb.png" alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645895817295-28dd73bc-4052-4054-a284-82c8357cd49d.png" alt="image.png"><br>实验：如何通过负载均衡使得可以使用0.5核的cpu的服务器仍在可以表现出不错的性能。</p>
+<h2 id="安装HAProxy"><a href="#安装HAProxy" class="headerlink" title="安装HAProxy"></a>安装HAProxy</h2><p><a target="_blank" rel="noopener" href="https://www.haproxy.com/blog/how-to-install-haproxy-on-ubuntu/">在Ubuntu安装Haproxy</a></p>
+<h2 id="编写haproxy-cfg"><a href="#编写haproxy-cfg" class="headerlink" title="编写haproxy.cfg"></a>编写haproxy.cfg</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">defaults</span><br><span class="line">    mode tcp</span><br><span class="line">frontend lb-app-pi</span><br><span class="line">    bind *:8080</span><br><span class="line">    default_backend servers</span><br><span class="line">backend servers</span><br><span class="line">    balance roundrobin</span><br><span class="line">    server server1 localhost:8081</span><br><span class="line">    server server2 localhost:8082</span><br><span class="line">    server server3 localhost:8083</span><br><span class="line">    server server4 localhost:8084</span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645933588528-75253283-131e-4fb4-be76-3571082a182f.png" alt="image.png"></p>
+<h2 id="启动后端服务器"><a href="#启动后端服务器" class="headerlink" title="启动后端服务器"></a>启动后端服务器</h2><p>启动四个cpu使用0.5核的服务器<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645933828830-3bd3df13-0fdb-44a8-a4aa-bc18cf866395.png" alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645933854007-a735992b-9e8d-470b-9c05-150e70298fde.png" alt="image.png"></p>
+<h2 id="测试单服务器性能"><a href="#测试单服务器性能" class="headerlink" title="测试单服务器性能"></a>测试单服务器性能</h2><p>先负载均衡中只使用一台服务器，相当于所以请求还是都到一台服务器内了。<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645961124966-53c62f46-7ee7-4a56-96d5-8dde75c22f24.png" alt="image.png"><br>设置Gatling进行压力测试<br>设置场景为100个并发的请求<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645934436405-95350d29-4fbb-46ce-8b37-4912c556c11c.png" alt="image.png"></p>
+<h3 id="启动HAProxy"><a href="#启动HAProxy" class="headerlink" title="启动HAProxy"></a>启动HAProxy</h3><p><code>haproxy - f haproxy.cfg</code><br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645959099467-5e5babb0-d6ec-4fa7-956c-0938828acad5.png" alt="image.png"><br>(警告是缺少某些配置项的设置，不过暂不影响)</p>
+<h3 id="压力测试-1"><a href="#压力测试-1" class="headerlink" title="压力测试"></a>压力测试</h3><p>在100并发下的测试：<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645959756987-0590149e-eaff-4961-811f-e87c50b28ad2.png" alt="image.png"><br>1个0.5核服务器在100个并发下，基本上是快卡死了的状态，平均等待50s，一半多都失败了。</p>
+<h2 id="测试2台服务器负载均衡后的性能"><a href="#测试2台服务器负载均衡后的性能" class="headerlink" title="测试2台服务器负载均衡后的性能"></a>测试2台服务器负载均衡后的性能</h2><p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645959994854-4cfbd2ea-5a83-4ae6-8037-aff5be7c6f27.png" alt="image.png"></p>
+<h3 id="压力测试-2"><a href="#压力测试-2" class="headerlink" title="压力测试"></a>压力测试</h3><p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645960096333-d02d247a-ad2d-4651-a1e2-06cf68777275.png" alt="image.png"><br>所有请求都正确得到响应了，平均时间变成了37秒多，性能得到了不错的提升。</p>
+<h2 id="继续增加服务器进行测试"><a href="#继续增加服务器进行测试" class="headerlink" title="继续增加服务器进行测试"></a>继续增加服务器进行测试</h2><p>三台服务器下的测试：<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645960333033-abb33cdc-ddea-4231-839a-0b505068a1b0.png" alt="image.png"><br>平均响应时间变为24.7秒<br>四台服务器下进行测试：<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645961043829-33c6c705-0f65-4260-9f59-540276f1dd2c.png" alt="image.png"><br>平均响应时间加快到了17.5秒<br>水平向扩展，大致即为通过堆资源的方式，提高服务器数量来提高总体服务的性能。</p>
+<h1 id="缓存和会话管理问题"><a href="#缓存和会话管理问题" class="headerlink" title="缓存和会话管理问题"></a>缓存和会话管理问题</h1><p>每次请求服务器实际上计算的都是相同精度的PI值，既然精度相同，那么每次都执行同样计算则是没有必要的，若是对系统在进行优化，则需要考虑如何避免这种重复的计算。<br>对于这个问题，可以通过缓存的方式来处理。</p>
+<h2 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h2><p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1646032824696-56e46a8e-656f-4ab7-8719-1fb2a9464f28.png" alt="image.png"><br>浏览器中，便通过缓存的方式来避免下载重复页面或者图片。服务器也可以通过缓存的方式，来简化每次请求都进行的相同的复杂计算。如果用户请求的是相同的计算，则可以把之前的计算结果响应回去，不需要重新计算。</p>
+<h3 id="引入Spring提供的一种缓存机制"><a href="#引入Spring提供的一种缓存机制" class="headerlink" title="引入Spring提供的一种缓存机制"></a>引入Spring提供的一种缓存机制</h3><p>引入依赖</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-cache<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>修改代码<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1646033700912-200e9f2c-ff4d-459f-9722-463eb5ee4597.png" alt="image.png"><br><img src="https://gitee.com/gezilzq/image-host/raw/master//img/1646033712741-14db2093-16e9-483e-a5c1-305ec5f5e42f.png" alt="image.png"><br><strong>过程</strong><br>运行前，spring会扫描所有添加<code>@Cacheable</code>注解的方法，并在方法调用前插入一段拦截代码，当在此调用这个方法时，拦截代码会检查之前有没有调用过，有没有保存过缓存，如果有缓存，则缓存就返回了，如果没有则再继续执行这个方法，这个代码的结果会再作为结果缓存下来。<br><strong>测试</strong><br><img src="https://gitee.com/gezilzq/image-host/raw/master//img/1646034420881-6f3cdc13-77f7-473d-84b3-52e899fd131d.png" alt="image.png"><br>第一次计算后，PI值就被记录在缓存中，后续请求不再进行计算直接返回了。</p>
+<h3 id="再进行水平向扩展"><a href="#再进行水平向扩展" class="headerlink" title="再进行水平向扩展"></a>再进行水平向扩展</h3><p>打包镜像<code>app-pi-cache</code><br><img src="https://gitee.com/gezilzq/image-host/raw/master//img/1646034760329-90bd91f0-3055-4f84-b979-60286d8f569b.png" alt="image.png"><br>启动镜像，生成四个容器<br><code>docker run -d --name app-pi-cache-1 --cpus=0.5 -p 8081:8080 app-pi-cache</code><br><img src="https://gitee.com/gezilzq/image-host/raw/master//img/1646035177023-d0fbc985-c8ba-41a4-9d65-6a78aaacb288.png" alt="image.png"><br>启动Haproxy<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1646035263242-697c414d-fd96-42db-a819-87d11a2c7bbd.png" alt="image.png"><br>测试（100个并发下）<br><img src="https://gitee.com/gezilzq/image-host/raw/master//img/1646035424655-5746fdc9-1cc3-4b03-8716-0ef457b0aa02.png" alt="image.png"></p>
+<h2 id="会话管理"><a href="#会话管理" class="headerlink" title="会话管理"></a>会话管理</h2><p>若是每次请求中含有参数，可以指定所计算的PI的精度。但由于水平向扩展时，每个Server都是独立的，可能会出现一个服务器已经计算了某个精度的PI，另一个服务器又重新计算了相同精度的PI，两个服务器之间有了重复的计算。</p>
+<h2 id="会话"><a href="#会话" class="headerlink" title="会话"></a>会话</h2><p><img src="https://gitee.com/gezilzq/image-host/raw/master//img/1646038438311-9931efd2-6757-4000-9c26-93ca3e6c1bd3.png" alt="image.png"></p>
+<h3 id="修改代码-增加会话"><a href="#修改代码-增加会话" class="headerlink" title="修改代码-增加会话"></a>修改代码-增加会话</h3><p><img src="https://gitee.com/gezilzq/image-host/raw/master//img/1646039802242-415abbe8-f5d8-4bc8-9b12-82ae0254d7da.png" alt="image.png"><br>测试<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1646043856036-e6aa5c93-3cf9-4c48-8a4b-817c8eafff5d.png" alt="image.png"><br><img src="https://gitee.com/gezilzq/image-host/raw/master//img/1646044039910-eec862e8-b6d5-4993-bd43-59776c46bb51.png" alt="image.png"></p>
+<h3 id="测试-1"><a href="#测试-1" class="headerlink" title="测试"></a>测试</h3><p>直接在springboot内启动，</p>
+<ul>
+<li><code>application.properties</code>内添加 server.port=8081 指定端口号</li>
+<li>命令行内运行<code>mvn spring-boot:run </code>启动项目</li>
+</ul>
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1646044913806-ed6cd8f8-8350-4609-97e4-40d61b10a420.png" alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1646048549669-b5462fbb-98ac-44ed-a00d-ee4eaf0f46d7.png" alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1646048568057-6d4cd630-e0d2-4cc4-9e86-e1f46d33b397.png" alt="image.png"><br>以下未实操：<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1646048777432-27667cff-253e-42f5-bb3c-7ddc221a8e42.png" alt="image.png"><br>按之前的方式，请求会被轮着分给不同的服务器，会话无法正常建立，总是会把前一个Server返回的SessionId返回给另一个Server，而另一个Server不认识这个SessionId,则会再又生成一个Session，但在另一台Server仍然无法用。</p>
+<h2 id="如何解决水平扩展系统中的缓存和会话等状态问题？"><a href="#如何解决水平扩展系统中的缓存和会话等状态问题？" class="headerlink" title="如何解决水平扩展系统中的缓存和会话等状态问题？"></a>如何解决水平扩展系统中的缓存和会话等状态问题？</h2><p>整个集群中，每一个节点的缓存，都需要通过一种机制，使得所有的计算节点都去共享缓存，使得提高缓存的效率。<br>对于会话来说，每个节点所维护的会话状态，都应该跟用户发来的请求进行关联，这样才能保证用户的请求发到某一个跟他之前建立过会话的服务器上，以免出现错误。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/02/26/%E5%90%8E%E7%AB%AF%E6%B8%B2%E6%9F%93%20%E5%89%8D%E7%AB%AF%E6%B8%B2%E6%9F%93%20%E4%B8%8E%20%E6%A8%A1%E6%9D%BF%E5%BC%95%E6%93%8E/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
+      <meta itemprop="name" content="gezi_lzq">
+      <meta itemprop="description" content="Blog of lizhenqi ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gezi's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/02/26/%E5%90%8E%E7%AB%AF%E6%B8%B2%E6%9F%93%20%E5%89%8D%E7%AB%AF%E6%B8%B2%E6%9F%93%20%E4%B8%8E%20%E6%A8%A1%E6%9D%BF%E5%BC%95%E6%93%8E/" class="post-title-link" itemprop="url">后端渲染 前端渲染</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-02-26 00:00:00" itemprop="dateCreated datePublished" datetime="2022-02-26T00:00:00+08:00">2022-02-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-02-28 20:11:28" itemprop="dateModified" datetime="2022-02-28T20:11:28+08:00">2022-02-28</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/web%E5%BC%80%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">web开发</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <blockquote>
+<p>曾经在学习过程中，对于javaweb中的jsp,前后端分离开发时的vue,React前端框架，springboot的Thymeleaf模板引擎等等，均没有什么概念，也不知道发生了什么，直观感受就是通过某个黑盒搞成了一个html页面显示在了浏览器上面。<br>产生此困惑的主要原因还是在于自己在学习规划时有些好高骛远，有些原始的写法不够了解，导致对有些概念不清楚，只是知道某些技术，而不清楚他们的区别。<br>通过前段时间学习开发的一个Django框架的游戏项目，和最近学校学习的jsp，我逐渐产生一些概念，故整理出来。</p>
+</blockquote>
+<h1 id="HTML"><a href="#HTML" class="headerlink" title="HTML"></a>HTML</h1><p>若想要理清其中的脉络，不如从技术的发展来看。<br>首先我们要跟随HTML的脚步出发，HTML是Hypertext Markup Language（超文本标记语言）的缩写，是Web用于编辑网页的主要工具。<br>浏览器通过读取html文件，生成dom树，将信息展示在页面上。<br>我们所看到的各个网页，均为一个个html文件，而html文件，说白了也只是一个很长字符串。<br>所以说，我们查看的网页均为浏览器读取这个html文件内的字符串所产生的<br>那html文件的内容是如何来的呢？</p>
+<h2 id="静态页面"><a href="#静态页面" class="headerlink" title="静态页面"></a>静态页面</h2><p>如果你要建设一篇文章的网页，那完全可以先编译器内制作出来该文章的html<br>然后把该html文件放置在服务器内，谁想请求查看这篇文章的网页<br>服务器则只需要把该文件发送过去<br>浏览器接收到此html文件后，解析生成网页，一切就完成了。<br>可现实世界，并没有那么简单。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/02/26/%E5%90%8E%E7%AB%AF%E6%B8%B2%E6%9F%93%20%E5%89%8D%E7%AB%AF%E6%B8%B2%E6%9F%93%20%E4%B8%8E%20%E6%A8%A1%E6%9D%BF%E5%BC%95%E6%93%8E/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/02/24/Oauth2%E6%8E%88%E6%9D%83%E5%AE%9E%E8%B7%B5%EF%BC%88acwing%E4%B8%80%E9%94%AE%E7%99%BB%E5%BD%95%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
+      <meta itemprop="name" content="gezi_lzq">
+      <meta itemprop="description" content="Blog of lizhenqi ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gezi's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/02/24/Oauth2%E6%8E%88%E6%9D%83%E5%AE%9E%E8%B7%B5%EF%BC%88acwing%E4%B8%80%E9%94%AE%E7%99%BB%E5%BD%95%EF%BC%89/" class="post-title-link" itemprop="url">Oauth2授权实践(Acwing一键登录)</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-02-24 00:00:00" itemprop="dateCreated datePublished" datetime="2022-02-24T00:00:00+08:00">2022-02-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-02-28 20:36:09" itemprop="dateModified" datetime="2022-02-28T20:36:09+08:00">2022-02-28</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/web%E5%BC%80%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">web开发</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645690023476-8ccd5e3c-f06e-4dc3-bd72-bc2cd1b2625c.png" alt="image.png"></p>
+<h2 id="修改用户数据表"><a href="#修改用户数据表" class="headerlink" title="修改用户数据表"></a>修改用户数据表</h2><h3 id="修改model文件"><a href="#修改model文件" class="headerlink" title="修改model文件"></a>修改model文件</h3><ul>
+<li>增加openid字段</li>
+</ul>
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645692188670-e8ee3bb2-9f46-4967-b358-dfd0c426f41e.png" alt="image.png"></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/02/24/Oauth2%E6%8E%88%E6%9D%83%E5%AE%9E%E8%B7%B5%EF%BC%88acwing%E4%B8%80%E9%94%AE%E7%99%BB%E5%BD%95%EF%BC%89/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/02/22/Django%E5%AF%B9%E6%8E%A5Redis/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
+      <meta itemprop="name" content="gezi_lzq">
+      <meta itemprop="description" content="Blog of lizhenqi ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gezi's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/02/22/Django%E5%AF%B9%E6%8E%A5Redis/" class="post-title-link" itemprop="url">Django对接Redis</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-02-22 00:00:00" itemprop="dateCreated datePublished" datetime="2022-02-22T00:00:00+08:00">2022-02-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-02-28 20:38:41" itemprop="dateModified" datetime="2022-02-28T20:38:41+08:00">2022-02-28</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/web%E5%BC%80%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">web开发</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ol>
+<li><p>安装命令</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install django_redis</span><br></pre></td></tr></table></figure></li>
+<li><p> 配置settings.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">CACHES = &#123; </span><br><span class="line">    <span class="string">&#x27;default&#x27;</span>: &#123;</span><br><span class="line">        <span class="string">&#x27;BACKEND&#x27;</span>: <span class="string">&#x27;django_redis.cache.RedisCache&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;LOCATION&#x27;</span>: <span class="string">&#x27;redis://127.0.0.1:6379/1&#x27;</span>,</span><br><span class="line">        <span class="string">&quot;OPTIONS&quot;</span>: &#123;</span><br><span class="line">            <span class="string">&quot;CLIENT_CLASS&quot;</span>: <span class="string">&quot;django_redis.client.DefaultClient&quot;</span>,</span><br><span class="line">        &#125;,  </span><br><span class="line">    &#125;,  </span><br><span class="line">&#125;</span><br><span class="line">USER_AGENTS_CACHE = <span class="string">&#x27;default&#x27;</span></span><br></pre></td></tr></table></figure></li>
+<li><p> 启动redis-server</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo redis<span class="literal">-server</span> /etc/redis/redis.conf</span><br></pre></td></tr></table></figure>
+<!--mor--></li>
+</ol>
+<p>测试：</p>
+<ol>
+<li>启动python shell  <code>python3 manage.py shell</code></li>
+<li>引入相关包 <code>from django.core.cache import cache</code></li>
+<li>语法：</li>
+</ol>
+<ul>
+<li><code>cache.keys(&quot;*&quot;)</code>：返回存储是所有<code>key</code>（可按照正则表达式匹配）</li>
+<li><code>cache.set(&quot;lzq&quot;,1,5)</code>：加入一个key-value对（lzq-1），5秒后过期</li>
+<li><code>cache.set(&quot;key&quot;,&quot;value&quot;,None)</code>：加入一个key-value对，不会过期</li>
+<li><code>cache.has_key(&quot;key&quot;)</code>:查询某个Key是否存在</li>
+<li><code>cache.get(&quot;lzq&quot;)</code>：获得某个键的值</li>
+<li><code>cache.delete(&quot;lzq&quot;)</code>:删除某个键值对</li>
+<li></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/02/15/%EF%BC%88CS106b%EF%BC%89%E5%AE%89%E8%A3%85Qt%20Creator/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
+      <meta itemprop="name" content="gezi_lzq">
+      <meta itemprop="description" content="Blog of lizhenqi ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gezi's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/02/15/%EF%BC%88CS106b%EF%BC%89%E5%AE%89%E8%A3%85Qt%20Creator/" class="post-title-link" itemprop="url">(CS106)安装Qt Creator</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-02-15 00:00:00" itemprop="dateCreated datePublished" datetime="2022-02-15T00:00:00+08:00">2022-02-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-02-28 20:42:33" itemprop="dateModified" datetime="2022-02-28T20:42:33+08:00">2022-02-28</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CS106/" itemprop="url" rel="index"><span itemprop="name">CS106</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><a target="_blank" rel="noopener" href="https://web.stanford.edu/dept/cs_edu/resources/qt/install-windows">步骤</a></p>
+<h2 id="下载Qt-installer"><a href="#下载Qt-installer" class="headerlink" title="下载Qt installer"></a>下载Qt installer</h2><p> <a target="_blank" rel="noopener" href="https://www.qt.io/download-qt-installer">https://www.qt.io/download-qt-installer</a><br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645089732575-dce5e2a9-3fc9-4fda-977b-471e7b59a576.png" alt="image.png"></p>
+<h2 id="运行安装程序"><a href="#运行安装程序" class="headerlink" title="运行安装程序"></a>运行安装程序</h2><p>第一步需要注册一个账号，然后下面大多都是Next or Agree<br>其中需要注意的是</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/02/15/%EF%BC%88CS106b%EF%BC%89%E5%AE%89%E8%A3%85Qt%20Creator/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/25/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6%E7%9A%84%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%EF%BC%88%E7%8E%AF%E5%A2%83%E7%AF%87%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
+      <meta itemprop="name" content="gezi_lzq">
+      <meta itemprop="description" content="Blog of lizhenqi ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gezi's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/25/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6%E7%9A%84%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%EF%BC%88%E7%8E%AF%E5%A2%83%E7%AF%87%EF%BC%89/" class="post-title-link" itemprop="url">智能合约的最佳实践（环境篇）</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-01-25 00:00:00" itemprop="dateCreated datePublished" datetime="2022-01-25T00:00:00+08:00">2022-01-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-02-28 20:46:12" itemprop="dateModified" datetime="2022-02-28T20:46:12+08:00">2022-02-28</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%8C%BA%E5%9D%97%E9%93%BE/" itemprop="url" rel="index"><span itemprop="name">区块链</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <blockquote>
+<p>本篇参考与<a target="_blank" rel="noopener" href="https://yos.io/2019/11/10/smart-contract-development-best-practices/">Best Practices for Smart Contract Development</a>进行个人翻译与加工</p>
+</blockquote>
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1643046289642-09caed8a-b0df-4207-83da-38965102e88f.png" alt="image.png"><br>​</p>
+<p>软件开发已经经历了数十年，在这半个世纪的开发过程，所积累下来了许多最佳的开发实践，设计模式等，这些优雅的智慧使我们受益匪浅。<br>相比之下，智能合约开发才刚刚开始，2015年推出的 Ethereum 和 solidarity，仅仅是几年前的事情。<br>密码空间（crypto space）是一个不断发展的未知领域。没有一个确定的技术栈来构建去中心化的应用程序；没有一个针对智能合约的开发者手册，像是<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Design_Patterns">Design Patterns</a> or <a target="_blank" rel="noopener" href="https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882">Clean Code</a>。各种技术与最佳实践的层出不穷。<br>你正在阅读我希望存在的那本失踪的指南。这篇文章记录了我从编写智能合约，构建分布式应用程序和开源项目中的所学到经验教训。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/01/25/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6%E7%9A%84%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%EF%BC%88%E7%8E%AF%E5%A2%83%E7%AF%87%EF%BC%89/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/09/Thrift%E7%9A%84%E4%BD%BF%E7%94%A8%E5%AE%9E%E8%B7%B5/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -519,545 +1096,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/10/01/Webpack%E6%89%93%E5%8C%85ts%E4%BB%A3%E7%A0%81/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
-      <meta itemprop="name" content="gezi_lzq">
-      <meta itemprop="description" content="Blog of lizhenqi ">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gezi's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/10/01/Webpack%E6%89%93%E5%8C%85ts%E4%BB%A3%E7%A0%81/" class="post-title-link" itemprop="url">Webpack打包ts代码</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-10-01 00:00:00 / Modified: 15:45:40" itemprop="dateCreated datePublished" datetime="2021-10-01T00:00:00+08:00">2021-10-01</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">前端学习</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%AD%A6%E4%B9%A0/TypeScript/" itemprop="url" rel="index"><span itemprop="name">TypeScript</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h2><h3 id="初始化项目"><a href="#初始化项目" class="headerlink" title="初始化项目"></a>初始化项目</h3><ul>
-<li>命令行运行</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm init -y</span><br></pre></td></tr></table></figure>
-<p>生成了一个package.json</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">Wrote to F:\Project\Learn\TypeStript\code\part3\package.json:</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  &quot;name&quot;: &quot;part3&quot;,</span><br><span class="line">  &quot;version&quot;: &quot;1.0.0&quot;,</span><br><span class="line">  &quot;description&quot;: &quot;&quot;,</span><br><span class="line">  &quot;main&quot;: &quot;index.js&quot;,</span><br><span class="line">  &quot;scripts&quot;: &#123;</span><br><span class="line">    &quot;test&quot;: &quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;keywords&quot;: [],</span><br><span class="line">  &quot;author&quot;: &quot;&quot;,</span><br><span class="line">  &quot;license&quot;: &quot;ISC&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/10/01/Webpack%E6%89%93%E5%8C%85ts%E4%BB%A3%E7%A0%81/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/09/29/%E5%BC%B9%E6%80%A7%E7%9B%92%E5%AD%90flex/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
-      <meta itemprop="name" content="gezi_lzq">
-      <meta itemprop="description" content="Blog of lizhenqi ">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gezi's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/09/29/%E5%BC%B9%E6%80%A7%E7%9B%92%E5%AD%90flex/" class="post-title-link" itemprop="url">弹性盒子`flex`记录</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-09-29 00:00:00" itemprop="dateCreated datePublished" datetime="2021-09-29T00:00:00+08:00">2021-09-29</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-10-01 15:31:40" itemprop="dateModified" datetime="2021-10-01T15:31:40+08:00">2021-10-01</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">前端学习</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%AD%A6%E4%B9%A0/CSS/" itemprop="url" rel="index"><span itemprop="name">CSS</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="父项常见属性"><a href="#父项常见属性" class="headerlink" title="父项常见属性"></a>父项常见属性</h3><ul>
-<li><code>flex-direction</code>：设置主轴的方向。</li>
-<li><code>justify-content</code>: 设置主轴上的子元素排列方式</li>
-<li><code>flex-wrap</code>:设置子元素是否换行</li>
-<li><code>align-content</code>：设置侧轴上的子元素排列方式（多行）</li>
-<li><code>align-items</code>: 设置侧轴上的子元素排列方式（单行）</li>
-<li><code>flex-flow</code>: 复合属性，相当于同时设置了<code>flex-direction</code>和<code>flex-wrap</code></li>
-</ul>
-<h3 id="子项常见属性"><a href="#子项常见属性" class="headerlink" title="子项常见属性"></a>子项常见属性</h3><ul>
-<li><code>flex</code>子项目占的份数</li>
-<li><code>align-self</code>控制子项自己在侧轴的排列方式</li>
-<li><code>order</code>属性定义子项的排列顺序（前后顺序）</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/09/26/%E5%B8%83%E5%B1%80/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
-      <meta itemprop="name" content="gezi_lzq">
-      <meta itemprop="description" content="Blog of lizhenqi ">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gezi's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/09/26/%E5%B8%83%E5%B1%80/" class="post-title-link" itemprop="url">布局学习记录</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-09-26 00:00:00" itemprop="dateCreated datePublished" datetime="2021-09-26T00:00:00+08:00">2021-09-26</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-10-01 15:34:12" itemprop="dateModified" datetime="2021-10-01T15:34:12+08:00">2021-10-01</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">前端学习</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%AD%A6%E4%B9%A0/CSS/" itemprop="url" rel="index"><span itemprop="name">CSS</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="浮动（float"><a href="#浮动（float" class="headerlink" title="浮动（float)"></a>浮动（float)</h2><blockquote>
-<p>网页布局第一准则:多个块级元素纵向排列找标准流,<strong>多个块级元素横向排列找浮动</strong>。</p>
-<p>网页布局第二准则:先设置盒子大小,之后设置盒子的位置.</p>
-</blockquote>
-<p>浮动最典型的应用：可以让多个块级元素一行内排列显示。</p>
-<p><code>float</code>属性用于创建浮动框,将其移动到一边,直到左边缘或右边缘触及包含块或另一个浮动框的边缘。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/09/26/%E5%B8%83%E5%B1%80/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/09/25/%E9%80%89%E6%8B%A9%E5%99%A8%E8%AE%B0%E5%BD%95/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
-      <meta itemprop="name" content="gezi_lzq">
-      <meta itemprop="description" content="Blog of lizhenqi ">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gezi's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/09/25/%E9%80%89%E6%8B%A9%E5%99%A8%E8%AE%B0%E5%BD%95/" class="post-title-link" itemprop="url">选择器记录</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-09-25 00:00:00" itemprop="dateCreated datePublished" datetime="2021-09-25T00:00:00+08:00">2021-09-25</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-10-01 15:32:26" itemprop="dateModified" datetime="2021-10-01T15:32:26+08:00">2021-10-01</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">前端学习</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%AD%A6%E4%B9%A0/CSS/" itemprop="url" rel="index"><span itemprop="name">CSS</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="使用全局选择器，让选择器更易读"><a href="#使用全局选择器，让选择器更易读" class="headerlink" title="使用全局选择器，让选择器更易读"></a><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Learn/CSS/Building_blocks/Selectors/Type_Class_and_ID_Selectors#%E4%BD%BF%E7%94%A8%E5%85%A8%E5%B1%80%E9%80%89%E6%8B%A9%E5%99%A8%EF%BC%8C%E8%AE%A9%E9%80%89%E6%8B%A9%E5%99%A8%E6%9B%B4%E6%98%93%E8%AF%BB">使用全局选择器，让选择器更易读</a></h3><p>全局选择器的一种用法是让选择器更易读，更明显地表明它们的作用。例如，如果我想选中任何<code>&lt;article&gt;</code>元素的第一子元素，不论它是什么元素，都给它加粗，我可以将<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/:first-child"><code>:first-child</code></a>选择器（我们将会在<a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Selectors/Pseudo-classes_and_pseudo-elements">伪类和伪元素</a>课中进一步了解）用作<code>&lt;article&gt;</code>元素选择器的一个兄弟选择器：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">article :first-child &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>但是这会和<code>article:first-child</code>混淆，而后者选择了作为其他元素的第一子元素的<code>&lt;article&gt;</code>元素。</p>
-<p>为了避免这种混淆，我们可以向<code>:first-child</code>选择器加入全局选择器，这样选择器所做的事情很容易就能看懂。选择器正选中<code>&lt;article&gt;</code>元素的<em>任何</em>第一子元素：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">article *:first-child &#123;</span><br><span class="line"></span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/09/25/%E9%80%89%E6%8B%A9%E5%99%A8%E8%AE%B0%E5%BD%95/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/09/24/Learn%20CSS(%E4%BA%8C)/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
-      <meta itemprop="name" content="gezi_lzq">
-      <meta itemprop="description" content="Blog of lizhenqi ">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gezi's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/09/24/Learn%20CSS(%E4%BA%8C)/" class="post-title-link" itemprop="url">Learn CSS（二）</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-09-24 00:00:00" itemprop="dateCreated datePublished" datetime="2021-09-24T00:00:00+08:00">2021-09-24</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-10-01 15:34:59" itemprop="dateModified" datetime="2021-10-01T15:34:59+08:00">2021-10-01</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">前端学习</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%AD%A6%E4%B9%A0/CSS/" itemprop="url" rel="index"><span itemprop="name">CSS</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="CSS-布局"><a href="#CSS-布局" class="headerlink" title="CSS 布局"></a>CSS 布局</h1><h2 id="display-属性"><a href="#display-属性" class="headerlink" title="display 属性"></a>display 属性</h2><ul>
-<li><code>display</code> 属性规定是否/如何显示元素。</li>
-</ul>
-<p>每个 HTML 元素都有一个默认的 display 值，具体取决于它的元素类型。大多数元素的默认 display 值为 <code>block</code> 或 <code>inline</code>。</p>
-<p><code>display: none; </code>通常与 JavaScript 一起使用，以隐藏和显示元素，而无需删除和重新创建它们。</p>
-<p>默认情况下，<code>&lt;script&gt;</code> 元素使用 <code>display: none;</code>。</p>
-<h4 id="块级元素（block-element）"><a href="#块级元素（block-element）" class="headerlink" title="块级元素（block element）"></a>块级元素（block element）</h4><p>块级元素总是从新行开始，并占据可用的全部宽度（尽可能向左和向右伸展）。</p>
-<p>如<code>div</code>,<code>h</code>,<code>p</code>,<code>form</code>,<code>header</code>,<code>footer</code></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/09/24/Learn%20CSS(%E4%BA%8C)/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/09/24/%E5%B1%82%E5%8F%A0%E4%B8%8E%E7%BB%A7%E6%89%BF/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
-      <meta itemprop="name" content="gezi_lzq">
-      <meta itemprop="description" content="Blog of lizhenqi ">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gezi's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/09/24/%E5%B1%82%E5%8F%A0%E4%B8%8E%E7%BB%A7%E6%89%BF/" class="post-title-link" itemprop="url">层叠与继承记录</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-09-24 00:00:00" itemprop="dateCreated datePublished" datetime="2021-09-24T00:00:00+08:00">2021-09-24</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-10-01 15:33:17" itemprop="dateModified" datetime="2021-10-01T15:33:17+08:00">2021-10-01</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">前端学习</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%AD%A6%E4%B9%A0/CSS/" itemprop="url" rel="index"><span itemprop="name">CSS</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <blockquote>
-<p>最基本的概念——层叠、优先级和继承——这些概念决定着如何将CSS应用到HTML中，以及如何解决冲突。  </p>
-</blockquote>
-<h2 id="冲突规则"><a href="#冲突规则" class="headerlink" title="冲突规则"></a><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Learn/CSS/Building_blocks/Cascade_and_inheritance#%E5%86%B2%E7%AA%81%E8%A7%84%E5%88%99">冲突规则</a></h2><p>CSS代表**层叠样式表(Cascading Style Sheets)*<em>，理解第一个词</em>cascading*很重要— cascade 的表现方式是理解CSS的关键。</p>
-<p>在某些时候，在做一个项目过程中你会发现一些应该产生效果的样式没有生效。</p>
-<p>通常的原因是你创建了两个应用于同一个元素的规则。<strong>cascade</strong>, 和它密切相关的概念是 <strong>specificity</strong>，决定在发生冲突的时候应该使用哪条规则。设计元素样式的规则可能不是期望的规则，因此需要了解这些机制是如何工作的。</p>
-<p>这里也有<strong>继承</strong>的概念，也就是在默认情况下，一些css属性继承当前元素的父元素上设置的值，有些则不继承。这也可能导致一些和期望不同的结果。</p>
-<p>我们来快速的看下正在处理的关键问题，然后依次了解它们是如何相互影响的，以及如何和css交互的。虽然这些概念难以理解，但是随着不断的练习，你会慢慢熟悉它的工作原理。</p>
-<h3 id="层叠"><a href="#层叠" class="headerlink" title="层叠"></a><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Learn/CSS/Building_blocks/Cascade_and_inheritance#%E5%B1%82%E5%8F%A0">层叠</a></h3><p>Stylesheets <strong>cascade（样式表层叠）</strong> — 简单的说，<strong>css规则的顺序很重要</strong>；当应用两条同级别的规则到一个元素的时候，写在后面的就是实际使用的规则。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/09/24/%E5%B1%82%E5%8F%A0%E4%B8%8E%E7%BB%A7%E6%89%BF/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1129,20 +1167,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">23</span>
+          <span class="site-state-item-count">29</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories">
           
-        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-count">17</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags">
           
-        <span class="site-state-item-count">24</span>
+        <span class="site-state-item-count">35</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>

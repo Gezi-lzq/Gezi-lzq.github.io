@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="本篇参考与Best Practices for Smart Contract Development进行个人翻译与加工  ​ 软件开发已经经历了数十年，在这半个世纪的开发过程，所积累下来了许多最佳的开发实践，设计模式等，这些优雅的智慧使我们受益匪浅。相比之下，智能合约开发才刚刚开始，2015年推出的 Ethereum 和 solidarity，仅仅是几年前的事情。密码空间（crypto spac">
+<meta property="og:type" content="article">
+<meta property="og:title" content="智能合约的最佳实践（环境篇）">
+<meta property="og:url" content="http://example.com/2022/01/25/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6%E7%9A%84%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%EF%BC%88%E7%8E%AF%E5%A2%83%E7%AF%87%EF%BC%89/index.html">
+<meta property="og:site_name" content="Gezi&#39;s blog">
+<meta property="og:description" content="本篇参考与Best Practices for Smart Contract Development进行个人翻译与加工  ​ 软件开发已经经历了数十年，在这半个世纪的开发过程，所积累下来了许多最佳的开发实践，设计模式等，这些优雅的智慧使我们受益匪浅。相比之下，智能合约开发才刚刚开始，2015年推出的 Ethereum 和 solidarity，仅仅是几年前的事情。密码空间（crypto spac">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1643046289642-09caed8a-b0df-4207-83da-38965102e88f.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1643047355308-9abcac53-de90-4793-b420-71b85f0df4fe.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1643047526951-ba66e17b-b093-486f-998c-e51bc99b15ad.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1643048821326-8ae94a92-d08f-45c4-aa47-c932bdb4132a.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1643049046981-e76e66d1-c370-4d34-a8ea-b8d558903748.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1643049620352-930ce992-dd7c-4411-85c7-c58d4f821541.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1643049741485-acde6dc7-c3b1-4319-b739-ed6124cf11eb.png">
+<meta property="article:published_time" content="2022-01-24T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-02-28T12:46:12.716Z">
+<meta property="article:author" content="gezi_lzq">
+<meta property="article:tag" content="智能合约">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1643046289642-09caed8a-b0df-4207-83da-38965102e88f.png">
+
+<link rel="canonical" href="http://example.com/2022/01/25/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6%E7%9A%84%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%EF%BC%88%E7%8E%AF%E5%A2%83%E7%AF%87%EF%BC%89/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>智能合约的最佳实践（环境篇） | Gezi's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Gezi's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/25/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6%E7%9A%84%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%EF%BC%88%E7%8E%AF%E5%A2%83%E7%AF%87%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
+      <meta itemprop="name" content="gezi_lzq">
+      <meta itemprop="description" content="Blog of lizhenqi ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gezi's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          智能合约的最佳实践（环境篇）
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-01-25 00:00:00" itemprop="dateCreated datePublished" datetime="2022-01-25T00:00:00+08:00">2022-01-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-02-28 20:46:12" itemprop="dateModified" datetime="2022-02-28T20:46:12+08:00">2022-02-28</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%8C%BA%E5%9D%97%E9%93%BE/" itemprop="url" rel="index"><span itemprop="name">区块链</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>本篇参考与<a target="_blank" rel="noopener" href="https://yos.io/2019/11/10/smart-contract-development-best-practices/">Best Practices for Smart Contract Development</a>进行个人翻译与加工</p>
+</blockquote>
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1643046289642-09caed8a-b0df-4207-83da-38965102e88f.png" alt="image.png"><br>​</p>
+<p>软件开发已经经历了数十年，在这半个世纪的开发过程，所积累下来了许多最佳的开发实践，设计模式等，这些优雅的智慧使我们受益匪浅。<br>相比之下，智能合约开发才刚刚开始，2015年推出的 Ethereum 和 solidarity，仅仅是几年前的事情。<br>密码空间（crypto space）是一个不断发展的未知领域。没有一个确定的技术栈来构建去中心化的应用程序；没有一个针对智能合约的开发者手册，像是<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Design_Patterns">Design Patterns</a> or <a target="_blank" rel="noopener" href="https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882">Clean Code</a>。各种技术与最佳实践的层出不穷。<br>你正在阅读我希望存在的那本失踪的指南。这篇文章记录了我从编写智能合约，构建分布式应用程序和开源项目中的所学到经验教训。</p>
+<span id="more"></span>
+
+<h1 id="这是给谁的"><a href="#这是给谁的" class="headerlink" title="这是给谁的"></a>这是给谁的</h1><p>本手册适用于:</p>
+<ul>
+<li>开发人员刚刚开始与智能合同</li>
+<li>有经验的Solidity开发者，希望将他们的工作提升到一个新的水平</li>
+</ul>
+<p>若你是一个新接触crypto的开发者，如果这篇指南对你有帮助，请告诉我。<br>另外，本文章不是为了介绍Solidity指南。<br>​</p>
+<h1 id="使用开发环境"><a href="#使用开发环境" class="headerlink" title="使用开发环境"></a>使用开发环境</h1><p>使用一个开发环境，如同<a target="_blank" rel="noopener" href="https://www.trufflesuite.com/">Truffle</a> (alternatively, <a target="_blank" rel="noopener" href="https://github.com/embarklabs/embark">Embark</a>, <a target="_blank" rel="noopener" href="https://buidler.dev/">Buidler</a> <a target="_blank" rel="noopener" href="http://dapp.tools/">dapp.tools</a>)去提供效率。<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1643047355308-9abcac53-de90-4793-b420-71b85f0df4fe.png" alt="image.png"><br>使用一个开发环境可以加速一些重复性工作，如图：</p>
+<ul>
+<li>编译合约</li>
+<li>发布合约</li>
+<li>debug合约</li>
+<li>升级合约</li>
+<li>运行单元测试</li>
+</ul>
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1643047526951-ba66e17b-b093-486f-998c-e51bc99b15ad.png" alt="image.png"><br>例如，Truffle 提供以下很有帮助且开盒即用的命令：</p>
+<ul>
+<li><code>compile</code>：将 智能合约 编译为ABI和字节格式。</li>
+<li><code>console</code>：实例化出一个可交互式的JS控制台使你可以与你的web3合约调用互动。</li>
+<li><code>test</code>：运行合约的单元测试</li>
+<li><code>migrate</code>：发布你的合约到网络上</li>
+</ul>
+<p>Truffle支持提供增加特性的插件，例如 <a target="_blank" rel="noopener" href="https://github.com/ConsenSys/truffle-security">truffle-security</a> 提供智能合约的安全证明。 <a target="_blank" rel="noopener" href="https://www.npmjs.com/package/truffle-plugin-verify">truffle-plugin-verify</a> 发布你的合约在区块链探索者（blockchain explorers）。你也可以创造<a target="_blank" rel="noopener" href="https://www.trufflesuite.com/docs/truffle/getting-started/writing-external-scripts#creating-a-custom-command-plugin">custom plugins</a>.<br>​</p>
+<p>同样的， <a target="_blank" rel="noopener" href="https://buidler.dev/plugins/">Buidle</a>r支持以太坊智能合约开发者的越来越多的插件列表。<br>​</p>
+<p>无论你使用哪个开发环境，挑选一个好的工具集是十分必要的。<br>​</p>
+<h1 id="本地开发"><a href="#本地开发" class="headerlink" title="本地开发"></a>本地开发</h1><p>使用GANACH（或GANACH CLI）运行一个本地区块链以便加快您的迭代周期。<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1643048821326-8ae94a92-d08f-45c4-aa47-c932bdb4132a.png" alt="image.png"><br>在主网络中，以太坊交易是要花费金钱的并且可能需要几分钟即可确认。跳过等待，通过使用你自己的本地链。在本地运行您的合同以获得免费和即时交易。<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1643049046981-e76e66d1-c370-4d34-a8ea-b8d558903748.png" alt="image.png"><br>Ganache<br>Ganache附带一个内置的块资源管理器，可以显示您解码的交易，合同和事件。此本地环境可配置，以满足您的测试需求。这个本地环境是<a target="_blank" rel="noopener" href="https://www.trufflesuite.com/docs/ganache/reference/ganache-settings">可配置的</a>，以满足你的需求。<br>Setting up is easy and quick. <a target="_blank" rel="noopener" href="https://www.trufflesuite.com/ganache">Download here</a>.<br>​</p>
+<h1 id="使用静态分析工具（Static-Analysis-Tools）"><a href="#使用静态分析工具（Static-Analysis-Tools）" class="headerlink" title="使用静态分析工具（Static Analysis Tools）"></a>使用静态分析工具（Static Analysis Tools）</h1><p>静态分析或者‘linting’是一个分析代码内编程错误的程序进程。在智能合约开发中，这有助于程序的风格不一致和发现被编译器忽视的易受攻击的代码。</p>
+<h2 id="1-Linters"><a href="#1-Linters" class="headerlink" title="1. Linters"></a>1. Linters</h2><p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1643049620352-930ce992-dd7c-4411-85c7-c58d4f821541.png" alt="image.png"><br>Lint Solidity代码与<a target="_blank" rel="noopener" href="https://github.com/protofire/solhint">solhint</a> 和<a target="_blank" rel="noopener" href="https://github.com/duaraghav8/Ethlint">Ethlin</a>t。Lint Solidity与其他语言的 linters 类似（例如Jslint）。它们提供安全性和样式指南验证。</p>
+<h2 id="2-Security-Analysis"><a href="#2-Security-Analysis" class="headerlink" title="2. Security Analysis"></a>2. Security Analysis</h2><p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1643049741485-acde6dc7-c3b1-4319-b739-ed6124cf11eb.png" alt="image.png"><br>安全性分析工具可识别 <a target="_blank" rel="noopener" href="https://yos.io/2018/10/20/smart-contract-vulnerabilities-and-how-to-mitigate-them/">智能合约漏洞</a>。这些工具运行一套漏洞探测器，并打印出发现的任何问题的摘要。开发人员可以在整个实施阶段使用此信息来查找和地址漏洞。<br>Options include: <a target="_blank" rel="noopener" href="https://github.com/ConsenSys/mythril">Mythril</a> · <a target="_blank" rel="noopener" href="https://github.com/crytic/slither">Slither</a> · <a target="_blank" rel="noopener" href="https://github.com/trailofbits/manticore">Manticore</a> · <a target="_blank" rel="noopener" href="https://mythx.io/">MythX</a> · <a target="_blank" rel="noopener" href="https://github.com/crytic/echidna">Echidna</a> · <a target="_blank" rel="noopener" href="https://github.com/melonproject/oyente">Oyente</a><br>​</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6/" rel="tag"># 智能合约</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/01/09/Thrift%E7%9A%84%E4%BD%BF%E7%94%A8%E5%AE%9E%E8%B7%B5/" rel="prev" title="Thrift的使用实践">
+      <i class="fa fa-chevron-left"></i> Thrift的使用实践
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/02/15/%EF%BC%88CS106b%EF%BC%89%E5%AE%89%E8%A3%85Qt%20Creator/" rel="next" title="(CS106)安装Qt Creator">
+      (CS106)安装Qt Creator <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BF%99%E6%98%AF%E7%BB%99%E8%B0%81%E7%9A%84"><span class="nav-number">1.</span> <span class="nav-text">这是给谁的</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83"><span class="nav-number">2.</span> <span class="nav-text">使用开发环境</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%AC%E5%9C%B0%E5%BC%80%E5%8F%91"><span class="nav-number">3.</span> <span class="nav-text">本地开发</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E9%9D%99%E6%80%81%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7%EF%BC%88Static-Analysis-Tools%EF%BC%89"><span class="nav-number">4.</span> <span class="nav-text">使用静态分析工具（Static Analysis Tools）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Linters"><span class="nav-number">4.1.</span> <span class="nav-text">1. Linters</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Security-Analysis"><span class="nav-number">4.2.</span> <span class="nav-text">2. Security Analysis</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="gezi_lzq"
+      src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
+  <p class="site-author-name" itemprop="name">gezi_lzq</p>
+  <div class="site-description" itemprop="description">Blog of lizhenqi </div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags">
+          
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/gezi-lzq" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;gezi-lzq" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/gezilzq" title="Gitee → https:&#x2F;&#x2F;gitee.com&#x2F;gezilzq" rel="noopener" target="_blank"><i class="fa fa-fw fa-Gitee"></i>Gitee</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.acwing.com/user/myspace/index/58842/" title="Acwing → https:&#x2F;&#x2F;www.acwing.com&#x2F;user&#x2F;myspace&#x2F;index&#x2F;58842&#x2F;" rel="noopener" target="_blank"><i class="fa fa-fw fa-Acwing"></i>Acwing</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">gezi_lzq</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+</body>
+</html>

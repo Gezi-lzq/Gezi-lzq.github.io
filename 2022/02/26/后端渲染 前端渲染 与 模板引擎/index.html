@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="曾经在学习过程中，对于javaweb中的jsp,前后端分离开发时的vue,React前端框架，springboot的Thymeleaf模板引擎等等，均没有什么概念，也不知道发生了什么，直观感受就是通过某个黑盒搞成了一个html页面显示在了浏览器上面。产生此困惑的主要原因还是在于自己在学习规划时有些好高骛远，有些原始的写法不够了解，导致对有些概念不清楚，只是知道某些技术，而不清楚他们的区别。通过前">
+<meta property="og:type" content="article">
+<meta property="og:title" content="后端渲染 前端渲染">
+<meta property="og:url" content="http://example.com/2022/02/26/%E5%90%8E%E7%AB%AF%E6%B8%B2%E6%9F%93%20%E5%89%8D%E7%AB%AF%E6%B8%B2%E6%9F%93%20%E4%B8%8E%20%E6%A8%A1%E6%9D%BF%E5%BC%95%E6%93%8E/index.html">
+<meta property="og:site_name" content="Gezi&#39;s blog">
+<meta property="og:description" content="曾经在学习过程中，对于javaweb中的jsp,前后端分离开发时的vue,React前端框架，springboot的Thymeleaf模板引擎等等，均没有什么概念，也不知道发生了什么，直观感受就是通过某个黑盒搞成了一个html页面显示在了浏览器上面。产生此困惑的主要原因还是在于自己在学习规划时有些好高骛远，有些原始的写法不够了解，导致对有些概念不清楚，只是知道某些技术，而不清楚他们的区别。通过前">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-02-25T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-02-28T12:11:28.720Z">
+<meta property="article:author" content="gezi_lzq">
+<meta property="article:tag" content="感想">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2022/02/26/%E5%90%8E%E7%AB%AF%E6%B8%B2%E6%9F%93%20%E5%89%8D%E7%AB%AF%E6%B8%B2%E6%9F%93%20%E4%B8%8E%20%E6%A8%A1%E6%9D%BF%E5%BC%95%E6%93%8E/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>后端渲染 前端渲染 | Gezi's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Gezi's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/02/26/%E5%90%8E%E7%AB%AF%E6%B8%B2%E6%9F%93%20%E5%89%8D%E7%AB%AF%E6%B8%B2%E6%9F%93%20%E4%B8%8E%20%E6%A8%A1%E6%9D%BF%E5%BC%95%E6%93%8E/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
+      <meta itemprop="name" content="gezi_lzq">
+      <meta itemprop="description" content="Blog of lizhenqi ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gezi's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          后端渲染 前端渲染
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-02-26 00:00:00" itemprop="dateCreated datePublished" datetime="2022-02-26T00:00:00+08:00">2022-02-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-02-28 20:11:28" itemprop="dateModified" datetime="2022-02-28T20:11:28+08:00">2022-02-28</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/web%E5%BC%80%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">web开发</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>曾经在学习过程中，对于javaweb中的jsp,前后端分离开发时的vue,React前端框架，springboot的Thymeleaf模板引擎等等，均没有什么概念，也不知道发生了什么，直观感受就是通过某个黑盒搞成了一个html页面显示在了浏览器上面。<br>产生此困惑的主要原因还是在于自己在学习规划时有些好高骛远，有些原始的写法不够了解，导致对有些概念不清楚，只是知道某些技术，而不清楚他们的区别。<br>通过前段时间学习开发的一个Django框架的游戏项目，和最近学校学习的jsp，我逐渐产生一些概念，故整理出来。</p>
+</blockquote>
+<h1 id="HTML"><a href="#HTML" class="headerlink" title="HTML"></a>HTML</h1><p>若想要理清其中的脉络，不如从技术的发展来看。<br>首先我们要跟随HTML的脚步出发，HTML是Hypertext Markup Language（超文本标记语言）的缩写，是Web用于编辑网页的主要工具。<br>浏览器通过读取html文件，生成dom树，将信息展示在页面上。<br>我们所看到的各个网页，均为一个个html文件，而html文件，说白了也只是一个很长字符串。<br>所以说，我们查看的网页均为浏览器读取这个html文件内的字符串所产生的<br>那html文件的内容是如何来的呢？</p>
+<h2 id="静态页面"><a href="#静态页面" class="headerlink" title="静态页面"></a>静态页面</h2><p>如果你要建设一篇文章的网页，那完全可以先编译器内制作出来该文章的html<br>然后把该html文件放置在服务器内，谁想请求查看这篇文章的网页<br>服务器则只需要把该文件发送过去<br>浏览器接收到此html文件后，解析生成网页，一切就完成了。<br>可现实世界，并没有那么简单。</p>
+<span id="more"></span>
+
+<h2 id="动态页面"><a href="#动态页面" class="headerlink" title="动态页面"></a>动态页面</h2><p>在我们所处的互联网环境中，其实到处接受到的都是动态页面。<br>可什么是动态页面呢，那篇文章网页内插入一个动图，可以称为动态网页吗？<br>通过js，css在网页内写出一个小动画可以成为动态页面吗？<br>动态究竟是什么？<br>承接上文的文章网页，我作为阅读者有一个新的想法，我想在文章右上角可以看到时间，这样我可以在阅读文章的时候，轻易的知道现在的时间。<br>而对于开发者应该如何实现呢？<br>如何还想像静态页面的方式一样，那可就完全不行了，<br>这意味着你得每隔1秒去更改html文件上的时间，<br>然后放到服务器上，读者也得每隔一秒手动刷新一下页面，获取你新更改的html文件。<br>​</p>
+<p>所以，想要实现这个效果，需要寻找一些其他办法。</p>
+<h2 id="后端渲染"><a href="#后端渲染" class="headerlink" title="后端渲染"></a>后端渲染</h2><p>作为人的没法每秒更改一下html文件的，<br>但是计算机完全可以，对于它来说只是简单的字符串操作，<br>可以通过写一个程序，使得每秒更改一下html文件，<br>程序找到<code>&lt;h3&gt;2022/2/23  18:24&lt;/h3&gt;</code>这个部分，<br>把它替换成<code>&lt;h3&gt;2022/2/23  18:25&lt;/h3&gt;</code>然后在与html的其他部分拼接起来，发生给浏览器。<br>​</p>
+<p>但是还有个小问题，如何让程序能够精准的把时间这部分改掉呢？<br>可以设置一些小标记，<code>&lt;h3&gt; &lt;% 2022/2/23  18:24 %&gt;&lt;/h3&gt;</code><br>编写程序让它只把<code>&lt;%</code>与<code>%&gt;</code>里面的内容给替换掉，改为当前时间。<br>同时使用html的语法，在html的<code>&lt;head&gt;</code>部分，设置成每隔一秒自动刷新<code>&lt;meta http-equiv=&quot;refresh&quot; content=&quot;1&quot;&gt;</code><br>这样就满足了在看文章网页时，能够知道当前时间的需求。<br>​</p>
+<p>而以上<strong>在服务器中更改html文件的行为</strong>，就可以理解为<strong>后端渲染</strong>。<br>​</p>
+<p>而真实项目内的后端渲染，一定不可能像上文一样手动的编写程序去拼接html文件，而是通过一套健全的标签实现上面<strong>动态改变html文件内容</strong>的操作。</p>
+<h3 id="JSP"><a href="#JSP" class="headerlink" title="JSP"></a>JSP</h3><blockquote>
+<p>JSP全称Java Server Pages，是一种动态网页开发技术。它使用JSP标签在HTML网页中插入Java代码。标签通常以&lt;%开头以%&gt;结束。</p>
+</blockquote>
+<p>jsp通过<code>&lt;% 代码片段 %&gt;</code> 其中的代码片段，可以在jsp内编写java程序来更改html文件。比如上文所说的显示当前时间，只需要在其中加入<code>&lt;h3&gt; &lt;%= (new java.util.Date()).toLocaleString()%&gt; &lt;/h3&gt;</code>​<br>内部的java代码片段就会通过某种方式被执行，输出当前的时间并且修改在html上面，<br>随后服务器便会自动将动态生成完的html响应给发送请求的浏览器。</p>
+<h3 id="hymeleaf"><a href="#hymeleaf" class="headerlink" title="hymeleaf"></a><strong>hymeleaf</strong></h3><blockquote>
+<p>Thymeleaf是一个现代服务器端Java模板引擎，适用于Web和独立环境，能够处理HTML，XML，JavaScript，CSS甚至纯文本。</p>
+</blockquote>
+<p>hymeleaf同样也是一种后端渲染的方案，都是在服务器内根据数据，生成好对应的html等文件，然后发送给浏览器。<br>​</p>
+<h3 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h3><ul>
+<li>服务端渲染不需要先下载一堆 js 和 css 后才能看到页面（首屏性能）</li>
+<li>SEO</li>
+<li>服务端渲染不用关心浏览器兼容性问题（随意浏览器发展，这个优点逐渐消失）</li>
+<li>对于电量不给力的手机或平板，减少在客户端的电量消耗很重要</li>
+</ul>
+<h2 id="前端渲染"><a href="#前端渲染" class="headerlink" title="前端渲染"></a>前端渲染</h2><p>由于文章十分的长，服务器每次只更改当前时间这一小部分内容，却需要每次把整个网页再发送过去，这对服务器来说产生了很大的压力，再加上浏览该文章的用户量逐渐增多，更是占用了服务器很大的带宽。<br>所以，有没有一种方式，使得可以局部刷新时间那部分页面，而不需要每次都进行完整的页面请求？<br>这时，压力来到了浏览器这边。<br>为了实现局部的刷新页面，需要能够找到 展示时间这部分的html标签，还要能够获得到当前的时间，并把当前时间修改在原本的html文件上。而html,css远远无法实现这些功能，这时便需要一种脚本语言，可以完成这些操作，那便是JavaScript。<br>通过给时间部分添加一个id属性<code>&lt;h3 id=time&gt;2022/2/23  18:24&lt;/h3&gt;</code>，可以使得js通过文档对象模型（Dom）提供的方法<code>document.getElementById(&quot;time&quot;)</code> 来获得页面上展示时间部分的元素，又可以通过<code>ajax</code>向后端发送请求，获得当前时间，并把时间内容修改在<code>time</code>元素上，来更改html。<br>​</p>
+<p>通过这种方式，在<strong>浏览器上动态更改html</strong>可以理解为<strong>前端渲染。</strong></p>
+<p>同样，真实项目内，也并未这种原始的一个个通过js来获取文档对象，并一个个更改。而多是借助一些前端框架，来动态更改html页面。</p>
+<h2 id="vue"><a href="#vue" class="headerlink" title="vue"></a>vue</h2><blockquote>
+<p>Vue.js 的核心是一个允许采用简洁的模板语法来声明式地将数据渲染进 DOM 的系统</p>
+</blockquote>
+<p>通过vue的相关模板语法，建立起Dom与数据响应式的关联。<br>​</p>
+<h3 id="优势-1"><a href="#优势-1" class="headerlink" title="优势"></a>优势</h3><ol>
+<li>局部刷新。无需每次都进行完整页面请求</li>
+<li>懒加载。如在页面初始时只加载可视区域内的数据，滚动后rp加载其它数据，可以通过 <a href="https://link.zhihu.com/?target=https://github.com/jasonslyvia/react-lazyload/">react-lazyload</a> 实现</li>
+<li>富交互。使用 JS 实现各种酷炫效果</li>
+<li>节约服务器成本。省电省钱，JS 支持 CDN 部署，且部署极其简单，只需要服务器支持静态文件即可</li>
+<li>天生的关注分离设计。服务器来访问数据库提供接口，JS 只关注数据获取和展现</li>
+<li>JS 一次学习，到处使用。可以用来开发 Web、Serve、Mobile、Desktop 类型的应用</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%84%9F%E6%83%B3/" rel="tag"># 感想</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/02/24/Oauth2%E6%8E%88%E6%9D%83%E5%AE%9E%E8%B7%B5%EF%BC%88acwing%E4%B8%80%E9%94%AE%E7%99%BB%E5%BD%95%EF%BC%89/" rel="prev" title="Oauth2授权实践(Acwing一键登录)">
+      <i class="fa fa-chevron-left"></i> Oauth2授权实践(Acwing一键登录)
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/02/28/%E5%8F%AF%E6%89%A9%E5%B1%95%E6%9E%B6%E6%9E%84/" rel="next" title="可扩展性架构">
+      可扩展性架构 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#HTML"><span class="nav-number">1.</span> <span class="nav-text">HTML</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9D%99%E6%80%81%E9%A1%B5%E9%9D%A2"><span class="nav-number">1.1.</span> <span class="nav-text">静态页面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E9%A1%B5%E9%9D%A2"><span class="nav-number">1.2.</span> <span class="nav-text">动态页面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF%E6%B8%B2%E6%9F%93"><span class="nav-number">1.3.</span> <span class="nav-text">后端渲染</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#JSP"><span class="nav-number">1.3.1.</span> <span class="nav-text">JSP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hymeleaf"><span class="nav-number">1.3.2.</span> <span class="nav-text">hymeleaf</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E5%8A%BF"><span class="nav-number">1.3.3.</span> <span class="nav-text">优势</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E7%AB%AF%E6%B8%B2%E6%9F%93"><span class="nav-number">1.4.</span> <span class="nav-text">前端渲染</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vue"><span class="nav-number">1.5.</span> <span class="nav-text">vue</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E5%8A%BF-1"><span class="nav-number">1.5.1.</span> <span class="nav-text">优势</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="gezi_lzq"
+      src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
+  <p class="site-author-name" itemprop="name">gezi_lzq</p>
+  <div class="site-description" itemprop="description">Blog of lizhenqi </div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags">
+          
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/gezi-lzq" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;gezi-lzq" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/gezilzq" title="Gitee → https:&#x2F;&#x2F;gitee.com&#x2F;gezilzq" rel="noopener" target="_blank"><i class="fa fa-fw fa-Gitee"></i>Gitee</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.acwing.com/user/myspace/index/58842/" title="Acwing → https:&#x2F;&#x2F;www.acwing.com&#x2F;user&#x2F;myspace&#x2F;index&#x2F;58842&#x2F;" rel="noopener" target="_blank"><i class="fa fa-fw fa-Acwing"></i>Acwing</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">gezi_lzq</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+</body>
+</html>

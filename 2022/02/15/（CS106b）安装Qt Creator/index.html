@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="步骤 下载Qt installer https:&#x2F;&#x2F;www.qt.io&#x2F;download-qt-installer 运行安装程序第一步需要注册一个账号，然后下面大多都是Next or Agree其中需要注意的是">
+<meta property="og:type" content="article">
+<meta property="og:title" content="(CS106)安装Qt Creator">
+<meta property="og:url" content="http://example.com/2022/02/15/%EF%BC%88CS106b%EF%BC%89%E5%AE%89%E8%A3%85Qt%20Creator/index.html">
+<meta property="og:site_name" content="Gezi&#39;s blog">
+<meta property="og:description" content="步骤 下载Qt installer https:&#x2F;&#x2F;www.qt.io&#x2F;download-qt-installer 运行安装程序第一步需要注册一个账号，然后下面大多都是Next or Agree其中需要注意的是">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645089732575-dce5e2a9-3fc9-4fda-977b-471e7b59a576.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645089795383-61f60e6e-7208-4ab7-b9a4-c0914485061c.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645089855644-176de5d0-b77c-457d-9936-43567abe9fbe.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645089971074-475ad189-0a98-4edc-8c81-e22627512603.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645089988427-b595a3e7-f276-41df-9530-99afa87be720.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645089988456-da513864-e1a2-4998-a8cf-f4d4fb7d01d1.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645089988524-4ed5be01-e07e-4577-99f2-3811c79019a0.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645089988693-fd435f14-19a6-40bc-a23d-ee055f720620.png">
+<meta property="article:published_time" content="2022-02-14T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-02-28T12:42:33.273Z">
+<meta property="article:author" content="gezi_lzq">
+<meta property="article:tag" content="Qt">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645089732575-dce5e2a9-3fc9-4fda-977b-471e7b59a576.png">
+
+<link rel="canonical" href="http://example.com/2022/02/15/%EF%BC%88CS106b%EF%BC%89%E5%AE%89%E8%A3%85Qt%20Creator/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>(CS106)安装Qt Creator | Gezi's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Gezi's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/02/15/%EF%BC%88CS106b%EF%BC%89%E5%AE%89%E8%A3%85Qt%20Creator/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
+      <meta itemprop="name" content="gezi_lzq">
+      <meta itemprop="description" content="Blog of lizhenqi ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gezi's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          (CS106)安装Qt Creator
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-02-15 00:00:00" itemprop="dateCreated datePublished" datetime="2022-02-15T00:00:00+08:00">2022-02-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-02-28 20:42:33" itemprop="dateModified" datetime="2022-02-28T20:42:33+08:00">2022-02-28</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CS106/" itemprop="url" rel="index"><span itemprop="name">CS106</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><a target="_blank" rel="noopener" href="https://web.stanford.edu/dept/cs_edu/resources/qt/install-windows">步骤</a></p>
+<h2 id="下载Qt-installer"><a href="#下载Qt-installer" class="headerlink" title="下载Qt installer"></a>下载Qt installer</h2><p> <a target="_blank" rel="noopener" href="https://www.qt.io/download-qt-installer">https://www.qt.io/download-qt-installer</a><br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645089732575-dce5e2a9-3fc9-4fda-977b-471e7b59a576.png" alt="image.png"></p>
+<h2 id="运行安装程序"><a href="#运行安装程序" class="headerlink" title="运行安装程序"></a>运行安装程序</h2><p>第一步需要注册一个账号，然后下面大多都是Next or Agree<br>其中需要注意的是</p>
+<span id="more"></span>
+
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645089795383-61f60e6e-7208-4ab7-b9a4-c0914485061c.png" alt="image.png"><br>选择<strong>Qt 6.x for desktop development</strong> </p>
+<blockquote>
+<p>如果没有这个选项，参考官方教程<br>If you don’t see <strong>Qt 6.x for desktop development</strong> as an option,click <strong>Custom installation</strong> and then proceed to the next window via “Next.” <strong>When you’re asked to “Select components” please only click MinGW 9.0.0 64-bit under Qt -&gt; Qt6.2.2</strong>. Once again, you’ll click <strong>Qt</strong> and then under <strong>Qt 6.2.2</strong> you’ll check the box for <strong>MinGW 9.0.0 64-bit</strong>.<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645089855644-176de5d0-b77c-457d-9936-43567abe9fbe.png" alt="image.png"></p>
+</blockquote>
+<h2 id="安装CS106专用包"><a href="#安装CS106专用包" class="headerlink" title="安装CS106专用包"></a>安装CS106专用包</h2><p>安装 Qt 后，您必须<strong>安装特定于 CS106 的包</strong>并执行<strong>完整的构建和运行循环</strong>以确认一切正常。</p>
+<h3 id="下载CS106包并解压"><a href="#下载CS106包并解压" class="headerlink" title="下载CS106包并解压"></a>下载CS106包并解压</h3><ul>
+<li>下载此存档文件：📦 <a target="_blank" rel="noopener" href="https://web.stanford.edu/dept/cs_edu/resources/qt/CS106.zip">CS106.zip</a></li>
+<li>将下载内容解压缩（在 Windows 计算机上，单击“全部l解压缩”）到您选择的位置。您应该有一个文件夹<strong>CS106</strong>，其中包含多个文件和文件夹。</li>
+</ul>
+<p><strong>注意：路径内不要存在中文</strong></p>
+<h3 id="打开并配置-CS106-项目"><a href="#打开并配置-CS106-项目" class="headerlink" title="打开并配置 CS106 项目"></a>打开并配置 CS106 项目</h3><p>Qt Creator 项目包含一个以扩展名命名的文件。双击该文件会在 Qt Creator 中打开该项目。首次打开项目时，Qt Creator 会要求您配置项目构建工具包。**.pro **</p>
+<ul>
+<li>找到文件并立即打开它。 <strong>CS106.pro</strong><ul>
+<li>如果您的 Windows 文件资源管理器选项设置为隐藏文件扩展名，则文件将显示名称. 您可以通过选择菜单项“文件”-&gt;“选项”来更改是否在文件资源管理器中显示扩展名，选择“查看”选项卡，然后在“高级设置”下，取消选中“隐藏已知文件类型的扩展名”。单击“应用”按钮。<strong>CS106.pro</strong></li>
+<li>“配置项目”面板将显示可用构建套件的列表（请参见下面的屏幕截图）。应该已经选择了默认套件；它将与您在安装 Qt Creator（版本<strong>Qt 6.xx</strong>）时选择的桌面套件相匹配。</li>
+</ul>
+</li>
+<li>通过单击“配置项目”按钮接受默认值。</li>
+</ul>
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645089971074-475ad189-0a98-4edc-8c81-e22627512603.png" alt="image.png"><br>如果您的 Qt Creator 显示没有可用的工具包，请查看<a target="_blank" rel="noopener" href="https://web.stanford.edu/dept/cs_edu/resources/qt/index.html">Qt 安装说明</a>。如果您错过了选择正确的选项，您可以重复这些步骤来重新安装 Qt。</p>
+<h3 id="构建程序"><a href="#构建程序" class="headerlink" title="构建程序"></a>构建程序</h3><p>C++ 代码必须在运行前_编译_或_构建_；这意味着将源代码转换为可执行的二进制代码。</p>
+<ul>
+<li><p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645089988427-b595a3e7-f276-41df-9530-99afa87be720.png" alt="image.png"></p>
+</li>
+<li><p>观看<img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645089988456-da513864-e1a2-4998-a8cf-f4d4fb7d01d1.png" alt="image.png"></p>
+<h3 id="运行程序"><a href="#运行程序" class="headerlink" title="运行程序"></a>运行程序</h3><p>现在程序已构建，您可以运行它了。</p>
+</li>
+<li><p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645089988524-4ed5be01-e07e-4577-99f2-3811c79019a0.png" alt="image.png"></p>
+</li>
+<li><p>如下图所示，欢迎程序向控制台窗口打印一条消息，并在图形窗口上绘制斯坦福徽标。<img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645089988693-fd435f14-19a6-40bc-a23d-ee055f720620.png" alt="image.png"></p>
+</li>
+</ul>
+<p>✔️ 恭喜，<strong>您的安装一切顺利</strong>！您现在可以丢弃 CS106 项目，您将不再需要它。</p>
+<h2 id="配置设置（可选）"><a href="#配置设置（可选）" class="headerlink" title="配置设置（可选）"></a>配置设置（可选）</h2><p>为了获得更好的体验，我们建议更改一些默认设置，请参阅我们<a target="_blank" rel="noopener" href="https://web.stanford.edu/dept/cs_edu/resources/qt/recommended-settings">推荐的配置设置</a>。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Qt/" rel="tag"># Qt</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/01/25/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6%E7%9A%84%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%EF%BC%88%E7%8E%AF%E5%A2%83%E7%AF%87%EF%BC%89/" rel="prev" title="智能合约的最佳实践（环境篇）">
+      <i class="fa fa-chevron-left"></i> 智能合约的最佳实践（环境篇）
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/02/22/Django%E5%AF%B9%E6%8E%A5Redis/" rel="next" title="Django对接Redis">
+      Django对接Redis <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BDQt-installer"><span class="nav-number">1.</span> <span class="nav-text">下载Qt installer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E5%AE%89%E8%A3%85%E7%A8%8B%E5%BA%8F"><span class="nav-number">2.</span> <span class="nav-text">运行安装程序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85CS106%E4%B8%93%E7%94%A8%E5%8C%85"><span class="nav-number">3.</span> <span class="nav-text">安装CS106专用包</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BDCS106%E5%8C%85%E5%B9%B6%E8%A7%A3%E5%8E%8B"><span class="nav-number">3.1.</span> <span class="nav-text">下载CS106包并解压</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%93%E5%BC%80%E5%B9%B6%E9%85%8D%E7%BD%AE-CS106-%E9%A1%B9%E7%9B%AE"><span class="nav-number">3.2.</span> <span class="nav-text">打开并配置 CS106 项目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%84%E5%BB%BA%E7%A8%8B%E5%BA%8F"><span class="nav-number">3.3.</span> <span class="nav-text">构建程序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E7%A8%8B%E5%BA%8F"><span class="nav-number">3.4.</span> <span class="nav-text">运行程序</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E8%AE%BE%E7%BD%AE%EF%BC%88%E5%8F%AF%E9%80%89%EF%BC%89"><span class="nav-number">4.</span> <span class="nav-text">配置设置（可选）</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="gezi_lzq"
+      src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
+  <p class="site-author-name" itemprop="name">gezi_lzq</p>
+  <div class="site-description" itemprop="description">Blog of lizhenqi </div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags">
+          
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/gezi-lzq" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;gezi-lzq" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/gezilzq" title="Gitee → https:&#x2F;&#x2F;gitee.com&#x2F;gezilzq" rel="noopener" target="_blank"><i class="fa fa-fw fa-Gitee"></i>Gitee</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.acwing.com/user/myspace/index/58842/" title="Acwing → https:&#x2F;&#x2F;www.acwing.com&#x2F;user&#x2F;myspace&#x2F;index&#x2F;58842&#x2F;" rel="noopener" target="_blank"><i class="fa fa-fw fa-Acwing"></i>Acwing</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">gezi_lzq</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+</body>
+</html>

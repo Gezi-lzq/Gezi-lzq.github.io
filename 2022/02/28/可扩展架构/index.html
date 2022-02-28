@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="解决的问题传统CS&#x2F;BS架构，用户通过网络给服务器发送请求，服务器经过计算后返回给用户，用户再进行下一次请求……系统在设计实现完毕后，当用户端越来越多后，服务器会受到较大的负载（数据计算，数据存储，io等等），导致响应越来越慢，甚至可能出现服务器宕机。 实现一个计算密集型（Computer-intensive）服务 模拟服务器端需要大规模计算同时模拟服务器在受到较多请求，承受较大负载的过程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="可扩展性架构">
+<meta property="og:url" content="http://example.com/2022/02/28/%E5%8F%AF%E6%89%A9%E5%B1%95%E6%9E%B6%E6%9E%84/index.html">
+<meta property="og:site_name" content="Gezi&#39;s blog">
+<meta property="og:description" content="解决的问题传统CS&#x2F;BS架构，用户通过网络给服务器发送请求，服务器经过计算后返回给用户，用户再进行下一次请求……系统在设计实现完毕后，当用户端越来越多后，服务器会受到较大的负载（数据计算，数据存储，io等等），导致响应越来越慢，甚至可能出现服务器宕机。 实现一个计算密集型（Computer-intensive）服务 模拟服务器端需要大规模计算同时模拟服务器在受到较多请求，承受较大负载的过程">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645804092889-dafb4209-f8b1-49f2-87ad-a23749d90286.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645805277910-0382faea-f992-4744-8daa-2b1c26ed9952.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645808583279-f28c8abb-12c8-4fa2-b325-b0f54ed2a95c.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645808608627-5b8a78bd-2664-4cbd-9825-7845b0d23337.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645808630914-94e59301-8108-40ce-a158-e710f9d14577.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645808682763-70e1766d-0ca8-4273-8bdf-941da262906f.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645867778597-657c22a1-0d60-4fd9-a0b8-167d893c5da8.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645867388471-99f87618-e4bf-438d-b684-dba778f1213f.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645868413572-f555ab54-937b-4266-a4fa-14e2987eaf05.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645871928838-bed60816-e0c5-4d6c-b02f-cb5ade7b791b.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645875173704-45a0a41a-5407-46d8-9fe1-a5f7589994f8.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645875098499-a8fa0086-5528-4ed5-8dcd-ac893dd0105a.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645875346599-03156d56-aaa7-4eca-963b-948649666c18.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645880631297-555591ba-35a2-47de-b4f3-99ed3b2836a8.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645880792181-967931f5-7ca6-40f1-9fc2-474fb033e7d1.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645881456852-7325820c-78dc-4dcd-9d54-0b414fcf940e.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645882895952-36d08f2b-079a-4cf3-92b2-9fe58f818b67.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645886616513-18eb1b2a-a36d-45c4-a66d-eb4c9eb8e1b6.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645886884709-75251cf1-3b6d-419d-ac6f-2d5c5cd47f6f.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645887266887-ed153ce1-3259-4c1f-b50f-19fa844fdb0f.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645889851441-847037e2-7476-4b7c-a181-3cbf734a14c9.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645892593106-318320a6-af13-4d11-a4d1-d1b00f554e0e.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645890257525-5fe59053-abb4-4d99-8028-d3faef534e9d.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645890301572-777d9ec9-cd63-48f3-889d-38cdab8449c8.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645891561261-467ccc4e-05a2-4237-bdea-e600fa1983bf.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645891349557-ca2128c3-9e72-478f-a1f5-450ef76fce40.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645891600163-d61ea7b1-60c8-4786-b86b-e943c90cd3a9.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645891662838-4f03ff2e-eab0-4f68-b202-78875002203b.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645891646867-de07584b-1e8a-4c0d-93fc-3b3110f2a4e7.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645892379528-b465becf-6839-4888-a782-17ca067ec0dd.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645892404150-5716dcfc-9f30-482d-9d7e-ac96f12c5801.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645892854259-7f63b24a-d98f-4eec-9ec0-989efe341052.png">
+<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master//img/1645892971061-613e3d3b-8b3d-45a3-b708-c519713298a6.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645893183849-e208c13e-234e-492a-badb-e4e77fa96813.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645893452815-f6eb026f-69f5-4c02-b35b-6c2b65e8b607.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645893664470-2a0beb5d-0123-4df6-868c-ee26dbc34aa2.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645893716116-d97914df-6927-4e56-a0aa-14b5e17c97ef.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645893897564-617283c3-de00-4487-9bb7-c9d22ddeebdc.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645894632586-e1868821-c868-4836-aeff-12e78d81c27e.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645894898062-b0cc5180-a7c8-4fd9-9a6e-4b33882c7d15.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645895045460-6b825840-c6cb-49f7-91bb-d3dc0bc3c165.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645895406021-c7b0b784-0f2f-412b-968c-9a422f19a8cb.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645895817295-28dd73bc-4052-4054-a284-82c8357cd49d.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645933588528-75253283-131e-4fb4-be76-3571082a182f.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645933828830-3bd3df13-0fdb-44a8-a4aa-bc18cf866395.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645933854007-a735992b-9e8d-470b-9c05-150e70298fde.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645961124966-53c62f46-7ee7-4a56-96d5-8dde75c22f24.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645934436405-95350d29-4fbb-46ce-8b37-4912c556c11c.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645959099467-5e5babb0-d6ec-4fa7-956c-0938828acad5.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645959756987-0590149e-eaff-4961-811f-e87c50b28ad2.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645959994854-4cfbd2ea-5a83-4ae6-8037-aff5be7c6f27.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645960096333-d02d247a-ad2d-4651-a1e2-06cf68777275.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645960333033-abb33cdc-ddea-4231-839a-0b505068a1b0.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645961043829-33c6c705-0f65-4260-9f59-540276f1dd2c.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1646032824696-56e46a8e-656f-4ab7-8719-1fb2a9464f28.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1646033700912-200e9f2c-ff4d-459f-9722-463eb5ee4597.png">
+<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master//img/1646033712741-14db2093-16e9-483e-a5c1-305ec5f5e42f.png">
+<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master//img/1646034420881-6f3cdc13-77f7-473d-84b3-52e899fd131d.png">
+<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master//img/1646034760329-90bd91f0-3055-4f84-b979-60286d8f569b.png">
+<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master//img/1646035177023-d0fbc985-c8ba-41a4-9d65-6a78aaacb288.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1646035263242-697c414d-fd96-42db-a819-87d11a2c7bbd.png">
+<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master//img/1646035424655-5746fdc9-1cc3-4b03-8716-0ef457b0aa02.png">
+<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master//img/1646038438311-9931efd2-6757-4000-9c26-93ca3e6c1bd3.png">
+<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master//img/1646039802242-415abbe8-f5d8-4bc8-9b12-82ae0254d7da.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1646043856036-e6aa5c93-3cf9-4c48-8a4b-817c8eafff5d.png">
+<meta property="og:image" content="https://gitee.com/gezilzq/image-host/raw/master//img/1646044039910-eec862e8-b6d5-4993-bd43-59776c46bb51.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1646044913806-ed6cd8f8-8350-4609-97e4-40d61b10a420.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1646048549669-b5462fbb-98ac-44ed-a00d-ee4eaf0f46d7.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1646048568057-6d4cd630-e0d2-4cc4-9e86-e1f46d33b397.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1646048777432-27667cff-253e-42f5-bb3c-7ddc221a8e42.png">
+<meta property="article:published_time" content="2022-02-27T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-02-28T12:32:44.347Z">
+<meta property="article:author" content="gezi_lzq">
+<meta property="article:tag" content="springboot">
+<meta property="article:tag" content="gatling">
+<meta property="article:tag" content="docker">
+<meta property="article:tag" content="haproxy">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645804092889-dafb4209-f8b1-49f2-87ad-a23749d90286.png">
+
+<link rel="canonical" href="http://example.com/2022/02/28/%E5%8F%AF%E6%89%A9%E5%B1%95%E6%9E%B6%E6%9E%84/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>可扩展性架构 | Gezi's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Gezi's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/02/28/%E5%8F%AF%E6%89%A9%E5%B1%95%E6%9E%B6%E6%9E%84/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
+      <meta itemprop="name" content="gezi_lzq">
+      <meta itemprop="description" content="Blog of lizhenqi ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gezi's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          可扩展性架构
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-02-28 00:00:00 / Modified: 20:32:44" itemprop="dateCreated datePublished" datetime="2022-02-28T00:00:00+08:00">2022-02-28</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/" itemprop="url" rel="index"><span itemprop="name">架构设计</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="解决的问题"><a href="#解决的问题" class="headerlink" title="解决的问题"></a>解决的问题</h2><p>传统CS/BS架构，用户通过网络给服务器发送请求，服务器经过计算后返回给用户，用户再进行下一次请求……<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645804092889-dafb4209-f8b1-49f2-87ad-a23749d90286.png" alt="image.png"><br>系统在设计实现完毕后，当用户端越来越多后，服务器会受到较大的负载（数据计算，数据存储，io等等），导致响应越来越慢，甚至可能出现服务器宕机。</p>
+<h2 id="实现一个计算密集型（Computer-intensive）服务"><a href="#实现一个计算密集型（Computer-intensive）服务" class="headerlink" title="实现一个计算密集型（Computer-intensive）服务"></a>实现一个计算密集型（Computer-intensive）服务</h2><blockquote>
+<p>模拟服务器端需要大规模计算<br>同时模拟服务器在受到较多请求，承受较大负载的过程</p>
+</blockquote>
+<!--mor-->
+
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645805277910-0382faea-f992-4744-8daa-2b1c26ed9952.png" alt="image.png"></p>
+<h3 id="计算圆周率"><a href="#计算圆周率" class="headerlink" title="计算圆周率"></a>计算圆周率</h3><p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645808583279-f28c8abb-12c8-4fa2-b325-b0f54ed2a95c.png" alt="image.png"></p>
+<ul>
+<li>返回计算时间</li>
+</ul>
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645808608627-5b8a78bd-2664-4cbd-9825-7845b0d23337.png" alt="image.png"></p>
+<h3 id="具体计算实现"><a href="#具体计算实现" class="headerlink" title="具体计算实现"></a>具体计算实现</h3><p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645808630914-94e59301-8108-40ce-a158-e710f9d14577.png" alt="image.png"></p>
+<h2 id="压力测试"><a href="#压力测试" class="headerlink" title="压力测试"></a>压力测试</h2><p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645808682763-70e1766d-0ca8-4273-8bdf-941da262906f.png" alt="image.png"><br>安装：<a target="_blank" rel="noopener" href="https://gatling.io/open-source/">https://gatling.io/open-source/</a><br>解压后，<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645867778597-657c22a1-0d60-4fd9-a0b8-167d893c5da8.png" alt="image.png"><br>编写压力测试代码<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645867388471-99f87618-e4bf-438d-b684-dba778f1213f.png" alt="image.png"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> gatlingtest;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> io.gatling.javaapi.core.*;</span><br><span class="line"><span class="keyword">import</span> io.gatling.javaapi.http.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> io.gatling.javaapi.core.CoreDsl.*;</span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> io.gatling.javaapi.http.HttpDsl.*;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BasicSimulationJava</span> <span class="keyword">extends</span> <span class="title">Simulation</span> </span>&#123; </span><br><span class="line"><span class="comment">//所有 HTTP 请求的通用配置</span></span><br><span class="line">  HttpProtocolBuilder httpProtocol = http </span><br><span class="line">    .baseUrl(<span class="string">&quot;http://172.30.96.1:8080&quot;</span>) <span class="comment">// 将添加到所有相对 url 的 baseUrl</span></span><br><span class="line">    .acceptHeader(<span class="string">&quot;text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8&quot;</span>) <span class="comment">// 将与所有请求一起发送的通用 HTTP 标头</span></span><br><span class="line">    .doNotTrackHeader(<span class="string">&quot;1&quot;</span>)</span><br><span class="line">    .acceptLanguageHeader(<span class="string">&quot;en-US,en;q=0.5&quot;</span>)</span><br><span class="line">    .acceptEncodingHeader(<span class="string">&quot;gzip, deflate&quot;</span>)</span><br><span class="line">    .userAgentHeader(<span class="string">&quot;Mozilla/5.0 (Windows NT 5.1; rv:31.0) Gecko/20100101 Firefox/31.0&quot;</span>);</span><br><span class="line">  <span class="comment">// 场景定义</span></span><br><span class="line">  ScenarioBuilder scn = scenario(<span class="string">&quot;Testing Pi Caculating&quot;</span>) <span class="comment">// 7</span></span><br><span class="line">    .exec(http(<span class="string">&quot;Testpi&quot;</span>) <span class="comment">// 一个名为Testpi的 HTTP 请求。</span></span><br><span class="line">      .get(<span class="string">&quot;/pi&quot;</span>)); <span class="comment">// 此请求使用GET方法定位的 url </span></span><br><span class="line">    <span class="comment">// .pause(5); // 暂停时间5s</span></span><br><span class="line"></span><br><span class="line">  &#123;</span><br><span class="line">    setUp( <span class="comment">// 设置将在此模拟中启动的场景</span></span><br><span class="line">      scn.injectOpen(atOnceUsers(<span class="number">2</span>)) <span class="comment">// 声明我们将向名为scn的场景中注入2个用户</span></span><br><span class="line">        .protocols(httpProtocol)); <span class="comment">//附加上面声明的 HTTP 配置</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行gatling<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645868413572-f555ab54-937b-4266-a4fa-14e2987eaf05.png" alt="image.png"><br>命令：<code>./gatling.sh</code><br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645871928838-bed60816-e0c5-4d6c-b02f-cb5ade7b791b.png" alt="image.png"><br>测试结果：<br><code>request count</code>:2<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645875173704-45a0a41a-5407-46d8-9fe1-a5f7589994f8.png" alt="image.png"><br><code>request count</code>:10<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645875098499-a8fa0086-5528-4ed5-8dcd-ac893dd0105a.png" alt="image.png"><br><code>request count</code>:100<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645875346599-03156d56-aaa7-4eca-963b-948649666c18.png" alt="image.png"><br>随着并发用户越多，服务器响应时间就越长，负载就越大。<br>​</p>
+<h1 id="垂直扩展"><a href="#垂直扩展" class="headerlink" title="垂直扩展"></a>垂直扩展</h1><p>通过增强硬件设备的性能来提高服务器本身的运行性能<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645880631297-555591ba-35a2-47de-b4f3-99ed3b2836a8.png" alt="image.png"></p>
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><p>在一台电脑上，模拟不同硬件环境对服务器性能的影响。<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645880792181-967931f5-7ca6-40f1-9fc2-474fb033e7d1.png" alt="image.png"></p>
+<h2 id="打包镜像"><a href="#打包镜像" class="headerlink" title="打包镜像"></a>打包镜像</h2><blockquote>
+<p>Jib is a <a target="_blank" rel="noopener" href="https://maven.apache.org/">Maven</a> plugin for building Docker and <a target="_blank" rel="noopener" href="https://github.com/opencontainers/image-spec">OCI</a> images for your Java applications.</p>
+</blockquote>
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645881456852-7325820c-78dc-4dcd-9d54-0b414fcf940e.png" alt="image.png"><br>通过Jib实现把Springboot项目封装成为一个容器镜像，随后可在Docker虚拟化环境中直接运行此容器</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.google.cloud.tools<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jib-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.1.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">from</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">image</span>&gt;</span>amazoncorretto:11<span class="tag">&lt;/<span class="name">image</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">from</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">to</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">image</span>&gt;</span>app-pi<span class="tag">&lt;/<span class="name">image</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">to</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>执行<code>mvn compile jib:dockerBuild</code>（docker也要运行起来）<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645882895952-36d08f2b-079a-4cf3-92b2-9fe58f818b67.png" alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645886616513-18eb1b2a-a36d-45c4-a66d-eb4c9eb8e1b6.png" alt="image.png"></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">from</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">image</span>&gt;</span>amazoncorretto:11<span class="tag">&lt;/<span class="name">image</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">from</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>这几句十分重要，如果没有的话，会默认从gcr.io拉取基础镜像，但是由于某种网络原因，即使使用了某种操作依然没法连接成功（补充 全局代理下可行），一直会出现<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645886884709-75251cf1-3b6d-419d-ac6f-2d5c5cd47f6f.png" alt="image.png"><br>设置基础映像后，会从registry中找到存有此镜像的registry进行拉取，</p>
+<blockquote>
+<p>文档：<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645887266887-ed153ce1-3259-4c1f-b50f-19fa844fdb0f.png" alt="image.png"><br>（拉取镜像这部分，网络搞得真是人都麻了）</p>
+</blockquote>
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645889851441-847037e2-7476-4b7c-a181-3cbf734a14c9.png" alt="image.png"></p>
+<h2 id="启动镜像"><a href="#启动镜像" class="headerlink" title="启动镜像"></a>启动镜像</h2><p><code>docker run -d --name app-pi-0.5 --cpus=0.5 -p 18080:8080 app-pi</code></p>
+<ul>
+<li>后台运行容器</li>
+<li>名称为<code>app-pi-0.5</code></li>
+<li>占用0.5核</li>
+<li>端口映射为 本机18080端口映射到容器的8080端口<h2 id="垂直扩展实验"><a href="#垂直扩展实验" class="headerlink" title="垂直扩展实验"></a>垂直扩展实验</h2><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645892593106-318320a6-af13-4d11-a4d1-d1b00f554e0e.png" alt="image.png"><h3 id="0-5核cpu服务器性能"><a href="#0-5核cpu服务器性能" class="headerlink" title="0.5核cpu服务器性能"></a>0.5核cpu服务器性能</h3>运行命令<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645890257525-5fe59053-abb4-4d99-8028-d3faef534e9d.png" alt="image.png"><br>查看<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645890301572-777d9ec9-cd63-48f3-889d-38cdab8449c8.png" alt="image.png"><br>测试：<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645891561261-467ccc4e-05a2-4237-bdea-e600fa1983bf.png" alt="image.png"><h3 id="1核cpu服务器性能"><a href="#1核cpu服务器性能" class="headerlink" title="1核cpu服务器性能"></a>1核cpu服务器性能</h3><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645891349557-ca2128c3-9e72-478f-a1f5-450ef76fce40.png" alt="image.png"><br>测试：<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645891600163-d61ea7b1-60c8-4786-b86b-e943c90cd3a9.png" alt="image.png"><h3 id="2核cpu服务器性能"><a href="#2核cpu服务器性能" class="headerlink" title="2核cpu服务器性能"></a>2核cpu服务器性能</h3><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645891662838-4f03ff2e-eab0-4f68-b202-78875002203b.png" alt="image.png"><br>测试：<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645891646867-de07584b-1e8a-4c0d-93fc-3b3110f2a4e7.png" alt="image.png"></li>
+</ul>
+<p><strong>3核cpu服务器性能</strong><br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645892379528-b465becf-6839-4888-a782-17ca067ec0dd.png" alt="image.png"><br>测试：<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645892404150-5716dcfc-9f30-482d-9d7e-ac96f12c5801.png" alt="image.png"><br>可见，随着分配cpu数量提高，响应时间显著变快，性能提升，这种提升即为垂直向扩展的效果。</p>
+<h1 id="水平扩展"><a href="#水平扩展" class="headerlink" title="水平扩展"></a>水平扩展</h1><p>提高服务器性能，不可能单纯依靠增加机器性能，机器本身性能是存在上限的，并且性能的提高，会造成服务器成本的大幅提高。<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645892854259-7f63b24a-d98f-4eec-9ec0-989efe341052.png" alt="img"></p>
+<h2 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h2><p><img src="https://gitee.com/gezilzq/image-host/raw/master//img/1645892971061-613e3d3b-8b3d-45a3-b708-c519713298a6.png" alt="image.png"></p>
+<h3 id="DNS-Pound-Robin"><a href="#DNS-Pound-Robin" class="headerlink" title="DNS Pound Robin"></a>DNS Pound Robin</h3><p>通过DNS的ip地址的分配来实现负载均衡，将请求分摊到不同服务器上。<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645893183849-e208c13e-234e-492a-badb-e4e77fa96813.png" alt="image.png"></p>
+<h3 id="L3-L4-L7-Load-Balancing"><a href="#L3-L4-L7-Load-Balancing" class="headerlink" title="L3/L4/L7 Load Balancing"></a>L3/L4/L7 Load Balancing</h3><p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645893452815-f6eb026f-69f5-4c02-b35b-6c2b65e8b607.png" alt="image.png"></p>
+<h4 id="L3负载均衡"><a href="#L3负载均衡" class="headerlink" title="L3负载均衡"></a>L3负载均衡</h4><p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645893664470-2a0beb5d-0123-4df6-868c-ee26dbc34aa2.png" alt="image.png"><br>L3是在网络协议层实现的负载均衡，通过Load balancer（负载均衡器）来进行请求的派发，发送给后端的若干个Server。基于ip协议，将请求中，通过网络地址转换协议 来实现请求的分发。<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645893716116-d97914df-6927-4e56-a0aa-14b5e17c97ef.png" alt="image.png"><br>比如，Load Balancer 的ip地址对于用户来说，相当于整个服务的一个入口。<br>一个用户（ip为206.183.42.40），向该Load Balancer发送请求，建立一个TCP/UDP等链接。<br>负载均衡器并不处理这个请求，而是将此请求转发到后台某个Server上面。</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645893897564-617283c3-de00-4487-9bb7-c9d22ddeebdc.png" alt="image.png"><br>负载均衡器通过将客户端发送的每个数据包内的<code>destination ip</code>通过某种算法，更换为某个后台Server的ip。服务器返回的数据包会再经过Load balancer,然后Load balancer再修改<code>source ip</code>。对于客户端来说，还是感觉向负载均衡器发送请求，又由它进行响应的。<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645894632586-e1868821-c868-4836-aeff-12e78d81c27e.png" alt="image.png"><br>通过Ip层的转换，将用户请求进行分发。<br>为避免出现单点失效，即为负载均衡器宕机了，整个服务都无法进行。所以要增加冗余，防止单个Load Balancer，整个服务不可用。<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645894898062-b0cc5180-a7c8-4fd9-9a6e-4b33882c7d15.png" alt="image.png"></p>
+<blockquote>
+<p>服务器都通过负载均衡器这个网口，部署条件较高，使用较少</p>
+</blockquote>
+<h4 id="L4负载均衡"><a href="#L4负载均衡" class="headerlink" title="L4负载均衡"></a>L4负载均衡</h4><p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645895045460-6b825840-c6cb-49f7-91bb-d3dc0bc3c165.png" alt="image.png"><br>较为常用<br>类似L3，Load Balancer将请求分发<br>L3中，Load Balancer工作在传输层，当Client发送请求，与Load balancer建立起TCP连接，Load balancer则决定与另外某个Backend也建立一个TCP连接。</p>
+<h2 id="L4负载均衡实验"><a href="#L4负载均衡实验" class="headerlink" title="L4负载均衡实验"></a>L4负载均衡实验</h2><p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645895406021-c7b0b784-0f2f-412b-968c-9a422f19a8cb.png" alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645895817295-28dd73bc-4052-4054-a284-82c8357cd49d.png" alt="image.png"><br>实验：如何通过负载均衡使得可以使用0.5核的cpu的服务器仍在可以表现出不错的性能。</p>
+<h2 id="安装HAProxy"><a href="#安装HAProxy" class="headerlink" title="安装HAProxy"></a>安装HAProxy</h2><p><a target="_blank" rel="noopener" href="https://www.haproxy.com/blog/how-to-install-haproxy-on-ubuntu/">在Ubuntu安装Haproxy</a></p>
+<h2 id="编写haproxy-cfg"><a href="#编写haproxy-cfg" class="headerlink" title="编写haproxy.cfg"></a>编写haproxy.cfg</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">defaults</span><br><span class="line">    mode tcp</span><br><span class="line">frontend lb-app-pi</span><br><span class="line">    bind *:8080</span><br><span class="line">    default_backend servers</span><br><span class="line">backend servers</span><br><span class="line">    balance roundrobin</span><br><span class="line">    server server1 localhost:8081</span><br><span class="line">    server server2 localhost:8082</span><br><span class="line">    server server3 localhost:8083</span><br><span class="line">    server server4 localhost:8084</span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645933588528-75253283-131e-4fb4-be76-3571082a182f.png" alt="image.png"></p>
+<h2 id="启动后端服务器"><a href="#启动后端服务器" class="headerlink" title="启动后端服务器"></a>启动后端服务器</h2><p>启动四个cpu使用0.5核的服务器<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645933828830-3bd3df13-0fdb-44a8-a4aa-bc18cf866395.png" alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645933854007-a735992b-9e8d-470b-9c05-150e70298fde.png" alt="image.png"></p>
+<h2 id="测试单服务器性能"><a href="#测试单服务器性能" class="headerlink" title="测试单服务器性能"></a>测试单服务器性能</h2><p>先负载均衡中只使用一台服务器，相当于所以请求还是都到一台服务器内了。<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645961124966-53c62f46-7ee7-4a56-96d5-8dde75c22f24.png" alt="image.png"><br>设置Gatling进行压力测试<br>设置场景为100个并发的请求<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645934436405-95350d29-4fbb-46ce-8b37-4912c556c11c.png" alt="image.png"></p>
+<h3 id="启动HAProxy"><a href="#启动HAProxy" class="headerlink" title="启动HAProxy"></a>启动HAProxy</h3><p><code>haproxy - f haproxy.cfg</code><br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645959099467-5e5babb0-d6ec-4fa7-956c-0938828acad5.png" alt="image.png"><br>(警告是缺少某些配置项的设置，不过暂不影响)</p>
+<h3 id="压力测试-1"><a href="#压力测试-1" class="headerlink" title="压力测试"></a>压力测试</h3><p>在100并发下的测试：<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645959756987-0590149e-eaff-4961-811f-e87c50b28ad2.png" alt="image.png"><br>1个0.5核服务器在100个并发下，基本上是快卡死了的状态，平均等待50s，一半多都失败了。</p>
+<h2 id="测试2台服务器负载均衡后的性能"><a href="#测试2台服务器负载均衡后的性能" class="headerlink" title="测试2台服务器负载均衡后的性能"></a>测试2台服务器负载均衡后的性能</h2><p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645959994854-4cfbd2ea-5a83-4ae6-8037-aff5be7c6f27.png" alt="image.png"></p>
+<h3 id="压力测试-2"><a href="#压力测试-2" class="headerlink" title="压力测试"></a>压力测试</h3><p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645960096333-d02d247a-ad2d-4651-a1e2-06cf68777275.png" alt="image.png"><br>所有请求都正确得到响应了，平均时间变成了37秒多，性能得到了不错的提升。</p>
+<h2 id="继续增加服务器进行测试"><a href="#继续增加服务器进行测试" class="headerlink" title="继续增加服务器进行测试"></a>继续增加服务器进行测试</h2><p>三台服务器下的测试：<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645960333033-abb33cdc-ddea-4231-839a-0b505068a1b0.png" alt="image.png"><br>平均响应时间变为24.7秒<br>四台服务器下进行测试：<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1645961043829-33c6c705-0f65-4260-9f59-540276f1dd2c.png" alt="image.png"><br>平均响应时间加快到了17.5秒<br>水平向扩展，大致即为通过堆资源的方式，提高服务器数量来提高总体服务的性能。</p>
+<h1 id="缓存和会话管理问题"><a href="#缓存和会话管理问题" class="headerlink" title="缓存和会话管理问题"></a>缓存和会话管理问题</h1><p>每次请求服务器实际上计算的都是相同精度的PI值，既然精度相同，那么每次都执行同样计算则是没有必要的，若是对系统在进行优化，则需要考虑如何避免这种重复的计算。<br>对于这个问题，可以通过缓存的方式来处理。</p>
+<h2 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h2><p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1646032824696-56e46a8e-656f-4ab7-8719-1fb2a9464f28.png" alt="image.png"><br>浏览器中，便通过缓存的方式来避免下载重复页面或者图片。服务器也可以通过缓存的方式，来简化每次请求都进行的相同的复杂计算。如果用户请求的是相同的计算，则可以把之前的计算结果响应回去，不需要重新计算。</p>
+<h3 id="引入Spring提供的一种缓存机制"><a href="#引入Spring提供的一种缓存机制" class="headerlink" title="引入Spring提供的一种缓存机制"></a>引入Spring提供的一种缓存机制</h3><p>引入依赖</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-cache<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>修改代码<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1646033700912-200e9f2c-ff4d-459f-9722-463eb5ee4597.png" alt="image.png"><br><img src="https://gitee.com/gezilzq/image-host/raw/master//img/1646033712741-14db2093-16e9-483e-a5c1-305ec5f5e42f.png" alt="image.png"><br><strong>过程</strong><br>运行前，spring会扫描所有添加<code>@Cacheable</code>注解的方法，并在方法调用前插入一段拦截代码，当在此调用这个方法时，拦截代码会检查之前有没有调用过，有没有保存过缓存，如果有缓存，则缓存就返回了，如果没有则再继续执行这个方法，这个代码的结果会再作为结果缓存下来。<br><strong>测试</strong><br><img src="https://gitee.com/gezilzq/image-host/raw/master//img/1646034420881-6f3cdc13-77f7-473d-84b3-52e899fd131d.png" alt="image.png"><br>第一次计算后，PI值就被记录在缓存中，后续请求不再进行计算直接返回了。</p>
+<h3 id="再进行水平向扩展"><a href="#再进行水平向扩展" class="headerlink" title="再进行水平向扩展"></a>再进行水平向扩展</h3><p>打包镜像<code>app-pi-cache</code><br><img src="https://gitee.com/gezilzq/image-host/raw/master//img/1646034760329-90bd91f0-3055-4f84-b979-60286d8f569b.png" alt="image.png"><br>启动镜像，生成四个容器<br><code>docker run -d --name app-pi-cache-1 --cpus=0.5 -p 8081:8080 app-pi-cache</code><br><img src="https://gitee.com/gezilzq/image-host/raw/master//img/1646035177023-d0fbc985-c8ba-41a4-9d65-6a78aaacb288.png" alt="image.png"><br>启动Haproxy<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1646035263242-697c414d-fd96-42db-a819-87d11a2c7bbd.png" alt="image.png"><br>测试（100个并发下）<br><img src="https://gitee.com/gezilzq/image-host/raw/master//img/1646035424655-5746fdc9-1cc3-4b03-8716-0ef457b0aa02.png" alt="image.png"></p>
+<h2 id="会话管理"><a href="#会话管理" class="headerlink" title="会话管理"></a>会话管理</h2><p>若是每次请求中含有参数，可以指定所计算的PI的精度。但由于水平向扩展时，每个Server都是独立的，可能会出现一个服务器已经计算了某个精度的PI，另一个服务器又重新计算了相同精度的PI，两个服务器之间有了重复的计算。</p>
+<h2 id="会话"><a href="#会话" class="headerlink" title="会话"></a>会话</h2><p><img src="https://gitee.com/gezilzq/image-host/raw/master//img/1646038438311-9931efd2-6757-4000-9c26-93ca3e6c1bd3.png" alt="image.png"></p>
+<h3 id="修改代码-增加会话"><a href="#修改代码-增加会话" class="headerlink" title="修改代码-增加会话"></a>修改代码-增加会话</h3><p><img src="https://gitee.com/gezilzq/image-host/raw/master//img/1646039802242-415abbe8-f5d8-4bc8-9b12-82ae0254d7da.png" alt="image.png"><br>测试<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1646043856036-e6aa5c93-3cf9-4c48-8a4b-817c8eafff5d.png" alt="image.png"><br><img src="https://gitee.com/gezilzq/image-host/raw/master//img/1646044039910-eec862e8-b6d5-4993-bd43-59776c46bb51.png" alt="image.png"></p>
+<h3 id="测试-1"><a href="#测试-1" class="headerlink" title="测试"></a>测试</h3><p>直接在springboot内启动，</p>
+<ul>
+<li><code>application.properties</code>内添加 server.port=8081 指定端口号</li>
+<li>命令行内运行<code>mvn spring-boot:run </code>启动项目</li>
+</ul>
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1646044913806-ed6cd8f8-8350-4609-97e4-40d61b10a420.png" alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1646048549669-b5462fbb-98ac-44ed-a00d-ee4eaf0f46d7.png" alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1646048568057-6d4cd630-e0d2-4cc4-9e86-e1f46d33b397.png" alt="image.png"><br>以下未实操：<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1646048777432-27667cff-253e-42f5-bb3c-7ddc221a8e42.png" alt="image.png"><br>按之前的方式，请求会被轮着分给不同的服务器，会话无法正常建立，总是会把前一个Server返回的SessionId返回给另一个Server，而另一个Server不认识这个SessionId,则会再又生成一个Session，但在另一台Server仍然无法用。</p>
+<h2 id="如何解决水平扩展系统中的缓存和会话等状态问题？"><a href="#如何解决水平扩展系统中的缓存和会话等状态问题？" class="headerlink" title="如何解决水平扩展系统中的缓存和会话等状态问题？"></a>如何解决水平扩展系统中的缓存和会话等状态问题？</h2><p>整个集群中，每一个节点的缓存，都需要通过一种机制，使得所有的计算节点都去共享缓存，使得提高缓存的效率。<br>对于会话来说，每个节点所维护的会话状态，都应该跟用户发来的请求进行关联，这样才能保证用户的请求发到某一个跟他之前建立过会话的服务器上，以免出现错误。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/springboot/" rel="tag"># springboot</a>
+              <a href="/tags/gatling/" rel="tag"># gatling</a>
+              <a href="/tags/docker/" rel="tag"># docker</a>
+              <a href="/tags/haproxy/" rel="tag"># haproxy</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/02/26/%E5%90%8E%E7%AB%AF%E6%B8%B2%E6%9F%93%20%E5%89%8D%E7%AB%AF%E6%B8%B2%E6%9F%93%20%E4%B8%8E%20%E6%A8%A1%E6%9D%BF%E5%BC%95%E6%93%8E/" rel="prev" title="后端渲染 前端渲染">
+      <i class="fa fa-chevron-left"></i> 后端渲染 前端渲染
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">解决的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E8%AE%A1%E7%AE%97%E5%AF%86%E9%9B%86%E5%9E%8B%EF%BC%88Computer-intensive%EF%BC%89%E6%9C%8D%E5%8A%A1"><span class="nav-number">2.</span> <span class="nav-text">实现一个计算密集型（Computer-intensive）服务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E5%9C%86%E5%91%A8%E7%8E%87"><span class="nav-number">2.1.</span> <span class="nav-text">计算圆周率</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B7%E4%BD%93%E8%AE%A1%E7%AE%97%E5%AE%9E%E7%8E%B0"><span class="nav-number">2.2.</span> <span class="nav-text">具体计算实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95"><span class="nav-number">3.</span> <span class="nav-text">压力测试</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9E%82%E7%9B%B4%E6%89%A9%E5%B1%95"><span class="nav-number"></span> <span class="nav-text">垂直扩展</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95"><span class="nav-number">1.</span> <span class="nav-text">测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%93%E5%8C%85%E9%95%9C%E5%83%8F"><span class="nav-number">2.</span> <span class="nav-text">打包镜像</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E9%95%9C%E5%83%8F"><span class="nav-number">3.</span> <span class="nav-text">启动镜像</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9E%82%E7%9B%B4%E6%89%A9%E5%B1%95%E5%AE%9E%E9%AA%8C"><span class="nav-number">4.</span> <span class="nav-text">垂直扩展实验</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#0-5%E6%A0%B8cpu%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%80%A7%E8%83%BD"><span class="nav-number">4.1.</span> <span class="nav-text">0.5核cpu服务器性能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E6%A0%B8cpu%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%80%A7%E8%83%BD"><span class="nav-number">4.2.</span> <span class="nav-text">1核cpu服务器性能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E6%A0%B8cpu%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%80%A7%E8%83%BD"><span class="nav-number">4.3.</span> <span class="nav-text">2核cpu服务器性能</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B0%B4%E5%B9%B3%E6%89%A9%E5%B1%95"><span class="nav-number"></span> <span class="nav-text">水平扩展</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="nav-number">1.</span> <span class="nav-text">负载均衡</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#DNS-Pound-Robin"><span class="nav-number">1.1.</span> <span class="nav-text">DNS Pound Robin</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#L3-L4-L7-Load-Balancing"><span class="nav-number">1.2.</span> <span class="nav-text">L3&#x2F;L4&#x2F;L7 Load Balancing</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#L3%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="nav-number">1.2.1.</span> <span class="nav-text">L3负载均衡</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#L4%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="nav-number">1.2.2.</span> <span class="nav-text">L4负载均衡</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#L4%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E5%AE%9E%E9%AA%8C"><span class="nav-number">2.</span> <span class="nav-text">L4负载均衡实验</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85HAProxy"><span class="nav-number">3.</span> <span class="nav-text">安装HAProxy</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E5%86%99haproxy-cfg"><span class="nav-number">4.</span> <span class="nav-text">编写haproxy.cfg</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E5%90%8E%E7%AB%AF%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">5.</span> <span class="nav-text">启动后端服务器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E5%8D%95%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%80%A7%E8%83%BD"><span class="nav-number">6.</span> <span class="nav-text">测试单服务器性能</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8HAProxy"><span class="nav-number">6.1.</span> <span class="nav-text">启动HAProxy</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95-1"><span class="nav-number">6.2.</span> <span class="nav-text">压力测试</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%952%E5%8F%B0%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E5%90%8E%E7%9A%84%E6%80%A7%E8%83%BD"><span class="nav-number">7.</span> <span class="nav-text">测试2台服务器负载均衡后的性能</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95-2"><span class="nav-number">7.1.</span> <span class="nav-text">压力测试</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%A7%E7%BB%AD%E5%A2%9E%E5%8A%A0%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%9B%E8%A1%8C%E6%B5%8B%E8%AF%95"><span class="nav-number">8.</span> <span class="nav-text">继续增加服务器进行测试</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E5%92%8C%E4%BC%9A%E8%AF%9D%E7%AE%A1%E7%90%86%E9%97%AE%E9%A2%98"><span class="nav-number"></span> <span class="nav-text">缓存和会话管理问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%93%E5%AD%98"><span class="nav-number">1.</span> <span class="nav-text">缓存</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E5%85%A5Spring%E6%8F%90%E4%BE%9B%E7%9A%84%E4%B8%80%E7%A7%8D%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B6"><span class="nav-number">1.1.</span> <span class="nav-text">引入Spring提供的一种缓存机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%8D%E8%BF%9B%E8%A1%8C%E6%B0%B4%E5%B9%B3%E5%90%91%E6%89%A9%E5%B1%95"><span class="nav-number">1.2.</span> <span class="nav-text">再进行水平向扩展</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%9A%E8%AF%9D%E7%AE%A1%E7%90%86"><span class="nav-number">2.</span> <span class="nav-text">会话管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%9A%E8%AF%9D"><span class="nav-number">3.</span> <span class="nav-text">会话</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E4%BB%A3%E7%A0%81-%E5%A2%9E%E5%8A%A0%E4%BC%9A%E8%AF%9D"><span class="nav-number">3.1.</span> <span class="nav-text">修改代码-增加会话</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95-1"><span class="nav-number">3.2.</span> <span class="nav-text">测试</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E6%B0%B4%E5%B9%B3%E6%89%A9%E5%B1%95%E7%B3%BB%E7%BB%9F%E4%B8%AD%E7%9A%84%E7%BC%93%E5%AD%98%E5%92%8C%E4%BC%9A%E8%AF%9D%E7%AD%89%E7%8A%B6%E6%80%81%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="nav-number">4.</span> <span class="nav-text">如何解决水平扩展系统中的缓存和会话等状态问题？</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="gezi_lzq"
+      src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
+  <p class="site-author-name" itemprop="name">gezi_lzq</p>
+  <div class="site-description" itemprop="description">Blog of lizhenqi </div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags">
+          
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/gezi-lzq" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;gezi-lzq" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/gezilzq" title="Gitee → https:&#x2F;&#x2F;gitee.com&#x2F;gezilzq" rel="noopener" target="_blank"><i class="fa fa-fw fa-Gitee"></i>Gitee</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.acwing.com/user/myspace/index/58842/" title="Acwing → https:&#x2F;&#x2F;www.acwing.com&#x2F;user&#x2F;myspace&#x2F;index&#x2F;58842&#x2F;" rel="noopener" target="_blank"><i class="fa fa-fw fa-Acwing"></i>Acwing</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">gezi_lzq</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+</body>
+</html>
