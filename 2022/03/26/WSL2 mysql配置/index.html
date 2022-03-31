@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="选择在WSL2通过Docker来安装mysql  需要先在WSL2内配置Docker  拉取mysql镜像 社区版：https:&#x2F;&#x2F;hub.docker.com&#x2F;_&#x2F;mysql   1docker pull docker  配置并运行mysql 环境变量启动镜像时，您可以通过在命令行中mysql传递一个或多个环境变量来调整 MySQL 实例的配置。docker run请注意，如果您使用已包含数据库">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Gezi&#39;s blog">
+<meta property="og:url" content="http://example.com/2022/03/26/WSL2%20mysql%E9%85%8D%E7%BD%AE/index.html">
+<meta property="og:site_name" content="Gezi&#39;s blog">
+<meta property="og:description" content="选择在WSL2通过Docker来安装mysql  需要先在WSL2内配置Docker  拉取mysql镜像 社区版：https:&#x2F;&#x2F;hub.docker.com&#x2F;_&#x2F;mysql   1docker pull docker  配置并运行mysql 环境变量启动镜像时，您可以通过在命令行中mysql传递一个或多个环境变量来调整 MySQL 实例的配置。docker run请注意，如果您使用已包含数据库">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1647084217004-e5aef5e2-d16d-4e63-88d4-ed3021770e8f.png#clientId=udb27cce1-5bbd-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=381&id=ue2d84b98&margin=%5Bobject%20Object%5D&name=image.png&originHeight=761&originWidth=1966&originalType=binary&ratio=1&rotation=0&showTitle=false&size=94739&status=done&style=none&taskId=ue5461690-a14f-4798-9125-c932f367ab6&title=&width=983">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1647084239396-2ad18d2c-75a3-4781-a10e-5c93b82395bf.png#clientId=udb27cce1-5bbd-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=331&id=ud9389017&margin=%5Bobject%20Object%5D&name=image.png&originHeight=661&originWidth=1378&originalType=binary&ratio=1&rotation=0&showTitle=false&size=96803&status=done&style=none&taskId=u6c91a9fe-2662-4341-85a9-13986c4b8dc&title=&width=689">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1647085947220-0b3fd6f4-d48d-4940-851b-da0bc4d40bcc.png#clientId=udb27cce1-5bbd-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=246&id=u0c6bfff7&margin=%5Bobject%20Object%5D&name=image.png&originHeight=491&originWidth=1199&originalType=binary&ratio=1&rotation=0&showTitle=false&size=69808&status=done&style=none&taskId=ufc15ee91-56bf-4559-900d-3a6bb130a40&title=&width=599.5">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1647085990475-7554ddca-54d5-42e0-8a61-93f1717de084.png#clientId=udb27cce1-5bbd-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=229&id=ufa94041c&margin=%5Bobject%20Object%5D&name=image.png&originHeight=423&originWidth=1096&originalType=binary&ratio=1&rotation=0&showTitle=false&size=34935&status=done&style=none&taskId=uadb75c92-01fe-499b-94fa-425484bd50a&title=&width=593">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1647086191503-e1fbe3fc-60cb-4cee-9725-146cce308ba6.png#clientId=udb27cce1-5bbd-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=70&id=ua5672097&margin=%5Bobject%20Object%5D&name=image.png&originHeight=92&originWidth=699&originalType=binary&ratio=1&rotation=0&showTitle=false&size=9922&status=done&style=none&taskId=uf31b8ab7-1aae-4846-89bc-ff59d0aa791&title=&width=530.5">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1647086331229-e532d95e-260f-4f9f-9c54-6fc015a3e605.png#clientId=udb27cce1-5bbd-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=244&id=u6e577969&margin=%5Bobject%20Object%5D&name=image.png&originHeight=488&originWidth=1361&originalType=binary&ratio=1&rotation=0&showTitle=false&size=65825&status=done&style=none&taskId=u3f952979-74ce-4372-afc0-53525239a64&title=&width=680.5">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1647086384732-de2b57a3-4cc7-47a9-b9b3-3e53b7f1e775.png#clientId=udb27cce1-5bbd-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=404&id=ue4244758&margin=%5Bobject%20Object%5D&name=image.png&originHeight=401&originWidth=553&originalType=binary&ratio=1&rotation=0&showTitle=false&size=21154&status=done&style=none&taskId=ua9f251de-38e7-4e2a-917f-434ee726901&title=&width=556.5">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1647086495886-325685c9-6641-4d46-afe2-9d69105ea416.png#clientId=udb27cce1-5bbd-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=95&id=u0316a523&margin=%5Bobject%20Object%5D&name=image.png&originHeight=190&originWidth=1204&originalType=binary&ratio=1&rotation=0&showTitle=false&size=22714&status=done&style=none&taskId=u2982268d-99ee-4367-afef-ab5300a952c&title=&width=602">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1647086570063-0c6297c8-5360-4385-b0fc-1e084a3c5203.png#clientId=udb27cce1-5bbd-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=241&id=ue0e9cde0&margin=%5Bobject%20Object%5D&name=image.png&originHeight=404&originWidth=984&originalType=binary&ratio=1&rotation=0&showTitle=false&size=46132&status=done&style=none&taskId=ub748e4a6-33e8-4f7f-90fa-3f0a5020e04&title=&width=588">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1647711729390-0c198459-9106-439d-a758-d6b8dc1d2632.png#clientId=u6241848c-42da-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=487&id=u0860ddd0&margin=%5Bobject%20Object%5D&name=image.png&originHeight=974&originWidth=822&originalType=binary&ratio=1&rotation=0&showTitle=false&size=44830&status=done&style=none&taskId=u96b371dd-c65d-43d9-8727-2670da69e4f&title=&width=411">
+<meta property="article:published_time" content="2022-03-25T17:14:25.355Z">
+<meta property="article:modified_time" content="2022-03-25T17:01:43.968Z">
+<meta property="article:author" content="gezi_lzq">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.nlark.com/yuque/0/2022/png/22177633/1647084217004-e5aef5e2-d16d-4e63-88d4-ed3021770e8f.png#clientId=udb27cce1-5bbd-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=381&id=ue2d84b98&margin=%5Bobject%20Object%5D&name=image.png&originHeight=761&originWidth=1966&originalType=binary&ratio=1&rotation=0&showTitle=false&size=94739&status=done&style=none&taskId=ue5461690-a14f-4798-9125-c932f367ab6&title=&width=983">
+
+<link rel="canonical" href="http://example.com/2022/03/26/WSL2%20mysql%E9%85%8D%E7%BD%AE/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title> | Gezi's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Gezi's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/03/26/WSL2%20mysql%E9%85%8D%E7%BD%AE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
+      <meta itemprop="name" content="gezi_lzq">
+      <meta itemprop="description" content="Blog of lizhenqi ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gezi's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-03-26 01:14:25 / Modified: 01:01:43" itemprop="dateCreated datePublished" datetime="2022-03-26T01:14:25+08:00">2022-03-26</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>选择在WSL2通过Docker来安装mysql</p>
+<blockquote>
+<p>需要先在WSL2内配置Docker</p>
+</blockquote>
+<h3 id="拉取mysql镜像"><a href="#拉取mysql镜像" class="headerlink" title="拉取mysql镜像"></a>拉取mysql镜像</h3><ul>
+<li>社区版：<a target="_blank" rel="noopener" href="https://hub.docker.com/_/mysql">https://hub.docker.com/_/mysql</a></li>
+</ul>
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1647084217004-e5aef5e2-d16d-4e63-88d4-ed3021770e8f.png#clientId=udb27cce1-5bbd-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=381&id=ue2d84b98&margin=%5Bobject%20Object%5D&name=image.png&originHeight=761&originWidth=1966&originalType=binary&ratio=1&rotation=0&showTitle=false&size=94739&status=done&style=none&taskId=ue5461690-a14f-4798-9125-c932f367ab6&title=&width=983" alt="image.png"></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull docker</span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1647084239396-2ad18d2c-75a3-4781-a10e-5c93b82395bf.png#clientId=udb27cce1-5bbd-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=331&id=ud9389017&margin=%5Bobject%20Object%5D&name=image.png&originHeight=661&originWidth=1378&originalType=binary&ratio=1&rotation=0&showTitle=false&size=96803&status=done&style=none&taskId=u6c91a9fe-2662-4341-85a9-13986c4b8dc&title=&width=689" alt="image.png"></p>
+<h3 id="配置并运行mysql"><a href="#配置并运行mysql" class="headerlink" title="配置并运行mysql"></a>配置并运行mysql</h3><blockquote>
+<h2 id="环境变量"><a href="#环境变量" class="headerlink" title="环境变量"></a>环境变量</h2><p>启动镜像时，您可以通过在命令行中mysql传递一个或多个环境变量来调整 MySQL 实例的配置。<br>docker run请注意，如果您使用已包含数据库的数据目录启动容器，则以下任何变量都不会产生任何影响：<br>任何预先存在的数据库在容器启动时将始终保持不变。<br>另请参阅<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/environment-variables.html">https://dev.mysql.com/doc/refman/5.7/en/environment-variables.html</a>以获取 MySQL 本身尊重的环境变量的文档（尤其是变量，如MYSQL_HOST，已知与此镜像一起使用时会导致问题）。</p>
+<h4 id="MYSQL-ROOT-PASSWORD"><a href="#MYSQL-ROOT-PASSWORD" class="headerlink" title="MYSQL_ROOT_PASSWORD"></a>MYSQL_ROOT_PASSWORD</h4><p>此变量是必需的，并指定将为 MySQLroot超级用户帐户设置的密码。在上面的例子中，它被设置为my-secret-pw。</p>
+<h4 id="MYSQL-DATABASE"><a href="#MYSQL-DATABASE" class="headerlink" title="MYSQL_DATABASE"></a>MYSQL_DATABASE</h4><p>此变量是可选的，允许您指定要在映像启动时创建的数据库的名称。如果提供了用户/密码（见下文），则该用户将被授予对此数据库的超级用户访问权限。(<a target="_blank" rel="noopener" href="http://dev.mysql.com/doc/en/adding-users.html">corresponding toGRANT ALL</a>) </p>
+<h4 id="MYSQL-USER-MYSQL-PASSWORD"><a href="#MYSQL-USER-MYSQL-PASSWORD" class="headerlink" title="MYSQL_USER,MYSQL_PASSWORD"></a>MYSQL_USER,MYSQL_PASSWORD</h4><p>这些变量是可选的，用于创建新用户和设置该用户的密码。该用户将被授予MYSQL_DATABASE变量指定的数据库的超级用户权限（见上文）。要创建用户，这两个变量都是必需的。<br>请注意，无需使用此机制来创建超级用户超级用户，默认情况下会使用MYSQL_ROOT_PASSWORD变量指定的密码创建该用户。</p>
+<h4 id="MYSQL-RANDOM-ROOT-PASSWORD"><a href="#MYSQL-RANDOM-ROOT-PASSWORD" class="headerlink" title="MYSQL_RANDOM_ROOT_PASSWORD"></a>MYSQL_RANDOM_ROOT_PASSWORD</h4><p>这是一个可选变量。设置为非空值，例如yes，为 root 用户生成一个随机初始密码（使用pwgen）。生成的 root 密码将打印到 stdout ( GENERATED ROOT PASSWORD: …..)。</p>
+<h4 id=""><a href="#" class="headerlink" title=""></a></h4></blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">docker run --publish 3306:3306 \</span><br><span class="line">        --name mysql-ce-8.0 \</span><br><span class="line">        --restart always \</span><br><span class="line">        --volume /home/username/mysql/data:/var/lib/mysql \</span><br><span class="line">        -e MYSQL_ROOT_PASSWORD= mysqlpassword \</span><br><span class="line">        -d mysql:8.0 \</span><br><span class="line">        --character-set-server=utf8mb4 \</span><br><span class="line">        --collation-server=utf8mb4_unicode_ci</span><br></pre></td></tr></table></figure>
+<p>其中含义如下：</p>
+<ul>
+<li>–publish 3306:3306代表容器内端口号和暴漏的端口号，第一个数字是对外暴漏的端口号，如果你本地有其他同类数据库，你可以修改其他值，第二个值是容器内MYSQL的默认监听端口3306，这个不建议修改。</li>
+<li>–name mysql-ce-8.0是我们给即将运行的Docker实例取的昵称。</li>
+<li>–restart always代表希望这个实例随着Docker Desktop一起重启，这样就自动做到开机自启。</li>
+<li>–volume /home/username/mysql/data:/var/lib/mysql代表我们持久化MYSQL的目录绑定，这里你需要把第一个地址修改成你自己的地址，如果没有对应的文件夹的，请实现新建好：mkdir dirname</li>
+<li>-e MYSQL_ROOT_PASSWORD=yourrootpassword是设置Root账号的预设密码，请将yourrootpassword部分替换成自己的密码。</li>
+<li>-d mysql:8.0是指定镜像名字和版本号(Tag)，这里我们那Tag=8.0举例，还有其他Tag请参见Docker Hub详情页</li>
+<li>–character-set-server=utf8mb4和–collation-server=utf8mb4_unicode_ci，然数据库所有表都采用utf8mb4字符</li>
+</ul>
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1647085947220-0b3fd6f4-d48d-4940-851b-da0bc4d40bcc.png#clientId=udb27cce1-5bbd-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=246&id=u0c6bfff7&margin=%5Bobject%20Object%5D&name=image.png&originHeight=491&originWidth=1199&originalType=binary&ratio=1&rotation=0&showTitle=false&size=69808&status=done&style=none&taskId=ufc15ee91-56bf-4559-900d-3a6bb130a40&title=&width=599.5" alt="image.png"><br /><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1647085990475-7554ddca-54d5-42e0-8a61-93f1717de084.png#clientId=udb27cce1-5bbd-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=229&id=ufa94041c&margin=%5Bobject%20Object%5D&name=image.png&originHeight=423&originWidth=1096&originalType=binary&ratio=1&rotation=0&showTitle=false&size=34935&status=done&style=none&taskId=uadb75c92-01fe-499b-94fa-425484bd50a&title=&width=593" alt="image.png"></p>
+<h3 id="进入MYSQL容器内部"><a href="#进入MYSQL容器内部" class="headerlink" title="进入MYSQL容器内部"></a>进入MYSQL容器内部</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -it mysql-ce-8.0 bash</span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1647086191503-e1fbe3fc-60cb-4cee-9725-146cce308ba6.png#clientId=udb27cce1-5bbd-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=70&id=ua5672097&margin=%5Bobject%20Object%5D&name=image.png&originHeight=92&originWidth=699&originalType=binary&ratio=1&rotation=0&showTitle=false&size=9922&status=done&style=none&taskId=uf31b8ab7-1aae-4846-89bc-ff59d0aa791&title=&width=530.5" alt="image.png"></p>
+<h3 id="进入MYSQL的ROOT账号"><a href="#进入MYSQL的ROOT账号" class="headerlink" title="进入MYSQL的ROOT账号"></a>进入MYSQL的ROOT账号</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -uroot -p</span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1647086331229-e532d95e-260f-4f9f-9c54-6fc015a3e605.png#clientId=udb27cce1-5bbd-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=244&id=u6e577969&margin=%5Bobject%20Object%5D&name=image.png&originHeight=488&originWidth=1361&originalType=binary&ratio=1&rotation=0&showTitle=false&size=65825&status=done&style=none&taskId=u3f952979-74ce-4372-afc0-53525239a64&title=&width=680.5" alt="image.png"><br /><code>show databases</code><br /><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1647086384732-de2b57a3-4cc7-47a9-b9b3-3e53b7f1e775.png#clientId=udb27cce1-5bbd-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=404&id=ue4244758&margin=%5Bobject%20Object%5D&name=image.png&originHeight=401&originWidth=553&originalType=binary&ratio=1&rotation=0&showTitle=false&size=21154&status=done&style=none&taskId=ua9f251de-38e7-4e2a-917f-434ee726901&title=&width=556.5" alt="image.png"></p>
+<h4 id="进入名为mysql的数据库"><a href="#进入名为mysql的数据库" class="headerlink" title="进入名为mysql的数据库"></a>进入名为mysql的数据库</h4><p><code>use mysql;</code><br /><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1647086495886-325685c9-6641-4d46-afe2-9d69105ea416.png#clientId=udb27cce1-5bbd-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=95&id=u0316a523&margin=%5Bobject%20Object%5D&name=image.png&originHeight=190&originWidth=1204&originalType=binary&ratio=1&rotation=0&showTitle=false&size=22714&status=done&style=none&taskId=u2982268d-99ee-4367-afef-ab5300a952c&title=&width=602" alt="image.png"></p>
+<h4 id="查询所有的用户"><a href="#查询所有的用户" class="headerlink" title="查询所有的用户"></a>查询所有的用户</h4><p><code>select host,user,plugin from user;</code><br /><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1647086570063-0c6297c8-5360-4385-b0fc-1e084a3c5203.png#clientId=udb27cce1-5bbd-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=241&id=ue0e9cde0&margin=%5Bobject%20Object%5D&name=image.png&originHeight=404&originWidth=984&originalType=binary&ratio=1&rotation=0&showTitle=false&size=46132&status=done&style=none&taskId=ub748e4a6-33e8-4f7f-90fa-3f0a5020e04&title=&width=588" alt="image.png"><br /><strong>使用软件连接docker容器内的mysql数据库</strong><br /><img src="https://cdn.nlark.com/yuque/0/2022/png/22177633/1647711729390-0c198459-9106-439d-a758-d6b8dc1d2632.png#clientId=u6241848c-42da-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=487&id=u0860ddd0&margin=%5Bobject%20Object%5D&name=image.png&originHeight=974&originWidth=822&originalType=binary&ratio=1&rotation=0&showTitle=false&size=44830&status=done&style=none&taskId=u96b371dd-c65d-43d9-8727-2670da69e4f&title=&width=411" alt="image.png"></p>
+<blockquote>
+<p>参考文章：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/taylorshi/p/10971246.html">https://www.cnblogs.com/taylorshi/p/10971246.html</a></p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/02/28/%E5%8F%AF%E6%89%A9%E5%B1%95%E6%9E%B6%E6%9E%84/" rel="prev" title="可扩展性架构">
+      <i class="fa fa-chevron-left"></i> 可扩展性架构
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/03/26/Springboot-Maven%E9%85%8D%E7%BD%AE%E5%AE%9E%E8%B7%B5/" rel="next" title="">
+       <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8B%89%E5%8F%96mysql%E9%95%9C%E5%83%8F"><span class="nav-number">1.</span> <span class="nav-text">拉取mysql镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E5%B9%B6%E8%BF%90%E8%A1%8Cmysql"><span class="nav-number">2.</span> <span class="nav-text">配置并运行mysql</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="nav-number"></span> <span class="nav-text">环境变量</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#MYSQL-ROOT-PASSWORD"><span class="nav-number">0.1.</span> <span class="nav-text">MYSQL_ROOT_PASSWORD</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#MYSQL-DATABASE"><span class="nav-number">0.2.</span> <span class="nav-text">MYSQL_DATABASE</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#MYSQL-USER-MYSQL-PASSWORD"><span class="nav-number">0.3.</span> <span class="nav-text">MYSQL_USER,MYSQL_PASSWORD</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#MYSQL-RANDOM-ROOT-PASSWORD"><span class="nav-number">0.4.</span> <span class="nav-text">MYSQL_RANDOM_ROOT_PASSWORD</span></a></li><li class="nav-item nav-level-4"><a class="nav-link"><span class="nav-number">0.5.</span> <span class="nav-text"></span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E5%85%A5MYSQL%E5%AE%B9%E5%99%A8%E5%86%85%E9%83%A8"><span class="nav-number">1.</span> <span class="nav-text">进入MYSQL容器内部</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E5%85%A5MYSQL%E7%9A%84ROOT%E8%B4%A6%E5%8F%B7"><span class="nav-number">2.</span> <span class="nav-text">进入MYSQL的ROOT账号</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%9B%E5%85%A5%E5%90%8D%E4%B8%BAmysql%E7%9A%84%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">2.1.</span> <span class="nav-text">进入名为mysql的数据库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E6%89%80%E6%9C%89%E7%9A%84%E7%94%A8%E6%88%B7"><span class="nav-number">2.2.</span> <span class="nav-text">查询所有的用户</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="gezi_lzq"
+      src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
+  <p class="site-author-name" itemprop="name">gezi_lzq</p>
+  <div class="site-description" itemprop="description">Blog of lizhenqi </div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags">
+          
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/gezi-lzq" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;gezi-lzq" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/gezilzq" title="Gitee → https:&#x2F;&#x2F;gitee.com&#x2F;gezilzq" rel="noopener" target="_blank"><i class="fa fa-fw fa-Gitee"></i>Gitee</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.acwing.com/user/myspace/index/58842/" title="Acwing → https:&#x2F;&#x2F;www.acwing.com&#x2F;user&#x2F;myspace&#x2F;index&#x2F;58842&#x2F;" rel="noopener" target="_blank"><i class="fa fa-fw fa-Acwing"></i>Acwing</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">gezi_lzq</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+</body>
+</html>

@@ -157,6 +157,272 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/09/19/%E4%BB%8Ejava%20IO%E6%B5%81%20%E4%BA%86%E8%A7%A3%20%E8%A3%85%E9%A5%B0%E8%80%85%E6%A8%A1%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
+      <meta itemprop="name" content="gezi_lzq">
+      <meta itemprop="description" content="Blog of lizhenqi ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gezi's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/09/19/%E4%BB%8Ejava%20IO%E6%B5%81%20%E4%BA%86%E8%A7%A3%20%E8%A3%85%E9%A5%B0%E8%80%85%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">从java I/O流 了解 装饰者模式</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-09-19 00:00:00 / Modified: 12:57:14" itemprop="dateCreated datePublished" datetime="2021-09-19T00:00:00+08:00">2021-09-19</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="从java-I-O流-了解-装饰者模式"><a href="#从java-I-O流-了解-装饰者模式" class="headerlink" title="从java I/O流 了解 装饰者模式"></a>从java I/O流 了解 装饰者模式</h1><h2 id="装饰者模式（Decorator）"><a href="#装饰者模式（Decorator）" class="headerlink" title="装饰者模式（Decorator）"></a>装饰者模式（Decorator）</h2><p>Decorator是一种结构设计模式，通过将<strong>对象</strong>放置在<strong>包含行为的特殊包装器对象</strong>中，可以将新行为附加到此对象。</p>
+<blockquote>
+<p>当 小明 穿上了一个军事外骨骼装备，小明就有了战士的能力。</p>
+<p>当 小红 穿上了一个腿部外骨骼，小红就有了田径运动员的能力</p>
+<p>但 小亮 穿上了一个军事外骨骼装备，又套上了一个腿部外骨骼，小亮能力就又提升了。</p>
+</blockquote>
+<p>使用装饰者模型的目的往往是计划增强或者改进某个类的功能，但是单纯的创造新类或者说是继承，都会导致类爆炸，随着功能之间的组合，类会越来越多，而装饰者模型就可以避免这个。</p>
+<p>装饰者较为核心的是运用了<em>聚合</em>或<em>组合</em> 的理念，</p>
+<p>之前为了增进改变某个类的行为，往往会采用继承的方式，但是继承是静态的，你不能在运行时改变现有对象的行为，只能将整个对象替换成另一个子类创建的对象。</p>
+<p>用<em>聚合</em>或<em>组合</em> ， 而不是<em>继承</em>。 两者的工作方式几乎一模一样： 一个对象<em>包含</em>指向另一个对象的引用， 并将部分工作委派给引用对象； 继承中的对象则继承了父类的行为， 它们自己<em>能够</em>完成这些工作。</p>
+<p>你可以使用这个新方法来轻松替换各种连接的 “小帮手” 对象， 从而能在运行时改变容器的行为。 一个对象可以使用多个类的行为， 包含多个指向其他对象的引用， 并将各种工作委派给引用对象。</p>
+<p>聚合 （或组合） 组合是许多设计模式背后的关键原则 （包括装饰在内）。 </p>
+<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210918105854687.png" alt="image-20210918105854687"></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/09/19/%E4%BB%8Ejava%20IO%E6%B5%81%20%E4%BA%86%E8%A7%A3%20%E8%A3%85%E9%A5%B0%E8%80%85%E6%A8%A1%E5%BC%8F/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/09/18/Learn%20CSS%EF%BC%88%E4%B8%80%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
+      <meta itemprop="name" content="gezi_lzq">
+      <meta itemprop="description" content="Blog of lizhenqi ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gezi's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/09/18/Learn%20CSS%EF%BC%88%E4%B8%80%EF%BC%89/" class="post-title-link" itemprop="url">Learn CSS（一）</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-09-18 00:00:00" itemprop="dateCreated datePublished" datetime="2021-09-18T00:00:00+08:00">2021-09-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-09-21 16:03:20" itemprop="dateModified" datetime="2021-09-21T16:03:20+08:00">2021-09-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">前端学习</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%AD%A6%E4%B9%A0/CSS/" itemprop="url" rel="index"><span itemprop="name">CSS</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ul>
+<li><em>CSS</em> 指的是层叠样式表* (<em>C</em>ascading <em>S</em>tyle <em>S</em>heets)</li>
+<li>CSS 描述了<em>如何在屏幕、纸张或其他媒体上显示 HTML 元素</em></li>
+<li>CSS <em>节省了大量工作</em>。它可以同时控制多张网页的布局</li>
+<li>外部样式表存储在 <em>CSS 文件</em>中</li>
+</ul>
+<p>*<strong>：</strong>也称级联样式表。</p>
+<p>创建 HTML 的目的是<em>描述网页</em>的内容,CSS 从 HTML 页面中删除了样式格式！</p>
+<h2 id="CSS-语法"><a href="#CSS-语法" class="headerlink" title="CSS 语法"></a>CSS 语法</h2><p>CSS 规则集（rule-set）由选择器和声明块组成：</p>
+<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/selector.gif" alt="CSS 选择器"></p>
+<p><strong>选择器</strong>指向您需要设置样式的 HTML 元素。</p>
+<p><strong>声明块</strong>包含一条或多条用分号分隔的声明。</p>
+<p>每条声明都包含一个 <strong>CSS 属性名称</strong>和一个<strong>值</strong>，以冒号分隔。</p>
+<p>多条 CSS 声明用<strong>分号</strong>分隔，声明块用<strong>花括号</strong>括起来。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/09/18/Learn%20CSS%EF%BC%88%E4%B8%80%EF%BC%89/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/09/05/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%84%E6%88%90%E5%92%8C%E5%9F%BA%E6%9C%AC%E5%8A%9F%E8%83%BD%EF%BC%88%E6%9C%AA%E5%AE%8C%E7%A8%BF%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
+      <meta itemprop="name" content="gezi_lzq">
+      <meta itemprop="description" content="Blog of lizhenqi ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gezi's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/09/05/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%84%E6%88%90%E5%92%8C%E5%9F%BA%E6%9C%AC%E5%8A%9F%E8%83%BD%EF%BC%88%E6%9C%AA%E5%AE%8C%E7%A8%BF%EF%BC%89/" class="post-title-link" itemprop="url">计算机系统的基本组成和基本功能（未完稿)</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-09-05 00:00:00 / Modified: 14:11:01" itemprop="dateCreated datePublished" datetime="2021-09-05T00:00:00+08:00">2021-09-05</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CSAPP%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">CSAPP学习</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <blockquote>
+<p>这部分老实说我起码看过好多遍了，关于这个冯诺依曼结构，但是总是记不住，或是记得有很大缺失之类。</p>
+<p>本着“好记性不如烂笔头”的想法，也是为了能写一篇博客些许的获得感，大概记录所学。</p>
+</blockquote>
+<h2 id="一个形象的例子"><a href="#一个形象的例子" class="headerlink" title="一个形象的例子"></a>一个形象的例子</h2><p>也许对于教科书来说，一开始从计算机结构发展的历史进行讲解，然后抛出<strong>存储器</strong>，<strong>运算器</strong>，<strong>控制器</strong>，等等概念，再去画出图片，直接开始讲解是个不错的，严谨的方式。（其实也能够理解和看懂，但是总觉得差了些什么）</p>
+<p><img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210905004654717.png" alt="image-20210905004654717"></p>
+<p>所以打算借助<a target="_blank" rel="noopener" href="https://www.icourse163.org/u/mooc1463468641395">袁春风</a>老师在课上的<strong>做菜</strong>例子（一个绝妙的比喻）来展开讲解计算机是如何工作的。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/09/05/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%84%E6%88%90%E5%92%8C%E5%9F%BA%E6%9C%AC%E5%8A%9F%E8%83%BD%EF%BC%88%E6%9C%AA%E5%AE%8C%E7%A8%BF%EF%BC%89/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/31/%E6%9C%80%E7%9F%AD%E7%BC%96%E8%BE%91%E8%B7%9D%E7%A6%BB-%E9%A2%98%E8%A7%A3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -745,198 +1011,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/19/Vue%E9%A1%B9%E7%9B%AE%E5%AD%A6%E4%B9%A0(%E4%B8%80)/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
-      <meta itemprop="name" content="gezi_lzq">
-      <meta itemprop="description" content="Blog of lizhenqi ">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gezi's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/08/19/Vue%E9%A1%B9%E7%9B%AE%E5%AD%A6%E4%B9%A0(%E4%B8%80)/" class="post-title-link" itemprop="url">Vue项目学习(一)</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-08-19 00:00:00" itemprop="dateCreated datePublished" datetime="2021-08-19T00:00:00+08:00">2021-08-19</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-08-22 22:54:06" itemprop="dateModified" datetime="2021-08-22T22:54:06+08:00">2021-08-22</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">前端学习</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%AD%A6%E4%B9%A0/vue/" itemprop="url" rel="index"><span itemprop="name">vue</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="项目概述"><a href="#项目概述" class="headerlink" title="项目概述"></a>项目概述</h2><ul>
-<li><p>PC端后台管理项目</p>
-</li>
-<li><p>开发模式：采用<strong>前后端分离</strong>的开发模式,其中前端项目是基于Vue技术栈的SPA(单页面)项目。</p>
-</li>
-<li><p>技术栈</p>
-<ul>
-<li>Vue</li>
-<li>Vue-router</li>
-<li>Element-UI</li>
-<li>Axios</li>
-<li>Echarts</li>
-</ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/08/19/Vue%E9%A1%B9%E7%9B%AE%E5%AD%A6%E4%B9%A0(%E4%B8%80)/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/19/Vue%E9%A1%B9%E7%9B%AE%E5%AD%A6%E4%B9%A0(%E4%BA%8C)/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210822193802198.png">
-      <meta itemprop="name" content="gezi_lzq">
-      <meta itemprop="description" content="Blog of lizhenqi ">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gezi's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/08/19/Vue%E9%A1%B9%E7%9B%AE%E5%AD%A6%E4%B9%A0(%E4%BA%8C)/" class="post-title-link" itemprop="url">Vue项目学习(二)</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-08-19 00:00:00" itemprop="dateCreated datePublished" datetime="2021-08-19T00:00:00+08:00">2021-08-19</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-08-22 15:31:33" itemprop="dateModified" datetime="2021-08-22T15:31:33+08:00">2021-08-22</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">前端学习</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%AD%A6%E4%B9%A0/vue/" itemprop="url" rel="index"><span itemprop="name">vue</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1EE411B7SU">参考课程资料</a></p>
-<h2 id="主页面的实现"><a href="#主页面的实现" class="headerlink" title="主页面的实现"></a>主页面的实现</h2><h3 id="实现基本主页面布局"><a href="#实现基本主页面布局" class="headerlink" title="实现基本主页面布局"></a>实现基本主页面布局</h3><blockquote>
-<p>官方文档<a target="_blank" rel="noopener" href="https://element.eleme.cn/#/zh-CN/component/container">Container布局容器</a></p>
-<p>采用<img src="https://gitee.com/gezilzq/image-host/raw/master/img/image-20210812231908811.png" alt="image-20210812231908811"></p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">el-container</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">el-header</span>&gt;</span>Header<span class="tag">&lt;/<span class="name">el-header</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">el-container</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">el-aside</span> <span class="attr">width</span>=<span class="string">&quot;200px&quot;</span>&gt;</span>Aside<span class="tag">&lt;/<span class="name">el-aside</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">el-main</span>&gt;</span>Main<span class="tag">&lt;/<span class="name">el-main</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">el-container</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">el-container</span>&gt;</span></span><br></pre></td></tr></table></figure>
-</blockquote>
-<blockquote>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/08/19/Vue%E9%A1%B9%E7%9B%AE%E5%AD%A6%E4%B9%A0(%E4%BA%8C)/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -1004,7 +1082,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-count">32</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
